@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluator</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+<h2> Hi {{ user.username }}!</h2>
+<p>
+    Ready to start evaluations?<br>
+    Student list and rubric will be added soon
+</p>
+<b>Ready to sign out?</b>
+<p><a href="{% url 'logout' %}">Sign out</a></p>
+{% else %}
+  <p>You can't view this page</p>
+{% endif %}
+</body>
+</html>
