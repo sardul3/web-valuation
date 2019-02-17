@@ -4,6 +4,7 @@ body{
   background: rgb(131,58,180);
   background: linear-gradient(318deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
 }
+
 #main_content{
   margin-top: 20vh;
   border: 0.7px solid #BF360C;
@@ -26,11 +27,33 @@ body{
   width: 300px;
 }
 
-.line{
-       width: 50%;
-       margin: auto;
-       margin-top: 5%;
-       margin-bottom: 5%;
-       transform: rotate(10deg);
-       border-color: purple;
-   }
+.login input {
+  display: block;
+  padding: 15px 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  border: 1px solid #ddd;
+  transition: border-width 0.2s ease;
+  border-radius: 2px;
+  color: #ccc;
+}
+.login input + i.fa {
+  color: #fff;
+  font-size: 1em;
+  position: absolute;
+  margin-top: -47px;
+  opacity: 0;
+  left: 0;
+  transition: all 0.1s ease-in;
+}
+.login input:focus {
+  outline: none;
+  color: #444;
+  border-color: #2196f3;
+  border-left-width: 35px;
+}
+.login input:focus + i.fa {
+  opacity: 1;
+  left: 25px;
+  transition: all 0.25s ease-out;
+}

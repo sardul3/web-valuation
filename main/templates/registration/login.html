@@ -1,15 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h2>Evaluator Login Page!</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{%block body_block %}
+<div class = "container login" id = "main_content" class = "container card border-primary bg-light mb-3 form-row" style="width: 30rem;">
+  <form method="post">
+    {% csrf_token %}
+
+    <p class = "text-center">
+      <img src = "{% static 'assets/images/ulm_logo.png' %}" class="img-fluid" alt="Responsive image" id = "logo" />
+    </p>
+
+    <div class="form-group col-auto col-lg-12">
+
+        <input type="text" class="form-control form-control-lg" id="exampleFormControlInput1" placeholder="Username">
+        <i class = "fa fa-user"></i>
+      </div>
+
+    <div class="form-group col-auto col-lg-12">
+     <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
+     <i class = "fa fa-key"></i>
+   </div>
+<div class = "col-auto col-lg-12">
+    <button type="submit" class = "btn btn-primary btn-block ">Login</button>
+  </div>
+  </form>
+</div>
+{% endblock %}
