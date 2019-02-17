@@ -1,0 +1,19 @@
+#main_content{
+  border: 1px solid #ed0b0b;
+
+  width: auto;
+  padding: 10px;
+  box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+  -webkit-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+  -moz-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+}
+
+.login_opts{
+  margin: 10px;
+  font-family: "Merienda";
+}
+
+#logo{
+  height: 300px;
+  width: 300px;
+}
