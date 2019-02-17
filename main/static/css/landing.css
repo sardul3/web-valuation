@@ -1,7 +1,15 @@
+{% load static %}
+body{
+  height: 100vh;
+  background: rgb(131,58,180);
+  background: linear-gradient(318deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+}
 #main_content{
-  border: 1px solid #ed0b0b;
-
+  margin-top: 20vh;
+  border: 0.7px solid #BF360C;
+  border-radius: 15px;
   width: auto;
+  background-color: #FFFFFF;
   padding: 10px;
   box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
   -webkit-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
@@ -17,3 +25,12 @@
   height: 300px;
   width: 300px;
 }
+
+.line{
+       width: 50%;
+       margin: auto;
+       margin-top: 5%;
+       margin-bottom: 5%;
+       transform: rotate(10deg);
+       border-color: purple;
+   }

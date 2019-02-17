@@ -2,7 +2,7 @@
 {% load static %}
 {% block body_block %}
   <div class = "container-fluid" id = "home">
-    <div class = "container" id = "main_content" class="card" style="width: 45rem;">
+    <div  id = "main_content" class = "container card border-primary bg-light mb-3" style="width: 45rem;">
       <p class = "text-center">
         <img src = "{% static 'assets/images/ulm_logo.png' %}" class="img-fluid" alt="Responsive image" id = "logo" />
       </p>
@@ -16,8 +16,6 @@
         <a href="/accounts/login" class = 'btn btn-lg btn-primary'>   Evaluator Log in </a>
       </span>
       </div>
-
-
     </div>
   </div>
 {% endblock %}
