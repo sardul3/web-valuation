@@ -1,0 +1,68 @@
+<html>  
+      <head>  
+           <title>Rubrics</title>  
+           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+           <script src="app.js"></script>
+           <style>
+                .groupbtn, .btn btn-xs btn-success, .btn btn-xs btn-danger{
+                    display: inline-block !important;
+                    
+               }
+               #groupbtn{
+                   border: 5px !important;
+                   background-color: lightsalmon !important;
+                   border-radius: 10px;
+                   padding: 5px;
+                   width: 15% !important;
+               }
+          </style>
+      </head>  
+      <body>  
+           <div class="container">  
+                
+                <div class="table-responsive">  
+                    <h2 class = "logo" align="center">Create Rubric</h2><br />
+                    <div id="creator">
+                        <div><p>Created By: </p><form method = post> 
+                                        <input type="text">
+                                        
+                                   </form>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="groupbtn" >
+                        <p class = "groupbtn">Add/Delete Column</p>
+                        <button type="button" name="btn_add" id="btn_add" class="btn btn-xs btn-success" onclick="addColumn()">+</button>
+                        <button type="button" id = "deleteColumns" name="delete_btn" class="btn btn-xs btn-danger" onclick="deleteColumns()">X</button>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="table-responsive">  
+                        <table  id="rubricbase" class="table table-bordered">  
+                            <tr id=headerRow>  
+
+                                 <th width="40%">Citeria</th>  
+                                 <th width="10%">Score</th>  
+                                   
+                            </tr>
+                            <tr id="second_row">  
+
+                                 <td class="category" contenteditable></td>  
+                                 <td class="score" contenteditable></td>    
+                            </tr>
+                        </table>
+                        <div id = "groupbtn">
+                            <p class = "groupbtn">Add/Delete Row</p>
+                            <button type="button" name="btn-add" class="btn btn-xs btn-success" onclick="addRow()">+</button>
+                            <button type="button" id= " deleteRows" name="delete_btn" class="btn btn-xs btn-danger" onclick="deleteRows()">X</button>
+                        </div>
+                        <br>
+                        <br>
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    </div>
+                </div>
+          </div>
+      </body>
+</html>
