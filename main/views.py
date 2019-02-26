@@ -40,11 +40,12 @@ def rubric(request):
 
 def grade(request):
     rubrics = Rubric.objects.all()
-
     measures = Measure.objects.all()
     students = Student.objects.all()
     context = {'rubrics':rubrics, 'students': students, 'measures':measures}
     if request.method == 'POST':
+
         score = request.POST.get('score')
         print(score)
+        
     return render(request, 'main/evaluatorrubric.html',context)

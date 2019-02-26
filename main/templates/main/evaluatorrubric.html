@@ -8,7 +8,7 @@
   <div class = "col-lg-4">
   <div class="form-group">
     <label for="exampleFormControlSelect1">Select a student</label>
-    <select class="form-control" id="exampleFormControlSelect1">
+    <select class="form-control" id="exampleFormControlSelect1" name="student_dd">
       {% for student in students %}
         <option>{{student.name}}</option>
       {%endfor%}
@@ -54,27 +54,30 @@
     {%endfor%}
   </td>
   <td class="category">
-        {% for cat in r.category.all %}
-          {% for mea in cat.measure.all %}
+          {% for mea in measures.all %}
             <p>{{mea}}</p>
           {%endfor%}
-        {% endfor%}
+  </td>
+  <td class="category">
+    {% for mea in measures.all %}
+      <p>{{mea.measureText}}</p>
+    {%endfor%}
+  </td>
+  <td class="category">
+    {% for mea in measures.all %}
+      <p>{{mea.weight}}</p>
+    {%endfor%}
+  </td>
+  <td class="category">
+    {% for cat in r.category.all %}
+        <input type = "number" name = "score">
+    {%endfor%}
 
-  </td>
-  <td class="category">
-
-    <p>{{measures.all.measureText}}</p>
-  </td>
-  <td class="category">
-    <p>{{r.weight}}</p>
-  </td>
-  <td class="category">
-    <input type = "number" name = "score">
   </td>
     </tr>
   {% endfor %}
 </table>
-<button type = "submit">Evaluate </button>
+<button type = "submit" class = "btn btn-primary btn-lg"> Evaluate </button>
 </form>
 </div>
 
