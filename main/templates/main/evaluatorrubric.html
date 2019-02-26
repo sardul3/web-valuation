@@ -70,7 +70,7 @@
   </td>
   <td class="category">
     {% for cat in r.category.all %}
-        <input type = "number" name = "score">
+        <input type = "number" name = "score{{cat.id}}">
     {%endfor%}
 
   </td>
