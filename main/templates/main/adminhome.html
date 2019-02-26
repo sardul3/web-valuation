@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href = "./static/css/landing.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Merienda|Merriweather|Ropa+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <title>Admin Home</title>
+    <style>
+      body{
+        height: 100vh;
+        background: rgb(131,58,180);
+        background: linear-gradient(318deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+      }
+      #main_content{
+        margin-top: 2vh;
+        border: 0.7px solid #BF360C;
+        border-radius: 15px;
+        width: auto;
+        background-color: #FFFFFF;
+        padding: 10px;
+        box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+        -webkit-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+        -moz-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+      }
+      .title{
+        background-color: #B71C1C;
+        color: white;
+        font-family: 'Merienda';
+      }
+    </style>
+
+  </head>
+  <body>
+
+
+    <div class = "container-fluid">
+      <div class = "container" id = "main_content">
+        <h4 class = 'text-right' style = "font-family: 'ropa sans'"> Logged in as Sagar </h4>
+        <div class = "row">
+          <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div class = "card border-warning mb-3">
+              <h3 class = "card-header title"> Evaluation Progress </h3>
+
+
+            </div>
+          </div>
+
+          <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div class = "card border-warning mb-3">
+              <h3 class = "card-header title"> Previous Outcomes </h3>
+
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Outcome A
+                  <button> Edit </button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Outcome B
+                  <button> Edit </button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Outcome C
+                  <button> Edit </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+
+          <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div class = "card border-warning mb-3">
+              <h3 class = "card-header title"> Start a new cycle </h3>
+
+              <form>
+                <div class="row m-1">
+                  <div class="col ">
+                     <div class="form-group">
+                       <input type="text" class="form-control" placeholder="Year">
+                     </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Semester">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle ml-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select Outcomes
+                    </button>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      1
+                      <div class="form-group form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                      </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      2
+                      <div class="form-group form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                      </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      3
+                      <div class="form-group form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                      </div>
+
+                    </li>
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                <div class="dropdown">
+
+                    <button class="btn btn-secondary dropdown-toggle ml-3 mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select Rubrics
+                    </button>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      1
+                      <div class="form-group form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                      </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      2
+                      <div class="form-group form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                      </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      3
+                      <div class="form-group form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                      </div>
+
+                    </li>
+                  </div>
+                  </div>
+                </div>
+                </div>
+
+                <div class="form-group">
+                  <div class = "btn btn-primary btn-lg ml-3">Start</div>
+                </div>
+              </form>
+
+
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class = "row">
+          <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div class = "card border-warning mb-3">
+              <h3 class = "card-header title"> Evaluators </h3>
+
+            </div>
+
+          </div>
+
+          <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div class = "card border-warning mb-3">
+              <h3 class = "card-header title"> Previous Rubrics </h3>
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Rubric A
+                  <button> Edit </button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  rubric B
+                  <button> Edit </button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Rubric C
+                  <button> Edit </button>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div class = "card border-warning mb-3">
+              <h3 class = "card-header title">Running Cycles </h3>
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Cycle A
+                  <button> End </button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Cycle B
+                  <button> End </button>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Cycle C
+                  <button> End </button>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+        <a href = "docs.html">
+          <h4 class = 'text-right' style = "font-family: 'ropa sans'">  <i>Documentation</i> </h4>
+        </a>
+      </div>
+
+    </div>
+
+    <script src=".././static/js/progress.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

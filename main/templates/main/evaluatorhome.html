@@ -1,20 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Evaluator</title>
-</head>
-<body>
+
+{% extends  'base.html' %}
+{% load static %}
+{% block body_block %}
+<div class = "container" id = "main_content">
 {% if user.is_authenticated %}
 <h2> Hi {{ user.username }}!</h2>
 <p>
     Ready to start evaluations?<br>
-    Student list and rubric will be added soon
 </p>
+<div id = "row card border-primary bg-light mb-3" style="width: 15rem;">
+  <div id = "col col-lg-3">
+    <ul class="list-group">
+    <li class="list-group-item active">Students</li>
+    {%for student in students%}
+      <li class="list-group-item">{{student.name}}</li>
+    {%endfor%}
+    </ul>
+  </div>
+<br/>
+  <div id = "col col-lg-3">
+    <ul class="list-group">
+    <li class="list-group-item active">Rubrics</li>
+    {%for rubric in rubrics%}
+      <li class="list-group-item">{{rubric}}</li>
+    {%endfor%}
+    </ul>
+  </div>
+</div>
+<br/>
+<div>
+  <form action = "{%url 'main:grade'%}">
+    <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>
+  </form>
+</div>
 <b>Ready to sign out?</b>
 <p><a href="{% url 'logout' %}">Sign out</a></p>
 {% else %}
   <p>You can't view this page</p>
 {% endif %}
-</body>
-</html>
+</div>
+{%endblock%}

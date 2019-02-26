@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class = "container" id = "main_content">
+  <form>
+<div class = "row">
+  <div class = "col-lg-4">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select a student</label>
+    <select class="form-control" id="exampleFormControlSelect1">
+      {% for student in students %}
+        <option>{{student.name}}</option>
+      {%endfor%}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select a rubric</label>
+    <select class="form-control" id="exampleFormControlSelect1">
+      {% for rubric in rubrics %}
+        <option>{{rubric.title}}</option>
+      {%endfor%}
+    </select>
+  </div>
+</div>
+</div>
+
+</form>
+
+</div>
+
+
+<div class = "container-fluid" id = "main_content" style="margin-top:10px;">
+  <form action = "{% url 'main:grade' %}" method = "POST" >
+    {% csrf_token%}
+      <table  id="rubricbase" class="table table-bordered">
+          <tr id=headerRow>
+            <th width="10%">Title</th>
+               <th width="40%">Citeria</th>
+               <th width="10%">Measure</th>
+               <th width="20%">MeasureText</th>
+               <th width="10%">Weight</th>
+               <th width="10%"> Score </th>
+          </tr>
+          <tr id="second_row">
+  {% for r in rubrics %}
+  <td class="category">
+    <p>{{r.title}}</p>
+  </td>
+  <td class="category">
+    {% for cat in r.category.all %}
+      <p>{{cat.categoryTitle}}</p>
+    {%endfor%}
+  </td>
+  <td class="category">
+        {% for cat in r.category.all %}
+          {% for mea in cat.measure.all %}
+            <p>{{mea}}</p>
+          {%endfor%}
+        {% endfor%}
+
+  </td>
+  <td class="category">
+
+    <p>{{measures.all.measureText}}</p>
+  </td>
+  <td class="category">
+    <p>{{r.weight}}</p>
+  </td>
+  <td class="category">
+    <input type = "number" name = "score">
+  </td>
+    </tr>
+  {% endfor %}
+</table>
+<button type = "submit">Evaluate </button>
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+{%endblock%}

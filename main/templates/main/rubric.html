@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+           <style>
+                .groupbtn, .btn btn-xs btn-success, .btn btn-xs btn-danger{
+                    display: inline-block !important;
+               }
+               #groupbtn{
+                   border: 5px !important;
+                   background-color: lightsalmon !important;
+                   border-radius: 10px;
+                   padding: 5px;
+                   width: 15% !important;
+               }
+          </style>
+      </head>
+      <body>
+           <div class="container-fluid" id = "main_content">
+                <div class="table-responsive">
+                  <form method = "POST" action="{%url 'main:rubric'%}">
+                  {%csrf_token%}
+                    <h2 class = "logo" align="center">Create Rubric</h2><br />
+                    <div id="creator">
+                        <div><p>Created By: </p>
+
+                              <input type="text" name = "created_by">
+                              <p> Title: </p>
+                              <input type="text" name = "title">
+                        </div>
+                    </div>
+                    <br>
+                    <!-- <div id="groupbtn" >
+                        <p class = "groupbtn">Add/Delete Column</p>
+                        <button type="button" name="btn_add" id="btn_add" class="btn btn-xs btn-success" onclick="addColumn()">+</button>
+                        <button type="button" id = "deleteColumns" name="delete_btn" class="btn btn-xs btn-danger" onclick="deleteColumns()">X</button>
+                    </div> -->
+                    <br>
+                    <br>
+                    <div class="table-responsive table-bordered">
+                        <table  id="rubricbase" class="table table-bordered">
+                            <tr id=headerRow>
+
+                                 <th width="40%">Citeria</th>
+                                 <th width="10%">Measure</th>
+                                 <th width="10%">MeasureText</th>
+                                 <th width="10%">Weight</th>
+                            </tr>
+                            <tr id="second_row">
+
+                                 <td class="category" contenteditable>
+                                   <input type = "text" name = "category">
+                                 </td>
+
+                                 <td class="category" contenteditable>
+                                   <input type = "text" name = "measure">
+                                 </td>
+
+                                 <td class="category" contenteditable>
+                                   <input type = "text" name = "measureText">
+                                 </td>
+
+                                 <td class="score" contenteditable>
+                                   <input type = "text" name = "weight">
+                                 </td>
+                            </tr>
+
+                        </table>
+                        <!-- <div id = "groupbtn">
+                            <p class = "groupbtn">Add/Delete Row</p>
+                            <button type="button" name="btn-add" class="btn btn-xs btn-success" onclick="addRow()">+</button>
+                            <button type="button" id= " deleteRows" name="delete_btn" class="btn btn-xs btn-danger" onclick="deleteRows()">X</button>
+                        </div> -->
+                        <br>
+                        <br>
+                        <input class="btn btn-primary" type="submit" value="Submit">
+
+
+
+                    </div>
+                      </form>
+                </div>
+</div>
+
+
+<div class = "container-fluid" id = "main_content" style="margin-top:10px;">
+  <form action = "{% url 'main:grade' %}" >
+    {%csrf_token%}
+      <table  id="rubricbase" class="table table-bordered">
+          <tr id=headerRow>
+            <th width="10%">Title</th>
+               <th width="40%">Citeria</th>
+               <th width="10%">Measure</th>
+               <th width="20%">MeasureText</th>
+               <th width="10%">Weight</th>
+          </tr>
+          <tr id="second_row">
+  {% for r in rubrics %}
+  <td class="category">
+    <p>{{r.title}}</p>
+  </td>
+  <td class="category">
+    <p>{{r.category}}</p>
+  </td>
+  <td class="category">
+    <p>{{r.measure}}</p>
+  </td>
+  <td class="category">
+    <p>{{r.measureText}}</p>
+  </td>
+  <td class="category">
+    <p>{{r.weight}}</p>
+  </td>
+
+    </tr>
+  {% endfor %}
+</table>
+<button type = "submit">Start Evaluation </button>
+</form>
+</div>
+
+{%endblock%}

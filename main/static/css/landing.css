@@ -6,7 +6,6 @@ body{
 }
 
 #main_content{
-  margin-top: 20vh;
   border: 0.7px solid #BF360C;
   border-radius: 15px;
   width: auto;
@@ -17,7 +16,7 @@ body{
   -moz-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
 }
 
-.login_opts{
+.login_opts, h1{
   margin: 10px;
   font-family: "Merienda";
 }
@@ -56,4 +55,25 @@ body{
   opacity: 1;
   left: 25px;
   transition: all 0.25s ease-out;
+}
+
+li a,span{
+  margin: 10px;
+  font-family: "Merienda";
+  color: #020800;
+  font-size: 2.2rem;
+  line-height: 21px;
+  font-weight: 700;
+}
+
+th{
+  font-family: 'Ropa Sans';
+  font-size: 1.5rem;
+
+}
+
+td{
+  font-family: Lato;
+  font-size: 1.5rem;
+
 }

@@ -1,0 +1,14 @@
+{% extends "admin:admin/main/base.html" %}
+{% load static %}
+
+{% block title %}Ev APP{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Share Care Admin</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{%block extrastyle%}
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{%endblock%}

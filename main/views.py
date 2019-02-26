@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+from .models import Rubric, Student, Measure, Category
 # Create your views here.
 
 
@@ -13,30 +13,38 @@ def homepage(request):
 
 
 def evaluatorhome(request):
-    return render(request, 'main/evaluatorhome.html', {})
+    rubrics = Rubric.objects.all()
+    students = Student.objects.all()
+    context = {'rubrics':rubrics, 'students':students}
 
-def user_login(request):
+    return render(request, 'main/evaluatorhome.html', context)
+
+def rubric(request):
+    if request.method == "POST":
+        created_by = request.POST.get('created_by')
+        title = request.POST.get('title')
+        category = request.POST.get('category')
+        measure = request.POST.get('measure')
+        measureText = request.POST.get('measureText')
+        weight = request.POST.get('weight')
+
+        rubric = Rubric(created_by=created_by, title=title, category=Category(categoryTitle=category, measure=Measure(measureTitle=measure, measureText=measureText,weight=weight)))
+        rubric.save()
+
+        rubrics = Rubric.objects.filter(title=title)
+        context = {'rubrics':rubrics}
+
+        return render(request, 'main/rubric.html', context)
+    return render(request, 'main/rubric.html')
+
+
+def grade(request):
+    rubrics = Rubric.objects.all()
+
+    measures = Measure.objects.all()
+    students = Student.objects.all()
+    context = {'rubrics':rubrics, 'students': students, 'measures':measures}
     if request.method == 'POST':
-        # get the username and password from the user
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        print(username)
-        print(password)
-
-        # django authenticates the credentials
-        user = authenticate(username='s', password='s')
-
-        if user:
-            if user.is_active:
-                # user is logged in and redirected to home page
-                login(request, user)
-                return HttpResponseRedirect(reverse('evaluatorhome'))
-            else:
-                return HttpResponse('Account is not active')
-        # if there is no valid user
-        else:
-            print('someone tried to login with invalid credentials')
-            return HttpResponse('Invalid username or password')
-    # for someone trying to log in
-    else:
-        return render(request, 'registration/login.html', {})
+        score = request.POST.get('score')
+        print(score)
+    return render(request, 'main/evaluatorrubric.html',context)
