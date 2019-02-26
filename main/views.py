@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category
+from .models import Rubric, Student, Measure, Category, evaluate_rubric
 # Create your views here.
 
 
@@ -15,7 +15,8 @@ def homepage(request):
 def evaluatorhome(request):
     rubrics = Rubric.objects.all()
     students = Student.objects.all()
-    context = {'rubrics':rubrics, 'students':students}
+    evaluatons = evaluate_rubric.objects.all()
+    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluatons}
 
     return render(request, 'main/evaluatorhome.html', context)
 
@@ -42,14 +43,16 @@ def grade(request):
     rubrics = Rubric.objects.all()
     measures = Measure.objects.all()
     students = Student.objects.all()
-
-    context = {'rubrics':rubrics, 'students': students, 'measures':measures}
+    evaluations = evaluate_rubric.objects.all()
+    context = {'rubrics':rubrics, 'students': students, 'measures':measures, 'evaluations':evaluations}
 
     if request.method == 'POST':
         rubrics = Rubric.objects.all()
         measures = Measure.objects.all()
         students = Student.objects.all()
         evaluated_student = request.POST.get('student_dd',None)
+        evaluated_rubric = request.POST.get('rubric_dd',None)
+        decimal_place = request.POST.get('decimal_dd', None)
 
         scores = []
         sum = 0
@@ -57,10 +60,14 @@ def grade(request):
             score = request.POST.get('score'+str(i+1))
             sum+=int(score)
             average = sum/len(measures)
-            average = round(average,2)
-        context = {'rubrics':rubrics, 'students': students, 'measures':measures, 'avg':average, 'evaluated_student':evaluated_student}
+            average = round(average,int(decimal_place))
 
-        print(average)
+        evaluation = evaluate_rubric(rubric=evaluated_rubric, grade_score=average, student=evaluated_student)
+        evaluation.save()
+
+        context = {'rubrics':rubrics, 'students': students, 'measures':measures,
+                    'avg':average, 'evaluations':evaluations }
+
         return render(request, 'main/evaluatorhome.html', context)
 
     return render(request, 'main/evaluatorrubric.html',context)

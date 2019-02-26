@@ -15,24 +15,33 @@
       {%endfor%}
     </select>
   </div>
-
+</div>
+  <div class = "col-lg-4">
   <div class="form-group">
     <label for="exampleFormControlSelect1">Select a rubric</label>
-    <select class="form-control" id="exampleFormControlSelect1">
+    <select class="form-control" id="exampleFormControlSelect1" name = "rubric_dd">
       {% for rubric in rubrics %}
         <option>{{rubric.title}}</option>
       {%endfor%}
     </select>
   </div>
+  </div>
+
+    <div class = "col-lg-4">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select a decimal place</label>
+    <select class="form-control" id="exampleFormControlSelect1" name="decimal_dd">
+        <option value = "1">One</option>
+        <option value = "2">Two</option>
+        <option value = "3">Three</option>
+        <option value = "4">Four</option>
+    </select>
+  </div>
 </div>
 </div>
-
-
-
 </div>
 
-
-<div class = "container-fluid" id = "main_content" style="margin-top:10px;">
+<div class = "container" id = "main_content" style="margin-top:10px;">
 
       <table  id="rubricbase" class="table table-bordered">
           <tr id=headerRow>
@@ -40,7 +49,6 @@
                <th width="40%">Citeria</th>
                <th width="10%">Measure</th>
                <th width="20%">MeasureText</th>
-               <th width="10%">Weight</th>
                <th width="10%"> Score </th>
           </tr>
           <tr id="second_row">
@@ -63,11 +71,7 @@
       <p>{{mea.measureText}}</p>
     {%endfor%}
   </td>
-  <td class="category">
-    {% for mea in measures.all %}
-      <p>{{mea.weight}}</p>
-    {%endfor%}
-  </td>
+
   <td class="category">
     {% for cat in r.category.all %}
         <input type = "number" name = "score{{cat.id}}" min="1" max="5">

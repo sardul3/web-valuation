@@ -6,6 +6,7 @@ body{
 }
 
 #main_content{
+  margin-top: 7vh;
   border: 0.7px solid #BF360C;
   border-radius: 15px;
   width: auto;
@@ -66,7 +67,7 @@ li a,span{
   font-weight: 700;
 }
 
-th{
+th, label{
   font-family: 'Ropa Sans';
   font-size: 1.5rem;
 

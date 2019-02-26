@@ -42,7 +42,6 @@ class Rubric(models.Model):
         return self.title
 
 class evaluate_rubric(models.Model):
-    rubric = models.ForeignKey(Rubric, on_delete=models.CASCADE)
-    evaluator = models.ForeignKey(Evaluator, on_delete=models.CASCADE)
-    grade_score = models.PositiveIntegerField()
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    rubric = models.CharField(max_length=200)
+    grade_score = models.FloatField()
+    student = models.CharField(max_length=200)

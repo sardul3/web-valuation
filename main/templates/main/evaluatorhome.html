@@ -11,7 +11,7 @@
 <div class = "row">
   <div class = "col col-lg-3">
     <ul class="list-group">
-    <li class="list-group-item active">Students</li>
+    <li class="list-group-item active">Current Students</li>
     {%for student in students%}
       <li class="list-group-item">{{student.name}}</li>
     {%endfor%}
@@ -20,7 +20,7 @@
 <br/>
   <div class = "col col-lg-3">
     <ul class="list-group">
-    <li class="list-group-item active">Rubrics</li>
+    <li class="list-group-item active">Available Rubrics</li>
     {%for rubric in rubrics%}
       <li class="list-group-item">{{rubric}}</li>
     {%endfor%}
@@ -30,7 +30,9 @@
   <div class = "col col-lg-6">
     <ul class="list-group">
     <li class="list-group-item active">Last Evaluation</li>
-      <h4 class = "text-center list-group-item">{{evaluated_student}} got an average of {{avg}}</h4>
+    {%for evaluation in evaluations%}
+      <p class = "text-center list-group-item">{{evaluation.student}} got an average of {{evaluation.grade_score}} on {{evaluation.rubric}} rubric</p>
+    {%endfor%}
     </ul>
   </div>
 
