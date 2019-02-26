@@ -42,10 +42,25 @@ def grade(request):
     rubrics = Rubric.objects.all()
     measures = Measure.objects.all()
     students = Student.objects.all()
-    context = {'rubrics':rubrics, 'students': students, 'measures':measures}
-    if request.method == 'POST':
 
-        score = request.POST.get('score')
-        print(score)
-        
+    context = {'rubrics':rubrics, 'students': students, 'measures':measures}
+
+    if request.method == 'POST':
+        rubrics = Rubric.objects.all()
+        measures = Measure.objects.all()
+        students = Student.objects.all()
+        evaluated_student = request.POST.get('student_dd',None)
+
+        scores = []
+        sum = 0
+        for i in range(len(measures)):
+            score = request.POST.get('score'+str(i+1))
+            sum+=int(score)
+            average = sum/len(measures)
+            average = round(average,2)
+        context = {'rubrics':rubrics, 'students': students, 'measures':measures, 'avg':average, 'evaluated_student':evaluated_student}
+
+        print(average)
+        return render(request, 'main/evaluatorhome.html', context)
+
     return render(request, 'main/evaluatorrubric.html',context)

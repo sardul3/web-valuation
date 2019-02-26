@@ -3,14 +3,15 @@
 {% block body_block %}
 
 <div class = "container" id = "main_content">
-  <form>
+  <form action = "{% url 'main:grade' %}" method = "POST" >
+    {% csrf_token%}
 <div class = "row">
   <div class = "col-lg-4">
   <div class="form-group">
     <label for="exampleFormControlSelect1">Select a student</label>
     <select class="form-control" id="exampleFormControlSelect1" name="student_dd">
       {% for student in students %}
-        <option>{{student.name}}</option>
+        <option value = "{{student.name}}">{{student.name}}</option>
       {%endfor%}
     </select>
   </div>
@@ -26,14 +27,13 @@
 </div>
 </div>
 
-</form>
+
 
 </div>
 
 
 <div class = "container-fluid" id = "main_content" style="margin-top:10px;">
-  <form action = "{% url 'main:grade' %}" method = "POST" >
-    {% csrf_token%}
+
       <table  id="rubricbase" class="table table-bordered">
           <tr id=headerRow>
             <th width="10%">Title</th>
@@ -70,7 +70,7 @@
   </td>
   <td class="category">
     {% for cat in r.category.all %}
-        <input type = "number" name = "score{{cat.id}}">
+        <input type = "number" name = "score{{cat.id}}" min="1" max="5">
     {%endfor%}
 
   </td>

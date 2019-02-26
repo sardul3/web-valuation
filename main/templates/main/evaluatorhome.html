@@ -8,8 +8,8 @@
 <p>
     Ready to start evaluations?<br>
 </p>
-<div id = "row card border-primary bg-light mb-3" style="width: 15rem;">
-  <div id = "col col-lg-3">
+<div class = "row">
+  <div class = "col col-lg-3">
     <ul class="list-group">
     <li class="list-group-item active">Students</li>
     {%for student in students%}
@@ -18,7 +18,7 @@
     </ul>
   </div>
 <br/>
-  <div id = "col col-lg-3">
+  <div class = "col col-lg-3">
     <ul class="list-group">
     <li class="list-group-item active">Rubrics</li>
     {%for rubric in rubrics%}
@@ -26,6 +26,16 @@
     {%endfor%}
     </ul>
   </div>
+
+  <div class = "col col-lg-6">
+    <ul class="list-group">
+    <li class="list-group-item active">Last Evaluation</li>
+      <h4 class = "text-center list-group-item">{{evaluated_student}} got an average of {{avg}}</h4>
+    </ul>
+  </div>
+
+
+
 </div>
 <br/>
 <div>
