@@ -8,5 +8,7 @@ urlpatterns = [
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('rubric', views.rubric, name = 'rubric'),
     path('grade', views.grade, name = 'grade'),
+    path('dashboard', views.dashboard, name = 'dashboard'),
+    path('newCycle', views.newCycle, name = 'newCycle'),
 
 ]

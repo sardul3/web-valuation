@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle
 # Create your views here.
 
 
@@ -71,3 +71,23 @@ def grade(request):
         return render(request, 'main/evaluatorhome.html', context)
 
     return render(request, 'main/evaluatorrubric.html',context)
+
+def dashboard(request):
+    rubrics = Rubric.objects.all()
+    evaluators = Evaluator.objects.all()
+    outcomes = Outcome.objects.all()
+    cycles = Cycle.objects.all()
+    notifications = evaluate_rubric.objects.all()
+
+    context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
+                'cycles': cycles, 'notifications':notifications}
+    return render(request, 'main/adminhome.html', context)
+
+def newCycle(request):
+    year = request.POST.get('year')
+    semester = request.POST.get('semester')
+
+    cycle = Cycle(year=year, semester=semester)
+    cycle.save()
+
+    return HttpResponseRedirect(reverse('main:dashboard'))

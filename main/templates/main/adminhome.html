@@ -43,7 +43,7 @@
 
     <div class = "container-fluid">
       <div class = "container" id = "main_content">
-        <h4 class = 'text-right' style = "font-family: 'ropa sans'"> Logged in as Sagar </h4>
+        <h4 class = 'text-right' style = "font-family: 'ropa sans'"> Logged in as {{user.username}} </h4>
         <div class = "row">
           <div class = "col col-lg-4 col-md-6 col-sm-12">
             <div class = "card border-warning mb-3">
@@ -58,18 +58,12 @@
               <h3 class = "card-header title"> Previous Outcomes </h3>
 
               <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Outcome A
-                  <button> Edit </button>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Outcome B
-                  <button> Edit </button>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Outcome C
-                  <button> Edit </button>
-                </li>
+                {% for outcome in outcomes %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{outcome.title}}
+                    <button class = "btn btn-warning"> Edit </button>
+                  </li>
+              {%endfor%}
               </ul>
             </div>
           </div>
@@ -79,51 +73,41 @@
             <div class = "card border-warning mb-3">
               <h3 class = "card-header title"> Start a new cycle </h3>
 
-              <form>
+              <form action = "{% url 'main:newCycle' %}" method = "POST" >
+                {% csrf_token%}
                 <div class="row m-1">
                   <div class="col ">
                      <div class="form-group">
-                       <input type="text" class="form-control" placeholder="Year">
+                       <input type="text" name = "year" class="form-control" placeholder="Year" required>
                      </div>
                   </div>
                   <div class="col">
                     <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Semester">
+                      <input type="text" name = "semester" class="form-control" placeholder="Semester" required>
                     </div>
                   </div>
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle ml-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Select Outcomes
                     </button>
 
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                  {%for outcome in outcomes%}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                      1
+                      {{outcome.title}}
                       <div class="form-group form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1"  name = "outcomes" value = {{outcome.title}}>
                       </div>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      2
-                      <div class="form-group form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      3
-                      <div class="form-group form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      </div>
-
-                    </li>
+                  {% endfor %}
                   </div>
 
-                </div>
-
-                <div class="form-group">
+                </div> -->
+              <!-- </div> -->
+                <!-- <div class="form-group">
                 <div class="dropdown">
 
                     <button class="btn btn-secondary dropdown-toggle ml-3 mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -131,33 +115,25 @@
                     </button>
 
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      1
-                      <div class="form-group form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      2
-                      <div class="form-group form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      3
-                      <div class="form-group form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      </div>
-
-                    </li>
+                    {%for rubric in rubrics%}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{rubric.title}}
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        </div>
+                      </li>
+                    {%endfor%}
                   </div>
                   </div>
-                </div>
-                </div>
+                </div> -->
 
+                <div class = "row p-1">
+                  <div class = "col col-lg-12 ml-0.5">
                 <div class="form-group">
-                  <div class = "btn btn-primary btn-lg ml-3">Start</div>
+                  <button type = "submit" class = "btn btn-primary btn-lg btn-block card-header title">Start</button>
                 </div>
+                </div>
+              </div>
               </form>
 
 
@@ -171,7 +147,13 @@
           <div class = "col col-lg-4 col-md-6 col-sm-12">
             <div class = "card border-warning mb-3">
               <h3 class = "card-header title"> Evaluators </h3>
-
+              <ul class="list-group">
+                {%for evaluator in evaluators%}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{evaluator.name}}
+                  </li>
+                {%endfor%}
+              </ul>
             </div>
 
           </div>
@@ -180,18 +162,12 @@
             <div class = "card border-warning mb-3">
               <h3 class = "card-header title"> Previous Rubrics </h3>
               <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Rubric A
-                  <button> Edit </button>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  rubric B
-                  <button> Edit </button>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Rubric C
-                  <button> Edit </button>
-                </li>
+                {%for rubric in rubrics%}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{rubric.title}}
+                    <button class = "btn btn-warning"> Edit </button>
+                  </li>
+                {%endfor%}
               </ul>
             </div>
 
@@ -201,29 +177,58 @@
             <div class = "card border-warning mb-3">
               <h3 class = "card-header title">Running Cycles </h3>
               <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Cycle A
-                  <button> End </button>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Cycle B
-                  <button> End </button>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Cycle C
-                  <button> End </button>
-                </li>
+                {%for cycle in cycles%}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{cycle.semester}}: {{cycle.year}}
+                    <button class = "btn btn-primary"> Visit </button>
+                  </li>
+                {%endfor%}
               </ul>
             </div>
-
           </div>
+        </div>
+
+        <div class = "row">
+          <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div class = "card border-warning mb-3">
+              <div class="collapse" id="collapseExample" style = "overflow-y: scroll; max-height: 30vh;">
+                <ul class="list-group">
+                  {%for notification in notifications%}
+                    <p class = "text-left list-group-item">{{notification.student}} got an average of {{notification.grade_score}} on {{notification.rubric}} rubric</p>
+                  {%endfor%}
+                </ul>
+              </div>
+          <button class="btn card-header title" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >
+              Notifications
+              <i class="fa fa-chevron-up text-right" aria-hidden="true"></i>
+          </button>
 
         </div>
-        <a href = "docs.html">
-          <h4 class = 'text-right' style = "font-family: 'ropa sans'">  <i>Documentation</i> </h4>
-        </a>
-      </div>
 
+
+
+
+
+
+            <!-- <div class = "card border-warning mb-3">
+              <h3 class = "card-header title">Notifications
+                  <i class="fa fa-chevron-up text-right" aria-hidden="true"></i>
+              </h3>
+              <ul class="list-group">
+                {%for notification in notifications%}
+                  <p class = "text-center list-group-item">{{notification.student}} got an average of {{notification.grade_score}} on {{notification.rubric}} rubric</p>
+                {%endfor%}
+              </ul>
+            </div> -->
+          </div>
+        </div>
+
+
+
+
+
+
+      </div>
     </div>
 
     <script src=".././static/js/progress.js"></script>

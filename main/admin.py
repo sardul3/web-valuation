@@ -8,5 +8,9 @@ admin.site.register(models.Rubric)
 admin.site.register(models.Measure)
 admin.site.register(models.Category)
 admin.site.register(models.evaluate_rubric)
+admin.site.register(models.Outcome)
+admin.site.register(models.Cycle)
+
+
 admin.site.site_header = "ULM Evaluation";
 admin.site.site_title = "Ev App";
