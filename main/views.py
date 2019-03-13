@@ -1,17 +1,19 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle
+from django.contrib import messages
+from .forms import RegisterForm
 # Create your views here.
 
 
 def homepage(request):
     return render(request, 'main/homepage.html', {})
 
-
+@login_required
 def evaluatorhome(request):
     rubrics = Rubric.objects.all()
     students = Student.objects.all()
@@ -20,6 +22,7 @@ def evaluatorhome(request):
 
     return render(request, 'main/evaluatorhome.html', context)
 
+@login_required
 def rubric(request):
     if request.method == "POST":
         created_by = request.POST.get('created_by')
@@ -38,7 +41,7 @@ def rubric(request):
         return render(request, 'main/rubric.html', context)
     return render(request, 'main/rubric.html')
 
-
+@login_required
 def grade(request):
     rubrics = Rubric.objects.all()
     measures = Measure.objects.all()
@@ -72,6 +75,7 @@ def grade(request):
 
     return render(request, 'main/evaluatorrubric.html',context)
 
+@login_required
 def dashboard(request):
     rubrics = Rubric.objects.all()
     evaluators = Evaluator.objects.all()
@@ -83,6 +87,8 @@ def dashboard(request):
                 'cycles': cycles, 'notifications':notifications}
     return render(request, 'main/adminhome.html', context)
 
+
+@login_required
 def newCycle(request):
     year = request.POST.get('year')
     semester = request.POST.get('semester')
@@ -91,3 +97,19 @@ def newCycle(request):
     cycle.save()
 
     return HttpResponseRedirect(reverse('main:dashboard'))
+
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created {username}')
+            return redirect('/login')
+        else:
+            return render(request, 'main/register.html', {'form': form})
+
+    else:
+        form = RegisterForm()
+        return render(request, 'main/register.html', {'form': form})
