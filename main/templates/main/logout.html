@@ -1,23 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 {%block body_block %}
 <div class = "container login" id = "main_content" class = "container card border-primary bg-light mb-3 form-row" style="width: 30rem;">
-  <form method="post" action = "{% url 'main:evaluatorhome'%}">
-    {% csrf_token %}
-
     <p class = "text-center">
       <img src = "{% static 'assets/images/ulm_logo.png' %}" class="img-fluid" alt="Responsive image" id = "logo" />
     </p>
-
-    {{form|crispy}}
-
-   <div class = "col-auto col-lg-12 login_opts">
-    <button type="submit" class = "btn btn-primary btn-block btn-lg ">Log In</button>
-  </div>
-  </form>
     <div>
-       Don't have an account yet? <a href="/register">Sign Up</a>
+    <h3> You have logged out successfully</h3>
+    </div>
+    <div>
+        Want to log back in? <a href="/login">Log In</a>
     </div>
 </div>
 {% endblock %}
