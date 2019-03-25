@@ -98,6 +98,9 @@ def newCycle(request):
 
     return HttpResponseRedirect(reverse('main:dashboard'))
 
+def cycle(request, cycle_id):
+    context = {'cycle_id':cycle_id };
+    return render(request, 'main/cycle.html', context)
 
 def register(request):
     if request.method == "POST":

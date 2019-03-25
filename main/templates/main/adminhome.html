@@ -180,7 +180,9 @@
                 {%for cycle in cycles%}
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{cycle.semester}}: {{cycle.year}}
+                  <a href = "{% url 'main:cycle' cycle.id %}">
                     <button class = "btn btn-primary"> Visit </button>
+                  </a>
                   </li>
                 {%endfor%}
               </ul>
