@@ -15,6 +15,15 @@ class Student(models.Model):
     def __str__(self):
         return self.name
 
+class Cycle(models.Model):
+    year = models.PositiveIntegerField()
+    semester = models.CharField(max_length=200)
+    # outcome = models.ForeignKey(Outcome, on_delete=models.CASCADE)
+    # rubrics = models.ForeignKey(Rubric, on_delete=models.CASCADE)
+
+    def __str_(self):
+        return self.year
+
 class Measure(models.Model):
     measureTitle = models.CharField(max_length=200)
     measureText = models.CharField(max_length=200)
@@ -58,12 +67,3 @@ class evaluate_rubric(models.Model):
     def __str__(self):
         out = self.student + " scored "+ self.grade_score + " in rubric: "+ self.rubric
         return out
-
-class Cycle(models.Model):
-    year = models.PositiveIntegerField()
-    semester = models.CharField(max_length=200)
-    # outcomes = models.ForeignKey(Outcome, on_delete=models.CASCADE)
-    # rubrics = models.ForeignKey(Rubric, on_delete=models.CASCADE)
-
-    def __str_(self):
-        return self.year

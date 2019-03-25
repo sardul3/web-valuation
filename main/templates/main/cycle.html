@@ -1,2 +1,90 @@
-<p> {{cycle_id}}
-</p>
+
+{% extends  'base.html' %}
+{% load static %}
+{% block body_block %}
+<style>
+  body{
+    height: 100vh;
+    background: rgb(131,58,180);
+    background: linear-gradient(318deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+  }
+  #main_content{
+    margin-top: 2vh;
+    border: 0.7px solid #BF360C;
+    border-radius: 15px;
+    width: auto;
+    background-color: #FFFFFF;
+    padding: 10px;
+    box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+    -webkit-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+    -moz-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
+  }
+  .title{
+    background-color: #B71C1C;
+    color: white;
+    font-family: 'Merienda';
+  }
+</style>
+<div class = "container" id = "main_content">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Learning Outcomes <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#upload">Upload data</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{%url 'main:rubric'%}">Create a rubric</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+  <p> {{cycle_id}}</p>
+  <div class = "row">
+    <div class = "col col-lg-6">
+<h1> View Learning outcomes </h1>
+<div class="accordion" id="accordionExample">
+  {%for outcome in outcomes%}
+    {% with outcome.id as outcome_id %}
+<div class="card">
+  <div class="card-header" id="headingOne">
+    <h2 class="mb-0">
+      <button class="btn btn-link stretched-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <h2>{{outcome.title}}</h2>
+      </button>
+    </h2>
+  </div>
+
+  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+    <div class="card-body">
+  <h2>  {{outcome.measure.measureTitle}} </h2>
+    <p>{{outcome.measure.measureText}} </p>
+    </div>
+  </div>
+</div>
+  {%endwith%}
+{%endfor%}
+
+
+<div id = "upload">
+  <form>
+  <div class="form-group">
+    <label for="exampleFormControlFile1">Example file input</label>
+    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+  </div>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+
+{%endblock%}

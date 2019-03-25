@@ -7,7 +7,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle
 from django.contrib import messages
 from .forms import RegisterForm
+from num2words import num2words
 # Create your views here.
+
 
 
 def homepage(request):
@@ -99,8 +101,11 @@ def newCycle(request):
     return HttpResponseRedirect(reverse('main:dashboard'))
 
 def cycle(request, cycle_id):
-    context = {'cycle_id':cycle_id };
+    outcomes = Outcome.objects.all();
+
+    context = {'cycle_id':cycle_id, 'outcomes': outcomes}
     return render(request, 'main/cycle.html', context)
+
 
 def register(request):
     if request.method == "POST":
