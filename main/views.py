@@ -41,7 +41,7 @@ def rubric(request):
         context = {'rubrics':rubrics}
 
         return render(request, 'main/rubric.html', context)
-    return render(request, 'main/rubric.html')
+    return render(request, 'main/rubric_create.html')
 
 @login_required
 def grade(request):
@@ -102,9 +102,13 @@ def newCycle(request):
 
 def cycle(request, cycle_id):
     outcomes = Outcome.objects.all();
+    evaluators = Evaluator.objects.all();
 
-    context = {'cycle_id':cycle_id, 'outcomes': outcomes}
+    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators}
     return render(request, 'main/cycle.html', context)
+
+def upload(request):
+    return render(request, 'main/upload.html')
 
 
 def register(request):

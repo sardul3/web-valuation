@@ -37,7 +37,7 @@
         <a class="nav-link" href="#">Learning Outcomes <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#upload">Upload data</a>
+        <a class="nav-link" href="{%url 'main:upload'%}">Upload data</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{%url 'main:rubric'%}">Create a rubric</a>
@@ -50,7 +50,7 @@
   <p> {{cycle_id}}</p>
   <div class = "row">
     <div class = "col col-lg-6">
-<h1> View Learning outcomes </h1>
+<h3 class = "list-group-item active"> View Learning outcomes </h3>
 <div class="accordion" id="accordionExample">
   {%for outcome in outcomes%}
     {% with outcome.id as outcome_id %}
@@ -72,19 +72,29 @@
 </div>
   {%endwith%}
 {%endfor%}
+</div>
+</div>
+<div class = "col col-lg-6">
 
+  <ul class="list-group">
+  <li class="list-group-item active ">Evaluators</li>
+  {%for evaluator in evaluators %}
+    <li class="list-group-item">{{evaluator.email}}</li>
+  {%endfor%}
 
-<div id = "upload">
-  <form>
-  <div class="form-group">
-    <label for="exampleFormControlFile1">Example file input</label>
-    <input type="file" class="form-control-file" id="exampleFormControlFile1">
-  </div>
-</form>
+  <li class="list-group-item">
+    <form class="form-inline">
+      <div class="form-group mb-2">
+        <label for="inputPassword2" class="sr-only">type in the email</label>
+        <input type="email" class="form-control" id="inputPassword2" placeholder="email">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2">Invite</button>
+  </form>
 
+  </li>
+</ul>
 </div>
 </div>
-</div>
-</div>
+
 
 {%endblock%}
