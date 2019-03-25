@@ -5,9 +5,13 @@
 <div class = "container" id = "main_content">
 {% if user.is_authenticated %}
 <h2> Hi {{ user.username }}!</h2>
+
 <p>
     Ready to start evaluations?<br>
 </p>
+    {% if user.is_superuser %}
+    <p>Visit the <a href="/admin">admin</a> site instead</p>
+    {% endif %}
 <div class = "row">
   <div class = "col col-lg-3">
     <ul class="list-group">
