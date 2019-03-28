@@ -4,10 +4,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score
 from django.contrib import messages
 from .forms import RegisterForm
-from num2words import num2words
+import csv
+import codecs
+import io
 # Create your views here.
 
 
@@ -108,7 +110,22 @@ def cycle(request, cycle_id):
     return render(request, 'main/cycle.html', context)
 
 def upload(request):
+    if request.method=='POST' and request.FILES:
+        csvfile = request.FILES['csv_file']
+        datset = csvfile.read().decode("UTF-8")
+        io_string = io.StringIO(datset)
+
+
+        for column in csv.reader(io_string, delimiter=",", quotechar="|"):
+            student_score = Test_score(student=column[0], test_name=column[1], score=column[2])
+            student_score.save()
+
+        context = {'test_scores': Test_score.objects.all()}
+        return render(request, 'main/upload.html', context)
+
     return render(request, 'main/upload.html')
+
+
 
 
 def register(request):
@@ -125,3 +142,20 @@ def register(request):
     else:
         form = RegisterForm()
         return render(request, 'main/register.html', {'form': form})
+
+def add_evaluator(request):
+    if request.method == 'POST':
+        evaluator = Evaluator(request.POST.get('evaluator_email'))
+        evaluator.save()
+    return HttpResponseRedirect(reverse('main:dashboard'))
+
+def add_learning_outcome(request):
+    title = request.POST.get('outcome_title')
+    measure_title = request.POST.get('measure_title')
+    measure_desc = request.POST.get('measure_desc')
+    measure = Measure(id = 2,measureTitle=measure_title, measureText=measure_desc)
+    outcome = Outcome(title=title, measure=measure)
+    measure.save()
+    outcome.save()
+
+    return render(request, 'main/cycle.html')

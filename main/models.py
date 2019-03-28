@@ -25,20 +25,17 @@ class Cycle(models.Model):
         return self.year
 
 class Measure(models.Model):
-    measureTitle = models.CharField(max_length=200)
-    measureText = models.CharField(max_length=200)
+    measureTitle = models.CharField(max_length=200, null=True)
+    measureText = models.CharField(max_length=200, null=True)
     weight = models.PositiveIntegerField(null=True, default=1)
 
 
-    def __str__(self):
-        return self.measureTitle
+
 
 class Outcome(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, null=True)
     measure = models.ForeignKey(Measure, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.title
 
 
 
@@ -67,3 +64,13 @@ class evaluate_rubric(models.Model):
     def __str__(self):
         out = self.student + " scored "+ self.grade_score + " in rubric: "+ self.rubric
         return out
+
+class Test_score(models.Model):
+    student = models.CharField(max_length=200)
+    test_name = models.CharField(max_length=200)
+    score = models.PositiveIntegerField()
+    class Meta:
+                managed = True
+
+    def __str__(self):
+        return self.student

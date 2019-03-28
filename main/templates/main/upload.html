@@ -4,19 +4,31 @@
 {% block body_block %}
 
 
-  <div class = "container" id = "main_content">
-<div class = "row">
-  <div class = "col col-lg-3">
-    <div id = "upload">
-      <h3 class = "list-group-item active"> Upload students </h3>
-      <form>
-      <div class="form-group">
-        <label for="exampleFormControlFile1">Example file input</label>
-        <input type="file" class="form-control-file" id="exampleFormControlFile1">
-      </div>
-    </form>
-  </div>
+<div class = "container" id = "main_content">
+
+  <form action="{% url 'main:upload' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+      <input type="file" name="csv_file" />
+      <input type="submit" value="Upload" class = "btn btn-primary" />
+
+  </form>
+
+{%if test_scores %}
+  <hr />
+  <h2> Uploaded data </h2>
+  <table class="table">
+{%for test_score in test_scores%}
+  <thead>
+    <tr>
+      <th scope="col">{{test_score.student}}</th>
+      <th scope="col">{{test_score.test_name}}</th>
+      <th scope="col">{{test_score.score}}</th>
+    </tr>
+  </thead>
+{%endfor%}
+
+</table>
+{%endif%}
 </div>
-</div>
-</div>
+
 {%endblock%}

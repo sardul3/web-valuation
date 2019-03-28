@@ -10,6 +10,7 @@ admin.site.register(models.Category)
 admin.site.register(models.evaluate_rubric)
 admin.site.register(models.Outcome)
 admin.site.register(models.Cycle)
+admin.site.register(models.Test_score)
 
 
 admin.site.site_header = "ULM Evaluation";

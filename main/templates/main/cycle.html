@@ -24,6 +24,12 @@
     color: white;
     font-family: 'Merienda';
   }
+  input{
+    margin-right: 10px;
+  }
+.btn-link{
+    text-decoration: none !important;
+  }
 </style>
 <div class = "container" id = "main_content">
 
@@ -46,11 +52,14 @@
   </div>
 </nav>
 
-
-  <p> {{cycle_id}}</p>
   <div class = "row">
-    <div class = "col col-lg-6">
-<h3 class = "list-group-item active"> View Learning outcomes </h3>
+    <div class = "col col-lg-6 ">
+<h3 class = "list-group-item active">
+     Learning outcomes
+</h3>
+
+
+
 <div class="accordion" id="accordionExample">
   {%for outcome in outcomes%}
     {% with outcome.id as outcome_id %}
@@ -58,43 +67,94 @@
   <div class="card-header" id="headingOne">
     <h2 class="mb-0">
       <button class="btn btn-link stretched-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        <h2>{{outcome.title}}</h2>
+        <p>{{outcome.title}}</p>
       </button>
     </h2>
   </div>
 
   <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
     <div class="card-body">
-  <h2>  {{outcome.measure.measureTitle}} </h2>
-    <p>{{outcome.measure.measureText}} </p>
+        <p>  {{outcome.measure.measureTitle}} </p>
+        <p>  {{outcome.measure.measureText}}  </p>
+
     </div>
   </div>
 </div>
+<div class = "btn btn-warning"> Assign Tools</div>
+
   {%endwith%}
 {%endfor%}
 </div>
 </div>
 <div class = "col col-lg-6">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Add a new learning objective
+  </button>
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Learning Outcome Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action = "{%url 'main:add_learning_outcome'%}" method="POST">
+            {%csrf_token%}
+
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Title</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
+            </div>
+<hr/>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Measure Title</label>
+            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Measure title" name = "measure_title">
+          </div>
+
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Measure Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "measure_desc"></textarea>
+          </div>
+
+
+
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<!-- <div class = "col col-lg-6">
 
   <ul class="list-group">
   <li class="list-group-item active ">Evaluators</li>
   {%for evaluator in evaluators %}
-    <li class="list-group-item">{{evaluator.email}}</li>
+    <li class="list-group-item">{{evaluator.name}}</li>
   {%endfor%}
 
   <li class="list-group-item">
-    <form class="form-inline">
-      <div class="form-group mb-2">
-        <label for="inputPassword2" class="sr-only">type in the email</label>
-        <input type="email" class="form-control" id="inputPassword2" placeholder="email">
+    <form class="form-inline" method="POST" action ="{%url 'main:add_evaluator'%}">
+      {% csrf_token %}
+      <div class="form-group mb-2 mr-3">
+        <input type="text" name = "evaluator_name" class="form-control"  placeholder="name">
+        <input type="email" name = "evaluator_email" class="form-control" placeholder="email">
       </div>
-      <button type="submit" class="btn btn-primary mb-2">Invite</button>
+      <button type="submit" class="btn btn-primary btn-block mb-2">Invite</button>
   </form>
 
   </li>
 </ul>
-</div>
-</div>
+</div> -->
+
 
 
 {%endblock%}
