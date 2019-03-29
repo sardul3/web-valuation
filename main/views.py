@@ -10,9 +10,6 @@ from .forms import RegisterForm
 import csv
 import codecs
 import io
-# Create your views here.
-
-
 
 def homepage(request):
     return render(request, 'main/homepage.html', {})
@@ -35,6 +32,7 @@ def rubric(request):
         measure = request.POST.get('measure')
         measureText = request.POST.get('measureText')
         weight = request.POST.get('weight')
+
 
         rubric = Rubric(created_by=created_by, title=title, category=Category(categoryTitle=category, measure=Measure(measureTitle=measure, measureText=measureText,weight=weight)))
         rubric.save()

@@ -5,7 +5,7 @@
 		var theader = '<table class = "table table-bordered table-responsive"> <thead> </thead>\n';
 		theader += '<tr> <th scope="col">Criteria</th>';
 		for(var i =0; i<=num_rows;i++){
-			theader += `<th scope="col">${i+1}</th>`;
+			theader += `<th scope="col"><input type="text" value = ${i+1} name = "head${i+1}" ></input></th>`;
 		}
 		theader += "</tr>";
 		var tbody = '';
