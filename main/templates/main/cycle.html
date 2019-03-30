@@ -58,36 +58,94 @@
      Learning outcomes
 </h3>
 
-
-
-<div class="accordion" id="accordionExample">
+<div class="panel-group" id="accordion">
   {%for outcome in outcomes%}
-    {% with outcome.id as outcome_id %}
-<div class="card">
-  <div class="card-header" id="headingOne">
-    <h2 class="mb-0">
-      <button class="btn btn-link stretched-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        <p>{{outcome.title}}</p>
-      </button>
-    </h2>
-  </div>
-
-  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-    <div class="card-body">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">{{outcome.title}}</a>
+      </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse in">
       {%for measure in measures %}
         {%if measure.outcome == outcome %}
-        <p>  {{measure.measureTitle}} </p>
-        <p>  {{measure.measureText}}  </p>
-        {%endif%}
-      {%endfor%}
+      <div class="panel-body">
+        <p>{{measure.measureTitle}}</p>
+        <p>{{measure.measureText}}</p>
+
+
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+        Edit
+      </button>
+
+
+
+        <hr />
+      </div>
+      {%endif%}
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Edit Measure</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="{%url 'main:update_measure' measure.id%}" method="POST">
+                {%csrf_token%}
+
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Measure Title</label>
+                  <input type="text" class="form-control" id="exampleInputPassword1"
+                         placeholder="Measure title" name = "measure_title"
+                         value = "{{measure.measureTitle}}">
+                </div>
+              <hr/>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Measure Description</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                          name = "measure_desc">{{measure.measureText}}</textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Cutoff-Score</label>
+                <input type="number" class="form-control" id="exampleInputPassword1"
+                       placeholder="cutoff score" name = "cutoff_score"
+                       value = "{{measure.cutoff_score}}">
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Cutoff-percent</label>
+                <input type="number" class="form-control" id="exampleInputPassword1"
+                       placeholder="Measure title" name = "cutoff_percent"
+                       value = "{{measure.cutoff_percent}}">
+              </div>
+
+
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    {%endfor%}
+
+
     </div>
   </div>
-</div>
-<div class = "btn btn-warning"> Assign Tools</div>
+  {%endfor%}
 
-  {%endwith%}
-{%endfor%}
+
 </div>
+
+
+
 </div>
 <div class = "col col-lg-6">
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">

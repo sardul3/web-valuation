@@ -10,6 +10,7 @@ urlpatterns = [
     path('rubric', views.rubric, name = 'rubric'),
     path('upload', views.upload, name = 'upload'),
     path('grade', views.grade, name = 'grade'),
+    path('update_measure/<int:measure_id>', views.update_measure, name="update_measure"),
     path('dashboard', views.dashboard, name = 'dashboard'),
     path('newCycle', views.newCycle, name = 'newCycle'),
     path('cycle/<int:cycle_id>', views.cycle, name = 'cycle'),

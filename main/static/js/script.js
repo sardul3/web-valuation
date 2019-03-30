@@ -4,7 +4,7 @@
 		var num_cols = document.getElementById('cols').value;
 		var theader = '<table class = "table table-bordered table-responsive"> <thead> </thead>\n';
 		theader += '<tr> <th scope="col">Criteria</th>';
-		for(var i =0; i<=num_rows;i++){
+		for(var i =0; i<=num_cols-2;i++){
 			theader += `<th scope="col"><input type="text" value = ${i+1} name = "head${i+1}" ></input></th>`;
 		}
 		theader += "</tr>";

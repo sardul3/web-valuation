@@ -152,9 +152,19 @@ def add_learning_outcome(request):
     title = request.POST.get('outcome_title')
     measure_title = request.POST.get('measure_title')
     measure_desc = request.POST.get('measure_desc')
-    measure = Measure(id = 2,measureTitle=measure_title, measureText=measure_desc)
+    measure = Measure(measureTitle=measure_title, measureText=measure_desc)
     outcome = Outcome(title=title, measure=measure)
     measure.save()
     outcome.save()
+
+    return render(request, 'main/cycle.html')
+
+def update_measure(request, measure_id):
+    measure_title = request.POST.get('measure_title')
+    measure_desc = request.POST.get('measure_desc')
+    cutoff_score = request.POST.get('cutoff_score')
+    cutoff_percent = request.POST.get('cutoff_percent')
+
+    measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent)
 
     return render(request, 'main/cycle.html')
