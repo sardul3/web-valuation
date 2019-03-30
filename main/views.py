@@ -101,10 +101,11 @@ def newCycle(request):
     return HttpResponseRedirect(reverse('main:dashboard'))
 
 def cycle(request, cycle_id):
-    outcomes = Outcome.objects.all();
+    outcomes = Outcome.objects.filter(cycle=cycle_id);
     evaluators = Evaluator.objects.all();
+    measures = Measure.objects.all();
 
-    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators}
+    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators, 'measures': measures}
     return render(request, 'main/cycle.html', context)
 
 def upload(request):

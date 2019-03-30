@@ -4,7 +4,7 @@
 		var num_cols = document.getElementById('cols').value;
 		var theader = '<table class = "table table-bordered table-responsive"> <thead> </thead>\n';
 		theader += '<tr> <th scope="col">Criteria</th>';
-		for(var i =0; i<=num_cols-2;i++){
+		for(var i =0; i<=num_rows;i++){
 			theader += `<th scope="col"><input type="text" value = ${i+1} name = "head${i+1}" ></input></th>`;
 		}
 		theader += "</tr>";
@@ -23,5 +23,4 @@
 		}
 		var tfooter = '</table>';
 		document.getElementById('rubricframe').innerHTML = theader + tbody + tfooter;
-		// window.location.href = `http://http://127.0.0.1:8000/rubric?rows=${num_rows}&cols=${num_cols}`;
 	}
