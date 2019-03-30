@@ -65,7 +65,7 @@ class Measure(models.Model):
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)
     cutoff_score = models.FloatField(null=True, blank=True, default=0)
     rubric = models.OneToOneField(Rubric,null=True, blank = True, on_delete = models.CASCADE)
-    test_score = models.OneToOneField(Test_score, null=True, blank = True, on_delete = models.CASCADE)
+    test_score = models.OneToOneField(Test, null=True, blank = True, on_delete = models.CASCADE)
 
 
 class evaluate_rubric(models.Model):
