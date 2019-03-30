@@ -43,7 +43,7 @@
 
 
 <div>
-	<form action = "{%url main:rubric%}" method="POST">
+	<form action = "{%url 'main:rubric'%}" method="POST">
 		{%csrf_token%}
     <button class = "btn btn-lg btn-primary btn-block"> Add Rubric </button>
 	</form>

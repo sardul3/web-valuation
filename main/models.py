@@ -29,14 +29,9 @@ class Measure(models.Model):
     measureText = models.CharField(max_length=200, null=True)
     weight = models.PositiveIntegerField(null=True, default=1)
 
-
-
-
 class Outcome(models.Model):
     title = models.CharField(max_length=200, null=True)
     measure = models.ForeignKey(Measure, on_delete=models.CASCADE)
-
-
 
 
 class Category(models.Model):
