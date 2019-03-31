@@ -11,6 +11,8 @@ import csv
 import codecs
 import io
 
+col = None
+row = None
 def homepage(request):
     return render(request, 'main/homepage.html', {})
 
@@ -23,16 +25,31 @@ def evaluatorhome(request):
 
     return render(request, 'main/evaluatorhome.html', context)
 
+
+def new_rubric(request):
+
+    if request.method == "POST":
+        cols = request.POST.get('cols')
+        rows = request.POST.get('rows')
+        context = {'cols': cols, 'rows': rows}
+        print(rows)
+        print(cols)
+        return render(request, 'main/rubric_create.html', context)
+    return render(request, 'main/rubric_create.html')
+
 @login_required
 def rubric(request):
     if request.method == "POST":
+
         created_by = request.POST.get('created_by')
         title = request.POST.get('title')
         category = request.POST.get('category')
         measure = request.POST.get('measure')
+
+        x = request.POST.get("rows", '')
+        print(x)
         measureText = request.POST.get('measureText')
         weight = request.POST.get('weight')
-
 
         rubric = Rubric(created_by=created_by, title=title, category=Category(categoryTitle=category, measure=Measure(measureTitle=measure, measureText=measureText,weight=weight)))
         rubric.save()
@@ -42,6 +59,7 @@ def rubric(request):
 
         return render(request, 'main/rubric.html', context)
     return render(request, 'main/rubric_create.html')
+
 
 @login_required
 def grade(request):
@@ -104,8 +122,9 @@ def cycle(request, cycle_id):
     outcomes = Outcome.objects.filter(cycle=cycle_id);
     evaluators = Evaluator.objects.all();
     measures = Measure.objects.all();
+    rubrics = Rubric.objects.all();
 
-    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators, 'measures': measures}
+    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators, 'measures': measures, 'rubrics': rubrics}
     return render(request, 'main/cycle.html', context)
 
 def upload(request):
@@ -148,13 +167,10 @@ def add_evaluator(request):
         evaluator.save()
     return HttpResponseRedirect(reverse('main:dashboard'))
 
-def add_learning_outcome(request):
+def add_learning_outcome(request, outcome_id):
     title = request.POST.get('outcome_title')
-    measure_title = request.POST.get('measure_title')
-    measure_desc = request.POST.get('measure_desc')
-    measure = Measure(measureTitle=measure_title, measureText=measure_desc)
-    outcome = Outcome(title=title, measure=measure)
-    measure.save()
+    outcome = Outcome(title=title)
+
     outcome.save()
 
     return render(request, 'main/cycle.html')
@@ -166,5 +182,18 @@ def update_measure(request, measure_id):
     cutoff_percent = request.POST.get('cutoff_percent')
 
     measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent)
+
+    return render(request, 'main/cycle.html')
+
+def new_measure(request, outcome_id):
+    measure_title = request.POST.get('measure_title')
+    measure_desc = request.POST.get('measure_desc')
+    cutoff_score = request.POST.get('cutoff_score')
+    cutoff_percent = request.POST.get('cutoff_percent')
+
+    outcome_found = Outcome.objects.get(id=outcome_id)
+    measure = Measure(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent, outcome=outcome_found)
+
+    measure.save()
 
     return render(request, 'main/cycle.html')

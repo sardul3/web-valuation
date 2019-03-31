@@ -44,10 +44,18 @@ class Outcome(models.Model):
     status = models.BooleanField(default=True)
     cycle = models.ManyToManyField(Cycle)
 
+    def __str__(self):
+        return self.title
+
+
 
 class Test(models.Model):
     test_name = models.CharField(max_length=200, default='Test', primary_key=True)
     created_by = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.test_name
+
 
 class Test_score(models.Model):
     student = models.CharField(max_length=200, null=True)
@@ -67,6 +75,10 @@ class Measure(models.Model):
     rubric = models.OneToOneField(Rubric,null=True, blank = True, on_delete = models.CASCADE)
     test_score = models.OneToOneField(Test, null=True, blank = True, on_delete = models.CASCADE)
 
+    def __str__(self):
+        return self.measureTitle
+
+
 
 class evaluate_rubric(models.Model):
     rubric = models.CharField(max_length=200)
@@ -76,6 +88,3 @@ class evaluate_rubric(models.Model):
     def __str__(self):
         out = self.student + " scored "+ self.grade_score + " in rubric: "+ self.rubric
         return out
-
-
-
