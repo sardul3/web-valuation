@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score
 from django.contrib import messages
@@ -170,7 +170,6 @@ def add_evaluator(request):
 def add_learning_outcome(request, outcome_id):
     title = request.POST.get('outcome_title')
     outcome = Outcome(title=title)
-
     outcome.save()
 
     return render(request, 'main/cycle.html')
@@ -197,3 +196,12 @@ def new_measure(request, outcome_id):
     measure.save()
 
     return render(request, 'main/cycle.html')
+
+def add_rubric_to_measure(request, measure_id):
+    rubric_title = request.POST.get('select_rubric', None)
+    print(rubric_title)
+    rubric_found = Rubric.objects.get(title = rubric_title)
+    measure = Measure.objects.filter(id=measure_id)
+    measure.update(rubric=rubric_found)
+
+    return HttpResponseRedirect(reverse_lazy('main:upload'))

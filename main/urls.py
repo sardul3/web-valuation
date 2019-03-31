@@ -11,6 +11,7 @@ urlpatterns = [
     path('new_rubric', views.new_rubric, name = 'new_rubric'),
     path('upload', views.upload, name = 'upload'),
     path('grade', views.grade, name = 'grade'),
+    path('add_rubric_to_measure/<int:measure_id>', views.add_rubric_to_measure, name = 'add_rubric_to_measure'),
     path('update_measure/<int:measure_id>', views.update_measure, name="update_measure"),
     path('new_measure/<int:outcome_id>', views.new_measure, name="new_measure"),
     path('dashboard', views.dashboard, name = 'dashboard'),

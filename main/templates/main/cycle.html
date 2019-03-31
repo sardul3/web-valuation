@@ -30,6 +30,13 @@
 .btn-link{
     text-decoration: none !important;
   }
+  .fas{
+    padding-top: 10%;
+    margin: 2%;
+  }
+  #title{
+    font-size: 1.5rem;
+  }
 </style>
 <div class = "container" id = "main_content">
 
@@ -54,17 +61,16 @@
 
   <div class = "row">
     <div class = "col col-lg-6 ">
-<h3 class = "list-group-item active">
-     Learning outcomes
-</h3>
-
+    <div class = "d-flex justify-content-between">
+    <span id ="title">  Learning outcomes </span>
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-Add a new learning objective
+ <i class="fas fa-plus"></i>
 </button>
+</div>
+
 <div class="panel-group" id="accordion">
   {%for outcome in outcomes%}
-
 
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -99,11 +105,13 @@ Add a new learning objective
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
+        <div class = "d-flex justify-content-between">
         <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">{{outcome.title}}</a>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
-          Add Measure
+        <button type="button" class="btn btn-primary text-right" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
+          <i class="fas fa-plus"></i>
         </button>
+        </div>
         <div class="modal fade" id="exampleModalCenterNewMeasure{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -161,6 +169,9 @@ Add a new learning objective
       <div class="panel-body">
         <p>{{measure.measureTitle}}</p>
         <p>{{measure.measureText}}</p>
+        {%if measure.rubric%}
+          <p>Tools associated: {{measure.rubric.title}} </p>
+        {%endif%}
 
 
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
@@ -233,11 +244,11 @@ Add a new learning objective
               </button>
             </div>
             <div class="modal-body">
-              <form>
+              <form action = "{%url 'main:add_rubric_to_measure' measure.id%}" method="POST">
                 {%csrf_token%}
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Select from a previous rubric</label>
-                  <select class="form-control" id="exampleFormControlSelect1">
+                  <select class="form-control" id="exampleFormControlSelect1" name ="select_rubric">
                       {%for rubric in rubrics%}
                         <option>{{rubric.title}}</option>
                       {%endfor%}
@@ -246,6 +257,7 @@ Add a new learning objective
 
 
                 <div class="modal-footer">
+                  <a href = "{%url 'main:new_rubric'%}"> create a new one </a>
                   <button type="submit" class="btn btn-primary">Add Rubric</button>
                 </div>
               </form>
@@ -257,14 +269,14 @@ Add a new learning objective
 
 
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddTestScore" data-measure-id = "{{measure.id}}">
-        Add Test scores
+        Add Test
       </button>
 
       <div class="modal fade" id="exampleModalCenterAddTestScore" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add test Score for the measure</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Add test for the measure</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -272,7 +284,11 @@ Add a new learning objective
             <div class="modal-body">
               <form>
                 {%csrf_token%}
-
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1">Add test</label>
+                  <input type="text" class="form-control" id="exampleInputPassword1"
+                         placeholder="Test name" name = "test_name">
+                </div>
 
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Add Test</button>
