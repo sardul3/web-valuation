@@ -37,8 +37,12 @@
   #title{
     font-size: 1.5rem;
   }
+  .objs{
+    border: 3px solid black;
+    padding: 0.7%;
+  }
 </style>
-<div class = "container" id = "main_content">
+<div class = "container-fluid" id = "main_content">
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +64,7 @@
 </nav>
 
   <div class = "row">
-    <div class = "col col-lg-6 ">
+    <div class = "col col-lg-6 objs ">
     <div class = "d-flex justify-content-between">
     <span id ="title">  Learning outcomes </span>
 
@@ -170,7 +174,10 @@
         <p>{{measure.measureTitle}}</p>
         <p>{{measure.measureText}}</p>
         {%if measure.rubric%}
-          <p>Tools associated: {{measure.rubric.title}} </p>
+          Tools associated: {{measure.rubric.title}}
+          <button>Add students</button>
+          <button>Assign evaluators</button>
+          <br />
         {%endif%}
 
 
@@ -282,7 +289,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
+              <form action = "{%url 'main:add_test_to_measure' measure.id%}" method="POST">
                 {%csrf_token%}
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Add test</label>

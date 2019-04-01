@@ -25,15 +25,12 @@
 	<form >
     <div class = "row">
       <div class = "col col-lg-4">
-		      <input placeholder="enter number of rows" class = "form-control" type="text" name="rows" id="rows"/><br />
+		      <input placeholder="enter number of rows" class = "form-control" type="text" name="rows" id="rows"><br />
       </div>
       <div class = "col col-lg-4">
-		      <input placeholder="enter number of columns" class = "form-control" type="text" name="cols" id="cols"/><br/>
+		      <input placeholder="enter number of columns" class = "form-control" type="text" name="cols" id="cols" onchange='createTable();'><br/>
       </div>
-      <div class = "col col-lg-4">
-		      <input class = "btn btn-primary btn-block" name="create" type="submit" value="Create" id = "main_generate" onclick='createTable();' />
 
-      </div>
 
 
 		</div>
@@ -45,9 +42,8 @@
 	  <div>
 			<form action = "{%url 'main:rubric'%}" method="POST">
 				{%csrf_token%}
-		    <button class = "btn btn-lg btn-primary btn-block"> Add Rubric </button>
-			rows -	{{rows}}
-			cols -	{{cols}}
+		    <button class = "btn btn-lg btn-primary btn-block" type="submit"> Add Rubric </button>
+		
 			</form>
 		</div>
 	</div>

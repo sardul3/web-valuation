@@ -15,7 +15,7 @@
 			tbody += '<tr>';
 			for( var j=0; j<num_cols;j++)
 			{
-				tbody += `<td contenteditable> <input type = "text" id= "category" name = ${i}${j}  />`;
+				tbody += `<td contenteditable> <input type = "text" id= "category" name = ${i}${j}  >`;
 
 				tbody += '</td>'
 			}

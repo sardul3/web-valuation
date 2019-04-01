@@ -4,15 +4,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test
 from django.contrib import messages
 from .forms import RegisterForm
 import csv
 import codecs
 import io
 
-col = None
-row = None
 def homepage(request):
     return render(request, 'main/homepage.html', {})
 
@@ -28,36 +26,27 @@ def evaluatorhome(request):
 
 def new_rubric(request):
 
-    if request.method == "POST":
-        cols = request.POST.get('cols')
-        rows = request.POST.get('rows')
-        context = {'cols': cols, 'rows': rows}
-        print(rows)
-        print(cols)
-        return render(request, 'main/rubric_create.html', context)
     return render(request, 'main/rubric_create.html')
 
 @login_required
 def rubric(request):
-    if request.method == "POST":
+    rows = int(request.GET.get('rows'))
+    cols = int(request.GET.get('cols'))
 
-        created_by = request.POST.get('created_by')
-        title = request.POST.get('title')
-        category = request.POST.get('category')
-        measure = request.POST.get('measure')
+    title_found = request.GET.get('title')
+    rubric = Rubric.objects.create(title=title_found)
 
-        x = request.POST.get("rows", '')
-        print(x)
-        measureText = request.POST.get('measureText')
-        weight = request.POST.get('weight')
+    for row in range(rows):
+        for col in range(cols):
+            key = str(row)+str(col)
+            print(key)
+            content = request.GET.get(key)
+            print(content)
+            category = Category(categoryTitle=content)
+            category.save()
+            rubric.category.add(category)
 
-        rubric = Rubric(created_by=created_by, title=title, category=Category(categoryTitle=category, measure=Measure(measureTitle=measure, measureText=measureText,weight=weight)))
-        rubric.save()
 
-        rubrics = Rubric.objects.filter(title=title)
-        context = {'rubrics':rubrics}
-
-        return render(request, 'main/rubric.html', context)
     return render(request, 'main/rubric_create.html')
 
 
@@ -199,9 +188,16 @@ def new_measure(request, outcome_id):
 
 def add_rubric_to_measure(request, measure_id):
     rubric_title = request.POST.get('select_rubric', None)
-    print(rubric_title)
     rubric_found = Rubric.objects.get(title = rubric_title)
     measure = Measure.objects.filter(id=measure_id)
     measure.update(rubric=rubric_found)
+
+    return HttpResponseRedirect(reverse_lazy('main:upload'))
+
+def add_test_to_measure(request, measure_id):
+    test_name_found = request.POST.get('test_name')
+    measure = Measure.objects.filter(id=measure_id)
+    test = Test.objects.create(test_name = test_name_found, created_by= request.user.username )
+    measure.update(test_score=test)
 
     return HttpResponseRedirect(reverse_lazy('main:upload'))
