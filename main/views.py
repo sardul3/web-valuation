@@ -32,20 +32,23 @@ def new_rubric(request):
 def rubric(request):
     rows = int(request.GET.get('rows'))
     cols = int(request.GET.get('cols'))
+    print(rows)
+    print(cols)
 
     title_found = request.GET.get('title')
     rubric = Rubric.objects.create(title=title_found)
-
+    print(rubric)
     for row in range(rows):
         for col in range(cols):
             key = str(row)+str(col)
             print(key)
             content = request.GET.get(key)
             print(content)
-            category = Category(categoryTitle=content)
-            category.save()
+            category = Category.objects.create(categoryTitle=content)
+            print(category)
             rubric.category.add(category)
 
+    print(rubric)
 
     return render(request, 'main/rubric_create.html')
 
@@ -190,8 +193,7 @@ def new_measure(request, outcome_id):
 def add_rubric_to_measure(request, measure_id):
     rubric_title = request.POST.get('select_rubric', None)
     rubric_found = Rubric.objects.get(title = rubric_title)
-    measure = Measure.objects.filter(id=measure_id)
-    measure.update(rubric=rubric_found)
+    measure = Measure.objects.filter(id=measure_id).update(rubric=rubric_found)
 
     return HttpResponseRedirect(reverse_lazy('main:upload'))
 

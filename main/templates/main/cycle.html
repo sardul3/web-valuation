@@ -237,11 +237,11 @@
         </div>
       </div>
 
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
         Add Rubric
       </button>
 
-      <div class="modal fade" id="exampleModalCenterAddRubric" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal fade" id="exampleModalCenterAddRubric{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -251,7 +251,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form action = "{%url 'main:add_rubric_to_measure' measure.id%}" method="POST">
+              <form action = "{%url 'main:add_rubric_to_measure' measure.id %}" method="POST">
                 {%csrf_token%}
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Select from a previous rubric</label>
