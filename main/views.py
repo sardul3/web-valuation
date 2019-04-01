@@ -181,9 +181,7 @@ def new_measure(request, outcome_id):
 
     outcome_found = Outcome.objects.get(id=outcome_id)
     measure = Measure(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent, outcome=outcome_found)
-
     measure.save()
-
     return render(request, 'main/cycle.html')
 
 def add_rubric_to_measure(request, measure_id):
@@ -194,6 +192,7 @@ def add_rubric_to_measure(request, measure_id):
 
     return HttpResponseRedirect(reverse_lazy('main:upload'))
 
+<<<<<<< HEAD
 def add_test_to_measure(request, measure_id):
     test_name_found = request.POST.get('test_name')
     measure = Measure.objects.filter(id=measure_id)
@@ -201,3 +200,8 @@ def add_test_to_measure(request, measure_id):
     measure.update(test_score=test)
 
     return HttpResponseRedirect(reverse_lazy('main:upload'))
+=======
+def delete_measure(request, measure_id):
+    Measure.objects.filter(id=measure_id).delete()
+    return render(request, 'main/cycle.html')
+>>>>>>> 940016261c8b51db5cf658d59af0c8d677df9f92

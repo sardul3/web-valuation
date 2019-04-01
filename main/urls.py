@@ -15,6 +15,7 @@ urlpatterns = [
     path('add_test_to_measure/<int:measure_id>', views.add_test_to_measure, name = 'add_test_to_measure'),
     path('update_measure/<int:measure_id>', views.update_measure, name="update_measure"),
     path('new_measure/<int:outcome_id>', views.new_measure, name="new_measure"),
+    path('delete_measure/<int:measure_id>', views.delete_measure, name="delete_measure"),
     path('dashboard', views.dashboard, name = 'dashboard'),
     path('newCycle', views.newCycle, name = 'newCycle'),
     path('cycle/<int:cycle_id>', views.cycle, name = 'cycle'),
