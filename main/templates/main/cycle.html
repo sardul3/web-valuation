@@ -73,9 +73,6 @@
 </button>
 </div>
 
-<div class="panel-group" id="accordion">
-  {%for outcome in outcomes%}
-
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -86,7 +83,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action = "{%url 'main:add_learning_outcome' cycle_id outcome.id  %}" method="POST">
+          <form action = "{%url 'main:add_learning_outcome' cycle_id%}" method="POST">
             {%csrf_token%}
 
             <div class="form-group">
@@ -105,6 +102,10 @@
   </div>
 
   </div>
+
+<div class="panel-group" id="accordion">
+  {%for outcome in outcomes%}
+
 
   <div class="panel panel-default">
     <div class="panel-heading">

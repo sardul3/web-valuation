@@ -25,7 +25,6 @@ def evaluatorhome(request):
 
 
 def new_rubric(request):
-
     return render(request, 'main/rubric_create.html')
 
 @login_required
@@ -159,7 +158,7 @@ def add_evaluator(request):
         evaluator.save()
     return HttpResponseRedirect(reverse('main:dashboard'))
 
-def add_learning_outcome(request, cycle_id, outcome_id):
+def add_learning_outcome(request, cycle_id):
     title = request.POST.get('outcome_title')
     outcome = Outcome(title=title)
     outcome.save()
@@ -167,7 +166,7 @@ def add_learning_outcome(request, cycle_id, outcome_id):
     outcome.cycle.add(cycle_found)
 
 
-    return render(request, 'main/cycle.html')
+    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
 def update_measure(request, measure_id):
     measure_title = request.POST.get('measure_title')
