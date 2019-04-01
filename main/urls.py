@@ -20,7 +20,7 @@ urlpatterns = [
     path('newCycle', views.newCycle, name = 'newCycle'),
     path('cycle/<int:cycle_id>', views.cycle, name = 'cycle'),
     path('upload', views.upload, name='upload'),
-    path('add_learning_outcome/<int:outcome_id>', views.add_learning_outcome, name="add_learning_outcome"),
+    path('add_learning_outcome/<int:cycle_id>/<int:outcome_id>', views.add_learning_outcome, name="add_learning_outcome"),
     path('add_evaluator', views.add_evaluator, name="add_evaluator"),
     path('register', views.register, name='register'),
     path('', auth_views.LoginView.as_view(template_name='main/login.html'), name='login'),

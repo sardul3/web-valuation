@@ -156,10 +156,13 @@ def add_evaluator(request):
         evaluator.save()
     return HttpResponseRedirect(reverse('main:dashboard'))
 
-def add_learning_outcome(request, outcome_id):
+def add_learning_outcome(request, cycle_id, outcome_id):
     title = request.POST.get('outcome_title')
     outcome = Outcome(title=title)
     outcome.save()
+    cycle_found = Cycle.objects.get(id=cycle_id)
+    outcome.cycle.add(cycle_found)
+
 
     return render(request, 'main/cycle.html')
 
@@ -192,16 +195,10 @@ def add_rubric_to_measure(request, measure_id):
 
     return HttpResponseRedirect(reverse_lazy('main:upload'))
 
-<<<<<<< HEAD
-def add_test_to_measure(request, measure_id):
-    test_name_found = request.POST.get('test_name')
-    measure = Measure.objects.filter(id=measure_id)
-    test = Test.objects.create(test_name = test_name_found, created_by= request.user.username )
-    measure.update(test_score=test)
-
-    return HttpResponseRedirect(reverse_lazy('main:upload'))
-=======
 def delete_measure(request, measure_id):
     Measure.objects.filter(id=measure_id).delete()
     return render(request, 'main/cycle.html')
->>>>>>> 940016261c8b51db5cf658d59af0c8d677df9f92
+
+def add_test_to_measure(request, measure_id):
+
+    return HttpResponseRedirect(reverse_lazy('main:upload'))

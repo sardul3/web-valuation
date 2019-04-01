@@ -86,7 +86,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action = "{%url 'main:add_learning_outcome' outcome.id %}" method="POST">
+          <form action = "{%url 'main:add_learning_outcome' cycle_id outcome.id  %}" method="POST">
             {%csrf_token%}
 
             <div class="form-group">
