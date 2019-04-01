@@ -88,7 +88,7 @@
         <div class="modal-body">
           <form action = "{%url 'main:add_learning_outcome' cycle_id outcome.id  %}" method="POST">
             {%csrf_token%}
-
+            <input type="hidden" id="url" name = "url" value={{request.path}}>
             <div class="form-group">
               <label for="exampleFormControlTextarea1">Title</label>
               <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
@@ -127,8 +127,9 @@
               </div>
               <div class="modal-body">
                 <form action = "{%url 'main:new_measure' outcome.id%}" method="POST">
-                  {%csrf_token%}
 
+                  {%csrf_token%}
+                  <input type="hidden" id="url" name = "url" value={{request.path}}>
                   <div class="form-group">
                     <label for="exampleFormControlTextarea1">Measure Title</label>
                     <input type="text" class="form-control" id="exampleInputPassword1"
@@ -197,7 +198,7 @@
             <div class="modal-body">
               <form action="{%url 'main:update_measure' measure.id%}" method="POST">
                 {%csrf_token%}
-
+                <input type="hidden" id="url" name = "url" value={{request.path}}>
                 <div class="form-group">
                   <label for="exampleFormControlTextarea1">Measure Title</label>
                   <input type="text" class="form-control" id="exampleInputPassword1"
@@ -320,6 +321,7 @@
             <div class="modal-body">
               <form action = "{%url 'main:delete_measure' measure.id%}" method="POST">
                 {%csrf_token%}
+                <input type="hidden" id="url" name = "url" value={{request.path}}>
                 Are you sure? <br/>
                   <button type="submit" class="btn btn-primary">Delete</button>
                 </div>

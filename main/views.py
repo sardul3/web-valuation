@@ -166,7 +166,6 @@ def add_learning_outcome(request, cycle_id, outcome_id):
     cycle_found = Cycle.objects.get(id=cycle_id)
     outcome.cycle.add(cycle_found)
 
-
     return render(request, 'main/cycle.html')
 
 def update_measure(request, measure_id):
@@ -174,9 +173,9 @@ def update_measure(request, measure_id):
     measure_desc = request.POST.get('measure_desc')
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
-
     measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent)
-
+    url = request.POST.get("url")
+    return redirect(url)
     return render(request, 'main/cycle.html')
 
 def new_measure(request, outcome_id):
@@ -188,6 +187,8 @@ def new_measure(request, outcome_id):
     outcome_found = Outcome.objects.get(id=outcome_id)
     measure = Measure(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent, outcome=outcome_found)
     measure.save()
+    url = request.POST.get("url")
+    return redirect(url)
     return render(request, 'main/cycle.html')
 
 def add_rubric_to_measure(request, measure_id):
@@ -199,6 +200,8 @@ def add_rubric_to_measure(request, measure_id):
 
 def delete_measure(request, measure_id):
     Measure.objects.filter(id=measure_id).delete()
+    url = request.POST.get("url")
+    return redirect(url)
     return render(request, 'main/cycle.html')
 
 def add_test_to_measure(request, measure_id):
