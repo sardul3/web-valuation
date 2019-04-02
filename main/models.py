@@ -22,21 +22,22 @@ class Cycle(models.Model):
     def __str_(self):
         return self.year
 
-
-class Category(models.Model):
-    categoryTitle = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.categoryTitle
-
 class Rubric(models.Model):
     title = models.CharField(max_length=200, blank=True, default="Untitled", primary_key=True)
     created_by = models.CharField(max_length=200)
     assigned_to = models.ManyToManyField(Evaluator)
-    category = models.ManyToManyField(Category)
 
     def __str__(self):
         return self.title
+
+
+class Category(models.Model):
+    categoryTitle = models.CharField(max_length=200)
+    rubric = models.ForeignKey(Rubric, null=True, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return self.categoryTitle
+
 
 
 class Outcome(models.Model):
@@ -72,8 +73,8 @@ class Measure(models.Model):
     outcome = models.ForeignKey(Outcome, null=True, on_delete = models.CASCADE)
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)
     cutoff_score = models.FloatField(null=True, blank=True, default=0)
-    rubric = models.OneToOneField(Rubric,null=True, blank = True, on_delete = models.CASCADE)
-    test_score = models.OneToOneField(Test, null=True, blank = True, on_delete = models.CASCADE)
+    rubric = models.ForeignKey(Rubric,null=True, blank = True, on_delete = models.CASCADE)
+    test_score = models.ForeignKey(Test, null=True, blank = True, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.measureTitle
