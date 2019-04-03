@@ -154,15 +154,15 @@
                   <input type="number" class="form-control" id="exampleInputPassword1"
                          placeholder="cutoff percentage" name = "cutoff_percent">
                 </div>
-				
-			<label for="exampleFormControlTextarea1">Select Tool Type</label> 
-			  <select class="custom-select" name="tool_selection">
-				<option selected>Select Tool</option>
-				<option value="1">Rubric</option>
-				<option value ="2">Exam Scores</option>
-				<option value="3">Standardized Test Scores</option>
-				<option value="4">Course Score</option>
-				</select>
+
+          			<label for="exampleFormControlTextarea1">Select Tool Type</label>
+          			  <select class="custom-select" name="tool_selection">
+          				<option selected>Select Tool</option>
+          				<option value="1">Rubric</option>
+          				<option value ="2">Exam Scores</option>
+          				<option value="3">Standardized Test Scores</option>
+          				<option value="4">Course Score</option>
+          				</select>
 
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -186,8 +186,58 @@
         <p>{{measure.measureText}}</p>
         {%if measure.rubric%}
           Tools associated: {{measure.rubric.title}}
-          <button>Add students</button>
-          <button>Assign evaluators</button>
+
+
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}" data-measure-id = "{{measure.id}}">
+            Add Students
+          </button>
+
+          <div class="modal fade" id="exampleModalCenterStudentUpload{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Add Students to measure: {{measure.measureTitle}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{%url 'main:add_individual_student' cycle_id%}" method="POST">
+                    {%csrf_token%}
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Student Name</label>
+                      <input type="text" class="form-control" id="exampleInputPassword1"
+                             placeholder="name of the student" name = "student_name">
+                      <button type = "submit" class = "btn btn-primary"> Add </button>
+                    </div>
+                  </form>
+                  <hr/>
+                  <label for="exampleFormControlTextarea1">Upload a csv file</label>
+
+                  <small id="emailHelp" class="form-text text-muted">instructions go here (file formating).</small>
+
+                  <form action="{% url 'main:upload_student' cycle_id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                      <input type="file" name="csv_file" />
+                      <input type="submit" value="Upload" class = "btn btn-primary" />
+
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form class="form-inline" action = "{%url 'main:add_evaluator' cycle_id %}" method = "POST">
+            {%csrf_token%}
+            <div class="form-group mb-2">
+                <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name">
+           </div>
+            <div class="form-group mb-2">
+                <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+           </div>
+            <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+          </form>
           <br />
         {%endif%}
 
@@ -235,7 +285,7 @@
                        placeholder="Measure title" name = "cutoff_percent"
                        value = "{{measure.cutoff_percentage}}">
               </div>
-			  
+
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
@@ -260,7 +310,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form action = "{%url 'main:add_rubric_to_measure' measure.id %}" method="POST">
+              <form action = "{%url 'main:add_rubric_to_measure' measure.id cycle_id %}" method="POST">
                 {%csrf_token%}
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Select from a previous rubric</label>
@@ -273,7 +323,7 @@
 
 
                 <div class="modal-footer">
-                  <a href = "{%url 'main:new_rubric'%}"> create a new one </a>
+                  <a href = "{%url 'main:test_rubric'%}"> create a new one </a>
                   <button type="submit" class="btn btn-primary">Add Rubric</button>
                 </div>
               </form>
@@ -356,27 +406,6 @@
 </div>
 
 </div>
-<!-- <div class = "col col-lg-6">
-
-  <ul class="list-group">
-  <li class="list-group-item active ">Evaluators</li>
-  {%for evaluator in evaluators %}
-    <li class="list-group-item">{{evaluator.name}}</li>
-  {%endfor%}
-
-  <li class="list-group-item">
-    <form class="form-inline" method="POST" action ="{%url 'main:add_evaluator'%}">
-      {% csrf_token %}
-      <div class="form-group mb-2 mr-3">
-        <input type="text" name = "evaluator_name" class="form-control"  placeholder="name">
-        <input type="email" name = "evaluator_email" class="form-control" placeholder="email">
-      </div>
-      <button type="submit" class="btn btn-primary btn-block mb-2">Invite</button>
-  </form>
-
-  </li>
-</ul>
-</div> -->
 
 
 

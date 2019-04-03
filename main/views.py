@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student
 from django.contrib import messages
 from .forms import RegisterForm
 import csv
@@ -124,11 +124,6 @@ def register(request):
         form = RegisterForm()
         return render(request, 'main/register.html', {'form': form})
 
-def add_evaluator(request):
-    if request.method == 'POST':
-        evaluator = Evaluator(request.POST.get('evaluator_email'))
-        evaluator.save()
-    return HttpResponseRedirect(reverse('main:dashboard'))
 
 def add_learning_outcome(request, cycle_id):
     title = request.POST.get('outcome_title')
@@ -163,12 +158,12 @@ def new_measure(request, outcome_id):
     return redirect(url)
     return render(request, 'main/cycle.html')
 
-def add_rubric_to_measure(request, measure_id):
+def add_rubric_to_measure(request, measure_id, cycle_id):
     rubric_title = request.POST.get('select_rubric', None)
     rubric_found = Rubric.objects.get(title = rubric_title)
     measure = Measure.objects.filter(id=measure_id).update(rubric=rubric_found)
 
-    return HttpResponseRedirect(reverse_lazy('main:upload'))
+    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
 def delete_measure(request, measure_id):
     Measure.objects.filter(id=measure_id).delete()
@@ -213,3 +208,28 @@ def  rubric_render(request):
     categories = Category.objects.all()
     context = {'rubric': rubrics, 'categories':categories, 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col)}
     return render(request, 'main/rubric_render.html',context)
+
+def add_individual_student(request, cycle_id):
+    student_name = request.POST.get('student_name')
+    student = Student(name=student_name)
+    student.save()
+    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+
+def upload_student(request, cycle_id):
+    if request.method=='POST' and request.FILES:
+        csvfile = request.FILES['csv_file']
+        datset = csvfile.read().decode("UTF-8")
+        io_string = io.StringIO(datset)
+
+        for column in csv.reader(io_string, delimiter=",", quotechar="|"):
+            student = Student(name=column[0], classification=column[1])
+            student.save()
+        return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+
+    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+
+def add_evaluator(request, cycle_id):
+    if request.method == 'POST':
+        evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'))
+        evaluator.save()
+    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
