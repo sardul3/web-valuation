@@ -42,46 +42,29 @@
 </div>
 
 <div class = "container" id = "main_content" style="margin-top:10px;">
+  <h1>Title: {{rubric.title}}</h1>
+  <table class = "table table-bordered table-responsive">
+  {% for x in row_num %}
+    <tr>
+    {% for y in row_col %}
+      {% for category in categories %}
+        {%if category.rubric == rubric %}
+          {% if category.index_x == x and category.index_y == y %}
+            <td> {{category.categoryTitle}} </td>
+          {%endif%}
+        {%endif%}
+      {%endfor%}
+    {% endfor %}
 
-      <table  id="rubricbase" class="table table-bordered">
-          <tr id=headerRow>
-            <th width="10%">Title</th>
-               <th width="40%">Citeria</th>
-               <th width="10%">Measure</th>
-               <th width="20%">MeasureText</th>
-               <th width="10%"> Score </th>
-          </tr>
-          <tr id="second_row">
-  {% for r in rubrics %}
-  <td class="category">
-    <p>{{r.title}}</p>
-  </td>
-  <td class="category">
-    {% for cat in r.category.all %}
-      <p>{{cat.categoryTitle}}</p>
-    {%endfor%}
-  </td>
-  <td class="category">
-          {% for mea in measures.all %}
-            <p>{{mea}}</p>
-          {%endfor%}
+    {%if x <= 0 %}
+    <td> Score </td>
+    {%else%}
+  <td>  <input type = "number"  name = "score{{x}}"> </td>
+    {%endif%}
 
-  </td>
-  <td class="category">
-    {% for mea in measures.all %}
-      <p>{{mea.measureText}}</p>
-    {%endfor%}
-  </td>
-
-  <td class="category">
-    {% for cat in r.category.all %}
-        <input type = "number" name = "score{{cat.id}}" min="1" max="5">
-    {%endfor%}
-
-  </td>
     </tr>
-  {% endfor %}
-</table>
+  {%endfor%}
+  </table>
 <button type = "submit" class = "btn btn-primary btn-lg"> Evaluate </button>
 </form>
 </div>

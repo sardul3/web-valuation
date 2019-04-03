@@ -26,11 +26,13 @@ def evaluatorhome(request):
 
 @login_required
 def grade(request):
-    rubrics = Rubric.objects.all()
+    rubrics = Rubric.objects.filter(id=6)[0]
     measures = Measure.objects.all()
     students = Student.objects.all()
     evaluations = evaluate_rubric.objects.all()
-    context = {'rubrics':rubrics, 'students': students, 'measures':measures, 'evaluations':evaluations}
+    categories = Category.objects.all()
+    context = {'rubric':rubrics, 'students': students, 'measures':measures, 'evaluations':evaluations
+            , 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col), 'categories':categories}
 
     if request.method == 'POST':
         rubrics = Rubric.objects.all()

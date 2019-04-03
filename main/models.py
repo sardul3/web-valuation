@@ -44,14 +44,6 @@ class Category(models.Model):
 
 
 
-class Category(models.Model):
-    categoryTitle = models.CharField(max_length=200)
-    rubric = models.ForeignKey(Rubric, null=True, on_delete = models.CASCADE)
-
-    def __str__(self):
-        return self.categoryTitle
-
-
 
 class Outcome(models.Model):
     title = models.CharField(max_length=200, default='', null=True)
