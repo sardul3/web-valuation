@@ -154,6 +154,15 @@
                   <input type="number" class="form-control" id="exampleInputPassword1"
                          placeholder="cutoff percentage" name = "cutoff_percent">
                 </div>
+				
+			<label for="exampleFormControlTextarea1">Select Tool Type</label> 
+			  <select class="custom-select" name="tool_selection">
+				<option selected>Select Tool</option>
+				<option value="1">Rubric</option>
+				<option value ="2">Exam Scores</option>
+				<option value="3">Standardized Test Scores</option>
+				<option value="4">Course Score</option>
+				</select>
 
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -226,9 +235,7 @@
                        placeholder="Measure title" name = "cutoff_percent"
                        value = "{{measure.cutoff_percentage}}">
               </div>
-
-
-
+			  
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
