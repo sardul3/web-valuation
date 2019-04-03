@@ -12,23 +12,29 @@
 			{
 				if(i==0 && j==0){
 					tbody += '<th width="30%">';
-					tbody += 'Criteria';
+					tbody +='<textarea name ="'+i;
+                    tbody += ''+j+'" id="'+i;
+                    tbody += ''+j+'">Criteria</textarea>';
 					tbody += '</th>';
 				}
-				else if(i==0 && j>0 && j<num_cols-1){
+				else if(i==0 && j>0 && j<=num_cols-1){
 					tbody += '<th>'
-					tbody += j;
+					tbody +='<textarea name ="'+i;
+                    tbody += ''+j+'" id="'+i;
+                    tbody += ''+j+'"></textarea>';
 					tbody += '</th>';
 				}
-				else if(i==0 && j==num_cols-1){
+				/*else if(i==0 && j==num_cols-1){
 					tbody += '<th>';
 					tbody += 'Score';
 					tbody += '</th>';
-				}
+				}*/
 				else{
-				tbody += '<td height = "40%" contenteditable>';
-				tbody += ""
-				tbody += '</td>'
+				tbody += '<td height = "40%">';
+				tbody +='<textarea name ="'+i;
+                tbody += ''+j+'" id="'+i;
+                tbody += ''+j+'"></textarea>';
+				tbody += '</td>';
 				}
 			}
 			tbody += '</tr>\n';
