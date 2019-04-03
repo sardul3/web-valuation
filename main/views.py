@@ -24,34 +24,6 @@ def evaluatorhome(request):
     return render(request, 'main/evaluatorhome.html', context)
 
 
-def new_rubric(request):
-    return render(request, 'main/rubric_create.html')
-
-@login_required
-def rubric(request):
-    rows = int(request.GET.get('rows'))
-    cols = int(request.GET.get('cols'))
-    print(rows)
-    print(cols)
-
-    title_found = request.GET.get('title')
-    rubric = Rubric.objects.create(title=title_found)
-    print(rubric)
-    for row in range(rows):
-        for col in range(cols):
-            key = str(row)+str(col)
-            print(key)
-            content = request.GET.get(key)
-            print(content)
-            category = Category.objects.create(categoryTitle=content)
-            print(category)
-            rubric.category.add(category)
-
-    print(rubric)
-
-    return render(request, 'main/rubric_create.html')
-
-
 @login_required
 def grade(request):
     rubrics = Rubric.objects.all()
@@ -207,3 +179,37 @@ def delete_measure(request, measure_id):
 def add_test_to_measure(request, measure_id):
 
     return HttpResponseRedirect(reverse_lazy('main:upload'))
+
+def test_rubric(request):
+
+    rows = 0
+    cols = 0
+    if request.method == 'POST':
+        rows = int(request.POST.get('rows'))
+        cols = int(request.POST.get('cols'))
+        print(rows)
+        print(cols)
+        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':range(cols),'row_num':rows, 'col_num': cols})
+    return render(request, 'main/test_rubric.html')
+
+
+def created_test_rubric(request):
+    if request.method == 'POST':
+        row_num = int(request.POST.get('row_num'))
+        row_col = int(request.POST.get('col_num'))
+        rubric_title = request.POST.get("rubric_title")
+        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col)
+        rubric_new.save()
+        for x in range(row_num):
+            for y in range(row_col):
+                text = request.POST.get(str(x)+str(y))
+                category = Category(categoryTitle=text,index_x=x,index_y=y,rubric=rubric_new)
+                category.save()
+
+    return render(request, 'main/test_rubric.html')
+
+def  rubric_render(request):
+    rubrics = Rubric.objects.filter(id=4)[0]
+    categories = Category.objects.all()
+    context = {'rubric': rubrics, 'categories':categories, 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col)}
+    return render(request, 'main/rubric_render.html',context)

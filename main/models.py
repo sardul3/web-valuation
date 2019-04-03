@@ -22,21 +22,26 @@ class Cycle(models.Model):
     def __str_(self):
         return self.year
 
+class Rubric(models.Model):
+    title = models.CharField(max_length=200, blank=True, default="Untitled")
+    max_row = models.PositiveIntegerField(null=True)
+    max_col = models.PositiveIntegerField(null=True)
+    created_by = models.CharField(max_length=200)
+    assigned_to = models.ManyToManyField(Evaluator)
+
+    def __str__(self):
+        return self.title
+
 
 class Category(models.Model):
     categoryTitle = models.CharField(max_length=200)
+    index_x = models.PositiveIntegerField(null=True)
+    index_y = models.PositiveIntegerField(null=True)
+    rubric = models.ForeignKey(Rubric, null=True, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.categoryTitle
 
-class Rubric(models.Model):
-    title = models.CharField(max_length=200, blank=True, default="Untitled", primary_key=True)
-    created_by = models.CharField(max_length=200)
-    assigned_to = models.ManyToManyField(Evaluator)
-    category = models.ManyToManyField(Category)
-
-    def __str__(self):
-        return self.title
 
 
 class Outcome(models.Model):
@@ -50,7 +55,7 @@ class Outcome(models.Model):
 
 
 class Test(models.Model):
-    test_name = models.CharField(max_length=200, default='Test', primary_key=True)
+    test_name = models.CharField(max_length=200, default='Test')
     created_by = models.CharField(max_length=200)
 
     def __str__(self):
@@ -72,8 +77,8 @@ class Measure(models.Model):
     outcome = models.ForeignKey(Outcome, null=True, on_delete = models.CASCADE)
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)
     cutoff_score = models.FloatField(null=True, blank=True, default=0)
-    rubric = models.OneToOneField(Rubric,null=True, blank = True, on_delete = models.CASCADE)
-    test_score = models.OneToOneField(Test, null=True, blank = True, on_delete = models.CASCADE)
+    rubric = models.ForeignKey(Rubric,null=True, blank = True, on_delete = models.CASCADE)
+    test_score = models.ForeignKey(Test, null=True, blank = True, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.measureTitle

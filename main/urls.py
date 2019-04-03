@@ -7,8 +7,11 @@ app_name = 'main'
 urlpatterns = [
     #path('', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
-    path('rubric/', views.rubric, name = 'rubric'),
-    path('new_rubric', views.new_rubric, name = 'new_rubric'),
+
+    path('test_rubric/', views.test_rubric, name = 'test_rubric'),
+    path('created_test_rubric/', views.created_test_rubric, name = 'created_test_rubric'),
+    path('rubric_render/', views.rubric_render, name = 'rubric_render'),
+
     path('upload', views.upload, name = 'upload'),
     path('grade', views.grade, name = 'grade'),
     path('add_rubric_to_measure/<int:measure_id>', views.add_rubric_to_measure, name = 'add_rubric_to_measure'),

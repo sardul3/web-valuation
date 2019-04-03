@@ -14,47 +14,40 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 	<script type="text/javascript" src = "{%static 'js/script.js'%}"></script>
 
+<style>
+textarea{
+	font-size: 1rem;
+}
+</style>
 </head>
 
 <body>
 
   <div class = "container" id = "main_content">
+    <form action = "{% url 'main:created_test_rubric'%}" method = "POST">
+      {%csrf_token%}
 
-	<h1>Create Rubrics</h1>
+			<div class="form-group">
+			    <label for="exampleInputPassword1">Rubric Title</label>
+			    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="title"
+				name="rubric_title">
+			</div>
+        <table class = "table table-bordered table-responsive" style = "width:100%;">
 
-	<form >
-    <div class = "row">
-      <div class = "col col-lg-4">
-		      <input placeholder="enter number of rows" class = "form-control" type="text" name="rows" id="rows"><br />
-      </div>
-      <div class = "col col-lg-4">
-		      <input placeholder="enter number of columns" class = "form-control" type="text" name="cols" id="cols" onchange='createTable();'><br/>
-      </div>
+      {%for row in rows%}
+      <tr>
+        {%for col in cols%}
+          <td> <textarea type = "text" name = "{{row}}{{col}}"></textarea></td>
+        {%endfor%}
+        </tr>
+      {%endfor%}
+			  </table>
+      <input type = "hidden" value = "{{row_num}}" name = "row_num">
+      <input type = "hidden" value = "{{col_num}}" name = "col_num">
 
+      <button type = "submit"> Add Rubric </button>
 
-
-		</div>
-		<div  id="rubricframe">
-
-		</div>
-
-
-	  <div>
-			<form action = "{%url 'main:rubric'%}" method="POST">
-				{%csrf_token%}
-		    <button class = "btn btn-lg btn-primary btn-block" type="submit"> Add Rubric </button>
-		
-			</form>
-		</div>
-	</div>
-
-	</form>
-	<br>
-
-
-
-
-
+    </form>
 
 
 </body>
