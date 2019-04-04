@@ -25,25 +25,37 @@
        <i class="fas fa-plus"></i>
       </button>
     </h1>
+    <br />
       <div class="list-group">
       {%for outcome in outcomes%}
+      <div class = "d-flex justify-content-center">
       <div class="d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
-
               <h5 class="mb-1 p-1">{{outcome.title}}</h5>
-
           </a>
-          </div>
-          <button class="btn btn-lg" >
+
+      </div>
+      <div style = "margin-left: 10px;">
+        <div class="btn-group">
+          <a  href = "" class = "btn  btn-light">
             <span style="font-size: 2em; color: black;">
               <i class="far fa-edit"></i>
           </span>
-          </button>
+          <//a>
+
+          <a  href = "#" class = "btn  btn-light" style = "margin-left: 5px;">
+            <span style="font-size: 2em; color: black;">
+              <i class="far fa-trash-alt"></i>
+          </span>
+          </a>
+      </div>
+
+      </div>
+      </div>
 
 
 
-
-          {%endfor%}
+      {%endfor%}
   </div>
     </div>
 
