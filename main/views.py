@@ -231,27 +231,37 @@ def  rubric_render(request):
     context = {'rubric': rubrics, 'categories':categories, 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col)}
     return render(request, 'main/rubric_render.html',context)
 
-def add_individual_student(request, outcome_id):
+def add_individual_student(request, outcome_id, measure_id):
     student_name = request.POST.get('student_name')
     student = Student(name=student_name)
     student.save()
+
+    measure = Measure.objects.get(id=measure_id)
+    measure.student.add(student)
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
-def upload_student(request, outcome_id):
+def upload_student(request, outcome_id, measure_id):
     if request.method=='POST' and request.FILES:
         csvfile = request.FILES['csv_file']
         datset = csvfile.read().decode("UTF-8")
         io_string = io.StringIO(datset)
+        measure = Measure.objects.get(id=measure_id)
 
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
             student = Student(name=column[0], classification=column[1])
             student.save()
-            return HttpResponseRedirect(reverse('main:dashboard'))
+            measure.student.add(student)
+
+            return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
-def add_evaluator(request, outcome_id):
+def add_evaluator(request, outcome_id, measure_id):
+    measure = Measure.objects.get(id=measure_id)
+
     if request.method == 'POST':
         evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'))
         evaluator.save()
+        measure.evaluator.add(evaluator)
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))

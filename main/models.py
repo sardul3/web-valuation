@@ -80,6 +80,8 @@ class Measure(models.Model):
     cutoff_score = models.FloatField(null=True, blank=True, default=0)
     rubric = models.ForeignKey(Rubric,null=True, blank = True, on_delete = models.CASCADE)
     test_score = models.ForeignKey(Test, null=True, blank = True, on_delete = models.CASCADE)
+    student = models.ManyToManyField(Student)
+    evaluator = models.ManyToManyField(Evaluator)
 
     def __str__(self):
         return self.measureTitle
