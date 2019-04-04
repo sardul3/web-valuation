@@ -12,13 +12,20 @@ urlpatterns = [
     path('created_test_rubric/', views.created_test_rubric, name = 'created_test_rubric'),
     path('rubric_render/', views.rubric_render, name = 'rubric_render'),
 
-    path('add_individual_student/<int:cycle_id>', views.add_individual_student, name = 'add_individual_student'),
-    path('upload_student/<int:cycle_id>', views.upload_student, name = 'upload_student'),
+    path('add_individual_student/<int:outcome_id>', views.add_individual_student, name = 'add_individual_student'),
+    path('upload_student/<int:outcome_id>', views.upload_student, name = 'upload_student'),
+
+    path('evaluator_rubric_select', views.evaluator_rubric_select, name = 'evaluator_rubric_select'),
+
+    path('outcome_detail/<int:outcome_id>', views.outcome_detail, name = 'outcome_detail'),
 
 
-    path('upload', views.upload, name = 'upload'),
+
+    path('upload/<int:outcome_id>', views.upload, name = 'upload'),
     path('grade', views.grade, name = 'grade'),
-    path('add_rubric_to_measure/<int:measure_id>/<int:cycle_id>', views.add_rubric_to_measure, name = 'add_rubric_to_measure'),
+    path('add_rubric_to_measure/<int:measure_id>/<int:outcome_id>', views.add_rubric_to_measure, name = 'add_rubric_to_measure'),
+
+
     path('add_test_to_measure/<int:measure_id>', views.add_test_to_measure, name = 'add_test_to_measure'),
     path('update_measure/<int:measure_id>', views.update_measure, name="update_measure"),
     path('new_measure/<int:outcome_id>', views.new_measure, name="new_measure"),
@@ -28,7 +35,7 @@ urlpatterns = [
     path('cycle/<int:cycle_id>', views.cycle, name = 'cycle'),
     path('upload', views.upload, name='upload'),
     path('add_learning_outcome/<int:cycle_id>', views.add_learning_outcome, name="add_learning_outcome"),
-    path('add_evaluator/<int:cycle_id>', views.add_evaluator, name="add_evaluator"),
+    path('add_evaluator/<int:outcome_id>', views.add_evaluator, name="add_evaluator"),
     path('register', views.register, name='register'),
     path('', auth_views.LoginView.as_view(template_name='main/login.html'), name='login'),
     path('logout', auth_views.LogoutView.as_view(template_name='main/logout.html'), name='logout'),

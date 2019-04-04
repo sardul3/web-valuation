@@ -1,11 +1,11 @@
 {% load static %}
 body{
   height: 100vh;
-  background: rgb(131,58,180);
-  background: linear-gradient(318deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+  /* background: rgb(131,58,180);
+  background: linear-gradient(318deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%); */
 }
 
-#main_content{
+/* #main_content{
   margin-top: 7vh;
   border: 0.7px solid #BF360C;
   border-radius: 15px;
@@ -26,7 +26,7 @@ body{
   height: 300px;
   width: 300px;
 }
-
+ */
 .login input {
   display: block;
   padding: 15px 10px;
@@ -60,7 +60,7 @@ body{
 
 li a,span{
   margin: 10px;
-  font-family: "Merienda";
+  /* font-family: "Merienda"; */
   color: #020800;
   font-size: 2.2rem;
   line-height: 21px;
@@ -68,13 +68,13 @@ li a,span{
 }
 
 th, label{
-  font-family: 'Ropa Sans';
+  /* font-family: 'Ropa Sans'; */
   font-size: 1.5rem;
 
 }
 
 td{
-  font-family: Lato;
+  /* font-family: Lato; */
   font-size: 1.5rem;
 
 }

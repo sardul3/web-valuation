@@ -13,20 +13,38 @@
     <link href="https://fonts.googleapis.com/css?family=Lato|Merienda|Merriweather|Ropa+Sans" rel="stylesheet">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 	<script type="text/javascript" src = "{%static 'js/script.js'%}"></script>
+<style>
+#main_content{
+	max-width: 25%;
+	border: 3px solid black;
+	padding: 2%;
+	margin-top: 10%;
+}
+</style>
+
 
 </head>
 
 <body>
+<div class="row align-self-center">
+		<div class = "container" id = "main_content">
 
-  <div class = "container" id = "main_content">
 
-	<h1>Create Rubrics</h1>
+	<h1 class = "text-center">Create Rubrics</h1>
+	<br/>
 
   <form action = "{% url 'main:test_rubric'%}" method = "POST">
     {% csrf_token %}
-    <input type = "number" name = "rows" >
-    <input type = "number" name = "cols" >
-    <button type = "submit"> Create </button>
+		 <div class="form-group">
+    	<input class = "form-control" type = "number" name = "rows" placeholder="enter the number of rows" required >
+		</div>
+		<div class="form-group">
+    	<input class = "form-control" type = "number" name = "cols" placeholder="enter the number of columns" required >
+		</div>
+    <button class = "btn btn-primary btn-block btn-lg" type = "submit"> Create </button>
+	</div>
+</div>
+
 </form>
 </body>
 

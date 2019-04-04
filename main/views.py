@@ -58,7 +58,16 @@ def grade(request):
 
         return render(request, 'main/evaluatorhome.html', context)
 
-    return render(request, 'main/evaluatorrubric.html',context)
+    return render(request, 'main/evaluator.rubric_select.html',context)
+
+
+def evaluator_rubric_select(request):
+    rubrics = Rubric.objects.all()
+    measures = Measure.objects.all()
+    students = Student.objects.all()
+    context = {'rubrics':rubrics, 'measures':measures, 'rubrics':rubrics}
+    return render(request, 'main/evaluator_rubric_select.html', context)
+
 
 @login_required
 def dashboard(request):
@@ -84,13 +93,24 @@ def newCycle(request):
     return HttpResponseRedirect(reverse('main:dashboard'))
 
 def cycle(request, cycle_id):
-    outcomes = Outcome.objects.filter(cycle=cycle_id);
-    evaluators = Evaluator.objects.all();
-    measures = Measure.objects.all();
-    rubrics = Rubric.objects.all();
+    outcomes = Outcome.objects.filter(cycle=cycle_id)
+    evaluators = Evaluator.objects.all()
+    measures = Measure.objects.all()
+    rubrics = Rubric.objects.all()
 
     context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators, 'measures': measures, 'rubrics': rubrics}
     return render(request, 'main/cycle.html', context)
+
+def outcome_detail(request, outcome_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    measures = Measure.objects.all()
+    rubrics = Rubric.objects.all()
+    students = Student.objects.all()
+    evaluators = Evaluator.objects.all()
+
+    context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+                'students': students, 'evaluators': evaluators}
+    return render(request, 'main/outcome_detail.html', context)
 
 def upload(request):
     if request.method=='POST' and request.FILES:
@@ -160,12 +180,12 @@ def new_measure(request, outcome_id):
     return redirect(url)
     return render(request, 'main/cycle.html')
 
-def add_rubric_to_measure(request, measure_id, cycle_id):
+def add_rubric_to_measure(request, measure_id, outcome_id):
     rubric_title = request.POST.get('select_rubric', None)
     rubric_found = Rubric.objects.get(title = rubric_title)
     measure = Measure.objects.filter(id=measure_id).update(rubric=rubric_found)
 
-    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def delete_measure(request, measure_id):
     Measure.objects.filter(id=measure_id).delete()
@@ -211,13 +231,13 @@ def  rubric_render(request):
     context = {'rubric': rubrics, 'categories':categories, 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col)}
     return render(request, 'main/rubric_render.html',context)
 
-def add_individual_student(request, cycle_id):
+def add_individual_student(request, outcome_id):
     student_name = request.POST.get('student_name')
     student = Student(name=student_name)
     student.save()
-    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
-def upload_student(request, cycle_id):
+def upload_student(request, outcome_id):
     if request.method=='POST' and request.FILES:
         csvfile = request.FILES['csv_file']
         datset = csvfile.read().decode("UTF-8")
@@ -226,12 +246,12 @@ def upload_student(request, cycle_id):
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
             student = Student(name=column[0], classification=column[1])
             student.save()
-        return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+            return HttpResponseRedirect(reverse('main:dashboard'))
 
-    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
-def add_evaluator(request, cycle_id):
+def add_evaluator(request, outcome_id):
     if request.method == 'POST':
         evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'))
         evaluator.save()
-    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))

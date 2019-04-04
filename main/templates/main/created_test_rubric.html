@@ -17,27 +17,40 @@
 <style>
 textarea{
 	font-size: 1rem;
+	height: 200%;
 }
+#main_content{
+	border: 3px solid black;
+	padding: 2%;
+	margin-top: 4%;
+}
+
+
 </style>
 </head>
 
 <body>
 
-  <div class = "container" id = "main_content">
+  <div class = "container-fluid" >
+		<div class = "container" id = "main_content">
     <form action = "{% url 'main:created_test_rubric'%}" method = "POST">
       {%csrf_token%}
-
-			<div class="form-group">
-			    <label for="exampleInputPassword1">Rubric Title</label>
-			    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="title"
-				name="rubric_title">
+			<h1 class = "text-center">Enter the data associated with the rubric</h1>
+			<div class="form-row">
+				<div class = "col-6">
+			    <input type="text" class="form-control" id="exampleInputPassword1"
+					 placeholder="enter the title of the rubric" name="rubric_title" required>
+				</div>
 			</div>
-        <table class = "table table-bordered table-responsive" style = "width:100%;">
+				<br />
+        <table class = "table table-bordered table-responsive">
 
       {%for row in rows%}
       <tr>
         {%for col in cols%}
-          <td> <textarea type = "text" name = "{{row}}{{col}}"></textarea></td>
+				<div class = "form-group">
+          <td> <textarea rows="5" class="form-control" id="exampleFormControlTextarea1" name = "{{row}}{{col}}"></textarea></td>
+				</div>
         {%endfor%}
         </tr>
       {%endfor%}
@@ -45,10 +58,11 @@ textarea{
       <input type = "hidden" value = "{{row_num}}" name = "row_num">
       <input type = "hidden" value = "{{col_num}}" name = "col_num">
 
-      <button type = "submit"> Add Rubric </button>
+      <button class = "btn btn-primary btn=lg" type = "submit"> Add Rubric </button>
 
     </form>
-
+</div>
+</div>
 
 </body>
 

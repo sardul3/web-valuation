@@ -2,6 +2,12 @@
 {% extends  'base.html' %}
 {% load static %}
 {% block body_block %}
+<style>
+  #main_content{
+    margin-top: 1%;
+  }
+</style>
+<div class = "container-fluid">
 <div class = "container" id = "main_content">
 {% if user.is_authenticated %}
 <h2> Hi {{ user.username }}!</h2>
@@ -45,7 +51,7 @@
 </div>
 <br/>
 <div>
-  <form action = "{%url 'main:grade'%}">
+  <form action = "{%url 'main:evaluator_rubric_select'%}">
     <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>
   </form>
 </div>
@@ -54,5 +60,6 @@
 {% else %}
   <p>You can't view this page</p>
 {% endif %}
+</div>
 </div>
 {%endblock%}
