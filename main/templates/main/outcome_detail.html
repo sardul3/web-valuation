@@ -96,22 +96,33 @@
   <div class="row d-flex align-items-center">
   <div class="col-4 ">
     <div class="list-group " id="list-tab" role="tablist">
+
+
       {%for measure in measures%}
         {%if measure.outcome == outcome%}
-      <a class="list-group-item list-group-item-action " id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
-      {%else%}
+          {%if forloop.first %}
+          <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
+          {%else%}
+          <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
+          {%endif%}
+        {%else%}
 
         {%endif%}
-
+        {%empty%}
+        <a class="list-group-item list-group-item-action active " id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Measure Title</a>
       {%endfor%}
 
     </div>
   </div>
-  <div class="col-8  " >
+  <div class="col-8" >
     <div class="tab-content speech-bubble" id="nav-tabContent">
       {%for measure in measures%}
         {%if measure.outcome == outcome%}
-      <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
+          {%if forloop.first %}
+                <div class="tab-pane fade show measure_section active" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
+          {%else%}
+                <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
+          {%endif%}
         <h1 class = "d-flex justify-content-between"> {{measure.measureTitle}}
 
           <div>
@@ -324,11 +335,7 @@
     </div>
 
 
-
-
-
-
-      </div>
+  </div>
       {%endif%}
 
 

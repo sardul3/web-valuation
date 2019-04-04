@@ -89,6 +89,7 @@ def newCycle(request):
 
     cycle = Cycle(year=year, semester=semester)
     cycle.save()
+    messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
 
     return HttpResponseRedirect(reverse('main:dashboard'))
 
@@ -138,6 +139,7 @@ def register(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, 'Account created')
+
             return redirect('/')
         else:
             return render(request, 'main/register.html', {'form': form})
@@ -154,6 +156,7 @@ def add_learning_outcome(request, cycle_id):
     cycle_found = Cycle.objects.get(id=cycle_id)
     outcome.cycle.add(cycle_found)
 
+    messages.add_message(request, messages.SUCCESS, 'Learning outcome created')
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
@@ -163,8 +166,12 @@ def update_measure(request, measure_id):
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
     measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent)
+
+    messages.add_message(request, messages.SUCCESS, 'Measure was edited successfully')
+
     url = request.POST.get("url")
     return redirect(url)
+
     return render(request, 'main/cycle.html')
 
 def new_measure(request, outcome_id):
@@ -176,6 +183,9 @@ def new_measure(request, outcome_id):
     outcome_found = Outcome.objects.get(id=outcome_id)
     measure = Measure(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent, outcome=outcome_found)
     measure.save()
+
+    messages.add_message(request, messages.SUCCESS, 'New measure is added to the outcome')
+
     url = request.POST.get("url")
     return redirect(url)
     return render(request, 'main/cycle.html')
@@ -185,10 +195,15 @@ def add_rubric_to_measure(request, measure_id, outcome_id):
     rubric_found = Rubric.objects.get(title = rubric_title)
     measure = Measure.objects.filter(id=measure_id).update(rubric=rubric_found)
 
+    messages.add_message(request, messages.SUCCESS, 'Rubric is now associated with the measure')
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def delete_measure(request, measure_id):
     Measure.objects.filter(id=measure_id).delete()
+
+    messages.add_message(request, messages.WARNING, 'Measure was removed successfully')
+
     url = request.POST.get("url")
     return redirect(url)
     return render(request, 'main/cycle.html')
@@ -238,6 +253,9 @@ def add_individual_student(request, outcome_id, measure_id):
 
     measure = Measure.objects.get(id=measure_id)
     measure.student.add(student)
+
+    messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def upload_student(request, outcome_id, measure_id):
@@ -252,6 +270,8 @@ def upload_student(request, outcome_id, measure_id):
             student.save()
             measure.student.add(student)
 
+            messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
+
             return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
@@ -263,5 +283,8 @@ def add_evaluator(request, outcome_id, measure_id):
         evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'))
         evaluator.save()
         measure.evaluator.add(evaluator)
+
+        messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
+
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
