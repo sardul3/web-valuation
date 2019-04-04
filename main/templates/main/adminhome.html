@@ -14,6 +14,11 @@
 
     <title>Admin Home</title>
 
+<style>
+#main_content{
+  margin-top: 2%;
+}
+</style>
 
   </head>
   <body>
@@ -24,7 +29,7 @@
         <h4 class = 'text-right' style = "font-family: 'ropa sans'"> Logged in as {{user.username}} </h4>
         <div class = "row">
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-warning mb-3">
+            <div class = "card border-primary mb-3">
               <h3 class = "card-header title"> Evaluation Progress </h3>
 
 
@@ -32,7 +37,7 @@
           </div>
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-warning mb-3">
+            <div class = "card border-primary mb-3">
               <h3 class = "card-header title"> Previous Outcomes </h3>
 
               <ul class="list-group">
@@ -48,7 +53,7 @@
 
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-warning mb-3">
+            <div class = "card border-primary mb-3">
               <h3 class = "card-header title"> Start a new cycle </h3>
 
               <form action = "{% url 'main:newCycle' %}" method = "POST" >
@@ -123,7 +128,7 @@
 
         <div class = "row">
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-warning mb-3">
+            <div class = "card border-primary mb-3">
               <h3 class = "card-header title"> Evaluators </h3>
               <ul class="list-group">
                 {%for evaluator in evaluators%}
@@ -137,7 +142,7 @@
           </div>
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-warning mb-3">
+            <div class = "card border-primary mb-3">
               <h3 class = "card-header title"> Previous Rubrics </h3>
               <ul class="list-group">
                 {%for rubric in rubrics%}
@@ -152,7 +157,7 @@
           </div>
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-warning mb-3">
+            <div class = "card border-primary mb-3">
               <h3 class = "card-header title">Running Cycles </h3>
               <ul class="list-group">
                 {%for cycle in cycles%}
@@ -170,7 +175,7 @@
 
         <div class = "row">
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-warning mb-3">
+            <div class = "card border-primary mb-3">
               <div class="collapse" id="collapseExample" style = "overflow-y: scroll; max-height: 30vh;">
                 <ul class="list-group">
                   {%for notification in notifications%}

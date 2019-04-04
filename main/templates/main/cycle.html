@@ -26,12 +26,22 @@
     </h1>
       <div class="list-group">
       {%for outcome in outcomes%}
+      <div class="d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
+
               <h5 class="mb-1 p-1">{{outcome.title}}</h5>
-            </div>
+
           </a>
-        <br/>
+          </div>
+          <button class="btn btn-lg" >
+            <span style="font-size: 2em; color: black;">
+              <i class="far fa-edit"></i>
+          </span>
+          </button>
+
+
+
+
           {%endfor%}
   </div>
     </div>
@@ -53,7 +63,7 @@
                     <label for="exampleFormControlTextarea1">Title</label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
                   </div>
-      
+
 
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save changes</button>

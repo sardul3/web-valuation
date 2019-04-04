@@ -103,7 +103,7 @@ def cycle(request, cycle_id):
 
 def outcome_detail(request, outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
-    measures = Measure.objects.all()
+    measures = Measure.objects.filter(outcome=outcome)
     rubrics = Rubric.objects.all()
     students = Student.objects.all()
     evaluators = Evaluator.objects.all()
