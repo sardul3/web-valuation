@@ -16,7 +16,7 @@ def homepage(request):
 
 @login_required
 def evaluatorhome(request):
-    # rubrics = Rubric.objects.all()
+    rubrics = Rubric.objects.all()
     students = Student.objects.all()
     evaluatons = evaluate_rubric.objects.all()
     context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluatons}
@@ -289,8 +289,12 @@ def add_evaluator(request, outcome_id, measure_id):
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
-# def update_outcome(request, outcome_id):
-#     new_outcome_text = request.POST.get('new_outcome_text')
-#     outcome = Outcome.objects.get(id = outcome_id)
-#
-# 
+def update_outcome(request, outcome_id, cycle_id):
+    new_outcome_text = request.POST.get('outcome_title')
+    outcome = Outcome.objects.filter(id = outcome_id).update(title = new_outcome_text)
+
+    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+
+def delete_outcome(request, outcome_id, cycle_id):
+    outcome = Outcome.objects.filter(id=outcome_id).delete()
+    return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))

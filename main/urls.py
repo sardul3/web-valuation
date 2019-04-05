@@ -20,6 +20,11 @@ urlpatterns = [
     path('outcome_detail/<int:outcome_id>', views.outcome_detail, name = 'outcome_detail'),
 
 
+    path('update_outcome/<int:outcome_id>/<int:cycle_id>', views.update_outcome, name = 'update_outcome'),
+    path('delete_outcome/<int:outcome_id>/<int:cycle_id>', views.delete_outcome, name = 'delete_outcome'),
+
+
+
 
     path('upload/<int:outcome_id>', views.upload, name = 'upload'),
     path('grade', views.grade, name = 'grade'),

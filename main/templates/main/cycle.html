@@ -37,17 +37,81 @@
       </div>
       <div style = "margin-left: 10px;">
         <div class="btn-group">
-          <a  href = "" class = "btn  btn-light">
+          <a  href = "" class = "btn  btn-light" data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: black;">
               <i class="far fa-edit"></i>
           </span>
-          <//a>
+          </a>
 
-          <a  href = "#" class = "btn  btn-light" style = "margin-left: 5px;">
+          <div class="modal fade" id="exampleModalCenterEditOutcome{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Edit Outcome</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+                <div class="modal-body">
+                  <form action="{%url 'main:update_outcome' outcome.id cycle_id%}" method="POST">
+                    {%csrf_token%}
+                    <input type="hidden" id="url" name = "url" value={{request.path}}>
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Outcome Title</label>
+                      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                name = "outcome_title">{{outcome.title}}
+                      </textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <a  href = "#" class = "btn  btn-light" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: black;">
               <i class="far fa-trash-alt"></i>
           </span>
           </a>
+
+          <div class="modal fade" id="exampleModalCenterDeleteOutcome{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Delete Outcome</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+                <div class="modal-body">
+                  <form action="{%url 'main:delete_outcome' outcome.id cycle_id%}" method="POST">
+                    {%csrf_token%}
+                    <input type="hidden" id="url" name = "url" value={{request.path}}>
+                    <h3> Are you sure? </h3>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Delete</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+
       </div>
 
       </div>

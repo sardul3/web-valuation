@@ -200,7 +200,7 @@
                         <form action = "{%url 'main:delete_measure' measure.id%}" method="POST">
                           {%csrf_token%}
                           <input type="hidden" id="url" name = "url" value={{request.path}}>
-                          Are you sure? <br/>
+                          <h3>Are you sure? </h3> <br/>
                             <button type="submit" class="btn btn-primary">Delete</button>
                           </form>
                           </div>
