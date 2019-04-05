@@ -18,6 +18,9 @@ class Student(models.Model):
 class Cycle(models.Model):
     year = models.PositiveIntegerField()
     semester = models.CharField(max_length=200)
+    startDate = models.DateField(default=None)
+    endDate = models.DateField(default=None, null=True)
+    isCurrent = models.BooleanField(default=True)
 
     def __str_(self):
         return self.year

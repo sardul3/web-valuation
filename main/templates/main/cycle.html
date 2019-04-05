@@ -5,12 +5,14 @@
 <style>
 
   .objs{
-    border: 3px solid black;
     padding: 0.7%;
     align:center;
   }
   #main_content{
     margin: 1%;
+  }
+  a{
+    font-size: 2rem;
   }
 </style>
 
@@ -18,7 +20,28 @@
 <div class = "container-fluid" id = "main_content">
 
   <div class = "row d-flex justify-content-center ">
-    <div class = "col col-lg-6 objs ">
+    <div class = "row mr-5">
+      <div class = "col">
+        <!-- <p> You are inside {{cycle.year}} {{cycle.semester}} cycle </p> -->
+        <div class="card border-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">{{cycle.semester}} {{cycle.year}}</div>
+            <div class="card-body text-dark">
+              <h5 class="card-title">Started at</h5>
+              <p class="card-text">{{cycle.startDate}}</p>
+              <hr>
+              <h5 class="card-title">Created by</h5>
+              <p class="card-text">{{user.username}}</p>
+              <hr>
+              <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger btn-lg">
+                End Cycle
+              </a>
+            </div>
+          </div>
+      </div>
+    </div>
+
+
+    <div class = "col col-lg-6 objs card border-dark ">
     <h1 class="text-center d-flex justify-content-between">  Learning outcomes
 
       <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
@@ -118,8 +141,15 @@
       </div>
 
 
+      {%empty%}
+      <div class="jumbotron jumbotron-fluid mt-3" style="background-color:#f7f7f7;">
+        <div class="container text-center ">
+          <h1 class="display-4">No outcomes yet</h1>
+          <p class="lead">Click the <strong style="font-size: 2rem;"> + </strong> icon above to add outcomes</p>
+        </div>
+      </div>
+  {%endfor%}
 
-      {%endfor%}
   </div>
     </div>
 

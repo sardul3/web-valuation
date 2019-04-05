@@ -23,6 +23,10 @@ urlpatterns = [
     path('update_outcome/<int:outcome_id>/<int:cycle_id>', views.update_outcome, name = 'update_outcome'),
     path('delete_outcome/<int:outcome_id>/<int:cycle_id>', views.delete_outcome, name = 'delete_outcome'),
 
+    path('end_cycle/<int:cycle_id>', views.end_cycle, name = 'end_cycle'),
+
+
+
 
 
 

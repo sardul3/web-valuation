@@ -10,6 +10,7 @@ from .forms import RegisterForm
 import csv
 import codecs
 import io
+from django.utils.timezone import datetime
 
 def homepage(request):
     return render(request, 'main/homepage.html', {})
@@ -86,8 +87,9 @@ def dashboard(request):
 def newCycle(request):
     year = request.POST.get('year')
     semester = request.POST.get('semester')
+    today = datetime.today()
 
-    cycle = Cycle(year=year, semester=semester)
+    cycle = Cycle(year=year, semester=semester, startDate=today)
     cycle.save()
     messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
 
@@ -98,9 +100,19 @@ def cycle(request, cycle_id):
     evaluators = Evaluator.objects.all()
     measures = Measure.objects.all()
     rubrics = Rubric.objects.all()
+    cycle = Cycle.objects.get(id=cycle_id)
 
-    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators, 'measures': measures, 'rubrics': rubrics}
+    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators, 'measures': measures, 'rubrics': rubrics, 'cycle':cycle}
     return render(request, 'main/cycle.html', context)
+
+def end_cycle(request, cycle_id):
+    cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=False)
+
+    messages.add_message(request, messages.WARNING, 'Cycle was deleted successfully')
+
+    return HttpResponseRedirect(reverse('main:dashboard'))
+
+
 
 def outcome_detail(request, outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
