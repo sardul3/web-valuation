@@ -20,7 +20,12 @@ def evaluatorhome(request):
     rubrics = Rubric.objects.all()
     students = Student.objects.all()
     evaluatons = evaluate_rubric.objects.all()
-    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluatons}
+
+    email_address = request.user.email
+    print(request.user.is_staff)
+    measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+    print(measure)
+    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluatons, 'measures':measure}
 
     return render(request, 'main/evaluatorhome.html', context)
 

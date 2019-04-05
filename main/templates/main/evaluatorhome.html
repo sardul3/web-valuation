@@ -3,68 +3,126 @@
 {% load static %}
 {% block body_block %}
 <style>
-  #main_content{
-    margin-top: 1%;
+  .objs{
+    padding: 0.7%;
+    align:center;
   }
+
+  #main_content{
+  margin-top:2%;
+  }
+
+
+  .measure_section{
+    padding: 3%;
+  }
+
+  .speech-bubble { position: relative; background: #f7f7f7; border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color: #f7f7f7; border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
+
 </style>
+
 <div class = "container-fluid">
 <div class = "container" id = "main_content">
 
-
-
-
-
 {% if user.is_authenticated %}
-<h2> Hi {{ user.username }}!</h2>
+    <h2> Hi {{ user.username }}!</h2>
 
-<p>
-    Ready to start evaluations?<br>
-</p>
-    {% if user.is_superuser %}
-    <p>Visit the <a href="/admin">admin</a> site instead</p>
-    {% endif %}
-<div class = "row">
-  <div class = "col col-lg-3">
-    <ul class="list-group">
-    <li class="list-group-item active">Current Students</li>
-    {%for student in students%}
-      <li class="list-group-item">{{student.name}}</li>
-    {%endfor%}
-    </ul>
-  </div>
-<br/>
-  <!-- <div class = "col col-lg-3">
-    <ul class="list-group">
-    <li class="list-group-item active">Available Rubrics</li>
-    {%for rubric in rubrics%}
-      <li class="list-group-item">{{rubric}}</li>
-    {%endfor%}
-    </ul>
-  </div> -->
+    <p>
+        Ready to start evaluations?<br>
+    </p>
+        {% if user.is_superuser %}
+        <p>Visit the <a href="/admin">admin</a> site instead</p>
+        {% endif %}
 
-  <div class = "col col-lg-6">
-    <ul class="list-group">
-    <li class="list-group-item active">Last Evaluation</li>
-    {%for evaluation in evaluations%}
-      <p class = "text-center list-group-item">{{evaluation.student}} got an average of {{evaluation.grade_score}} on {{evaluation.rubric}} rubric</p>
-    {%endfor%}
-    </ul>
+
+  <div class="row d-flex align-items-center">
+  <div class="col-4 ">
+    <div>
+      <h3 class = "d-flex justify-content-between mb-3 "> Measures assigned
+        </h3>
+    </div>
+    <div class="list-group " id="list-tab" role="tablist">
+
+
+      {%for measure in measures%}
+
+          {%if forloop.first %}
+          <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
+          {%else%}
+          <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
+          {%endif%}
+
+        {%empty%}
+        <a class="list-group-item list-group-item-action active " id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Measure Title</a>
+      {%endfor%}
+
+
+      <div class = "mt-2">
+      <b>Ready to sign out?</b>
+      <p><a href="/logout">Sign out</a></p>
+      {% else %}
+        <p>You can't view this page</p>
+      {% endif %}
+      </div>
+
+
+    </div>
   </div>
+
+
+  <div class="col-8" >
+    <div class="tab-content speech-bubble" id="nav-tabContent">
+      {%for measure in measures%}
+          {%if forloop.first %}
+                <div class="tab-pane fade show measure_section active" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
+          {%else%}
+                <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
+          {%endif%}
+        <h1 class = "d-flex justify-content-between"> {{measure.measureTitle}}
+         </h1>
+        <p> {{measure.measureText}} </p>
+
+        <ul class="list-group mb-2">
+          <li class="list-group-item active d-flex justify-content-between">Students
+          </li>
+            {% for student in measure.student.all %}
+                  <li class="list-group-item">{{student.name}}</li>
+            {%empty%}
+              <li class="list-group-item"> No students added yet </li>
+            {%endfor%}
+            </ul>
+            <form action = "{%url 'main:evaluator_rubric_select'%}" class = "text-center">
+              <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>
+            </form>
+
+
+
+  </div>
+
+
+    {%empty%}
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">No measures Assigned</h1>
+        <p class="lead">Please contact the coordinator for more queries</p>
+      </div>
+</div>
+    {%endfor%}
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+
 
 
 
 </div>
 <br/>
-<div>
-  <form action = "{%url 'main:evaluator_rubric_select'%}">
-    <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>
-  </form>
-</div>
-<b>Ready to sign out?</b>
-<p><a href="/logout">Sign out</a></p>
-{% else %}
-  <p>You can't view this page</p>
-{% endif %}
+
 </div>
 </div>
 {%endblock%}
