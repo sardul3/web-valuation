@@ -305,8 +305,12 @@ def update_outcome(request, outcome_id, cycle_id):
     new_outcome_text = request.POST.get('outcome_title')
     outcome = Outcome.objects.filter(id = outcome_id).update(title = new_outcome_text)
 
+    messages.add_message(request, messages.SUCCESS, 'Outcome was edited successfully')
+
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
 def delete_outcome(request, outcome_id, cycle_id):
     outcome = Outcome.objects.filter(id=outcome_id).delete()
+    messages.add_message(request, messages.WARNING, 'Outcome was deleted successfully')
+
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))

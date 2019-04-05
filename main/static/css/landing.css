@@ -84,5 +84,8 @@ td{
   position: absolute;
   top: 0;
   right: 0;
-  
+  border: 0.5px solid #007aff;
+  font-size: 1.5rem;
+  z-index: 1;
+
 }

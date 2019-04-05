@@ -22,7 +22,6 @@
   <div class = "row d-flex justify-content-center ">
     <div class = "row mr-5">
       <div class = "col">
-        <!-- <p> You are inside {{cycle.year}} {{cycle.semester}} cycle </p> -->
         <div class="card border-dark mb-3" style="max-width: 18rem;">
             <div class="card-header">{{cycle.semester}} {{cycle.year}}</div>
             <div class="card-body text-dark">
@@ -42,7 +41,7 @@
 
 
     <div class = "col col-lg-6 objs card border-dark ">
-    <h1 class="text-center d-flex justify-content-between">  Learning outcomes
+    <h1 class="text-center d-flex justify-content-between mb-3">  Learning outcomes
 
       <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
        <i class="fas fa-plus"></i>
@@ -60,7 +59,7 @@
       </div>
       <div style = "margin-left: 10px;">
         <div class="btn-group">
-          <a  href = "" class = "btn  btn-light" data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
+          <a  href = "" class = "btn  btn-light btn-lg" data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: black;">
               <i class="far fa-edit"></i>
           </span>
@@ -99,7 +98,7 @@
 
 
 
-          <a  href = "#" class = "btn  btn-light" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
+          <a  href = "#" class = "btn  btn-light btn-lg" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: black;">
               <i class="far fa-trash-alt"></i>
           </span>
@@ -142,7 +141,7 @@
 
 
       {%empty%}
-      <div class="jumbotron jumbotron-fluid mt-3" style="background-color:#f7f7f7;">
+      <div class="jumbotron jumbotron-fluid" style="background-color:#f7f7f7;">
         <div class="container text-center ">
           <h1 class="display-4">No outcomes yet</h1>
           <p class="lead">Click the <strong style="font-size: 2rem;"> + </strong> icon above to add outcomes</p>
