@@ -272,11 +272,11 @@ def created_test_rubric(request):
 
     return render(request, 'main/test_rubric.html')
 
-def rubric_render(request):
-    rubrics = Rubric.objects.filter(id=6)[0]
+def rubric_render(request, rubric_id):
+    rubrics = Rubric.objects.filter(id=rubric_id)[0]
     categories = Category.objects.all()
     context = {'rubric': rubrics, 'categories':categories, 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col)}
-    return render(request, 'main/rubric_render.html',context)
+    return render(request, 'main/rubric_render_admin.html',context)
 
 def add_individual_student(request, outcome_id, measure_id):
     student_name = request.POST.get('student_name')

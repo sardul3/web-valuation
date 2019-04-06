@@ -299,7 +299,7 @@
               <td>{{student.classification}}</td>
             </tr>
               {%endfor%}
-      
+
           </tbody>
       </table>
 
@@ -316,6 +316,7 @@
 {%if measure.tool_type == 'Rubric'%}
     {%if measure.rubric %}
       {{measure.tool_type}} associated: {{measure.rubric.title}}
+      <a href = "{% url 'main:rubric_render' measure.rubric.id%}" class = "btn btn-primary"> View </a>
     {%else%}
 
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
@@ -327,6 +328,8 @@
 {%if measure.tool_type == 'Test score'%}
     {%if measure.test_score %}
       {{measure.tool_type}} associated: {{measure.test_score.test_name}}
+      <button  class = "btn btn-primary"> View </button>
+
     {%else%}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
     Add Test Score
