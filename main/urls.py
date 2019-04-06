@@ -11,11 +11,13 @@ urlpatterns = [
     path('test_rubric/', views.test_rubric, name = 'test_rubric'),
     path('created_test_rubric/', views.created_test_rubric, name = 'created_test_rubric'),
     path('rubric_render/', views.rubric_render, name = 'rubric_render'),
+    path('evaluate_students/', views.evaluate_students, name = 'evaluate_students'),
+
 
     path('add_individual_student/<int:outcome_id>/<int:measure_id>', views.add_individual_student, name = 'add_individual_student'),
     path('upload_student/<int:outcome_id>/<int:measure_id>', views.upload_student, name = 'upload_student'),
 
-    path('evaluator_rubric_select', views.evaluator_rubric_select, name = 'evaluator_rubric_select'),
+    path('evaluator_rubric_select/<int:measure_id>', views.evaluator_rubric_select, name = 'evaluator_rubric_select'),
 
     path('outcome_detail/<int:outcome_id>', views.outcome_detail, name = 'outcome_detail'),
 
@@ -30,7 +32,7 @@ urlpatterns = [
 
 
 
-    path('upload/<int:outcome_id>', views.upload, name = 'upload'),
+    path('upload/<int:measure_id>/<int:outcome_id>', views.upload, name = 'upload'),
     path('grade', views.grade, name = 'grade'),
     path('add_rubric_to_measure/<int:measure_id>/<int:outcome_id>', views.add_rubric_to_measure, name = 'add_rubric_to_measure'),
 
@@ -42,7 +44,7 @@ urlpatterns = [
     path('dashboard', views.dashboard, name = 'dashboard'),
     path('newCycle', views.newCycle, name = 'newCycle'),
     path('cycle/<int:cycle_id>', views.cycle, name = 'cycle'),
-    path('upload', views.upload, name='upload'),
+    # path('upload', views.upload, name='upload'),
     path('add_learning_outcome/<int:cycle_id>', views.add_learning_outcome, name="add_learning_outcome"),
     path('add_evaluator/<int:outcome_id>/<int:measure_id>', views.add_evaluator, name="add_evaluator"),
     path('register', views.register, name='register'),

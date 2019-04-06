@@ -32,7 +32,7 @@ def evaluatorhome(request):
 
 @login_required
 def grade(request):
-    rubrics = Rubric.objects.filter(id=6)[0]
+    rubrics = Rubric.objects.filter(id=1)[0]
     measures = Measure.objects.all()
     students = Student.objects.all()
     evaluations = evaluate_rubric.objects.all()
@@ -64,15 +64,17 @@ def grade(request):
 
         return render(request, 'main/evaluatorhome.html', context)
 
-    return render(request, 'main/evaluator.rubric_select.html',context)
+    return render(request, 'main/evaluator_rubric_select.html',context)
 
 
-def evaluator_rubric_select(request):
-    rubrics = Rubric.objects.all()
-    measures = Measure.objects.all()
-    students = Student.objects.all()
-    context = {'rubrics':rubrics, 'measures':measures, 'rubrics':rubrics}
+def evaluator_rubric_select(request, measure_id):
+    measures = Measure.objects.get(id=measure_id)
+    students = measures.student.all()
+    context = { 'measures':measures, 'students':students, 'measure_id':measure_id}
     return render(request, 'main/evaluator_rubric_select.html', context)
+
+def evaluate_students(request):
+    return render(request, 'main/evaluate_students.html')
 
 
 @login_required
@@ -123,28 +125,34 @@ def outcome_detail(request, outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome=outcome)
     rubrics = Rubric.objects.all()
-    students = Student.objects.all()
+    students = None
+    for measure in measures:
+        students = measure.student.all()
     evaluators = Evaluator.objects.all()
 
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators}
     return render(request, 'main/outcome_detail.html', context)
 
-def upload(request):
+def upload(request, measure_id, outcome_id):
     if request.method=='POST' and request.FILES:
+        measure = Measure.objects.filter(id=measure_id)
+
         csvfile = request.FILES['csv_file']
         datset = csvfile.read().decode("UTF-8")
         io_string = io.StringIO(datset)
 
 
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
-            student_score = Test_score(student=column[0], test_name=column[1], score=column[2])
+            student = Student.objects.create(name=column[0])
+            test = Test.objects.create(test_name=column[1])
+            student_score = Test_score(student=student, test=test, score=column[2])
             student_score.save()
+            measure.update(test_score=student_score)
 
-        context = {'test_scores': Test_score.objects.all()}
-        return render(request, 'main/upload.html', context)
+        return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
-    return render(request, 'main/upload.html')
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 
 
@@ -182,7 +190,11 @@ def update_measure(request, measure_id):
     measure_desc = request.POST.get('measure_desc')
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
-    measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent)
+    cutoff_type = request.POST.get('cutoff_selection')
+    tool_type = request.POST.get('tool_selection')
+    measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,measureText= measure_desc,
+    cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent,
+    cutoff_type=cutoff_type, tool_type=tool_type)
 
     messages.add_message(request, messages.SUCCESS, 'Measure was edited successfully')
 
@@ -196,9 +208,13 @@ def new_measure(request, outcome_id):
     measure_desc = request.POST.get('measure_desc')
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
+    tool_type = request.POST.get('tool_selection')
+    cutoff_type = request.POST.get('cutoff_selection')
 
     outcome_found = Outcome.objects.get(id=outcome_id)
-    measure = Measure(measureTitle= measure_title,measureText= measure_desc,cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent, outcome=outcome_found)
+    measure = Measure(measureTitle= measure_title,measureText= measure_desc,
+                      cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent,
+                      outcome=outcome_found, tool_type=tool_type, cutoff_type=cutoff_type)
     measure.save()
 
     messages.add_message(request, messages.SUCCESS, 'New measure is added to the outcome')
@@ -230,7 +246,6 @@ def add_test_to_measure(request, measure_id):
     return HttpResponseRedirect(reverse_lazy('main:upload'))
 
 def test_rubric(request):
-
     rows = 0
     cols = 0
     if request.method == 'POST':
@@ -257,8 +272,8 @@ def created_test_rubric(request):
 
     return render(request, 'main/test_rubric.html')
 
-def  rubric_render(request):
-    rubrics = Rubric.objects.filter(id=4)[0]
+def rubric_render(request):
+    rubrics = Rubric.objects.filter(id=6)[0]
     categories = Category.objects.all()
     context = {'rubric': rubrics, 'categories':categories, 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col)}
     return render(request, 'main/rubric_render.html',context)

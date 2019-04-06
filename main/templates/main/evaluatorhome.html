@@ -24,19 +24,27 @@
 <div class = "container-fluid">
 <div class = "container" id = "main_content">
 
-{% if user.is_authenticated %}
-    <h2> Hi {{ user.username }}!</h2>
-
-    <p>
-        Ready to start evaluations?<br>
-    </p>
-        {% if user.is_superuser %}
-        <p>Visit the <a href="/admin">admin</a> site instead</p>
-        {% endif %}
-
 
   <div class="row d-flex align-items-center">
   <div class="col-4 ">
+
+    {% if user.is_authenticated %}
+      <ol class = 'breadcrumb'>
+        <h4 class = "breadcrumb-item"> Hi {{ user.username }}</h4>
+        <h4 class = "breadcrumb-item"> Evaluator View </h4>
+
+    </ol>
+        <p>
+      <br>
+        </p>
+            {% if user.is_superuser %}
+            <p> <a class = "btn btn-dark btn-lg" href="{%url 'main:dashboard'%}"> Act as Admin</a> </p>
+            {% endif %}
+
+
+
+
+
     <div>
       <h3 class = "d-flex justify-content-between mb-3 "> Measures assigned
         </h3>
@@ -91,7 +99,7 @@
               <li class="list-group-item"> No students added yet </li>
             {%endfor%}
             </ul>
-            <form action = "{%url 'main:evaluator_rubric_select'%}" class = "text-center">
+            <form action = "{%url 'main:evaluator_rubric_select' measure.id%}" class = "text-center">
               <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>
             </form>
 

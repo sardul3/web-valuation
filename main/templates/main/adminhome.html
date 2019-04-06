@@ -20,32 +20,11 @@
       <div class = "container" id = "main_content">
         <h4 class = 'text-right' style = "font-family: 'ropa sans'"> Logged in as {{user.username}} </h4>
         <div class = "row">
-          <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-primary mb-3">
-              <h3 class = "card-header title"> Evaluation Progress </h3>
 
-
-            </div>
-          </div>
-
-          <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-primary mb-3">
-              <h3 class = "card-header title"> Previous Outcomes </h3>
-
-              <ul class="list-group">
-                {% for outcome in outcomes %}
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{outcome.title}}
-                    <button class = "btn btn-warning"> Edit </button>
-                  </li>
-              {%endfor%}
-              </ul>
-            </div>
-          </div>
 
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-primary mb-3">
+            <div class = "card border-dark mb-3">
               <h3 class = "card-header title"> Start a new cycle </h3>
 
               <form action = "{% url 'main:newCycle' %}" method = "POST" >
@@ -63,44 +42,6 @@
                   </div>
                 </div>
 
-                <!-- <div class="form-group">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle ml-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Select Outcomes
-                    </button>
-
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-                  {%for outcome in outcomes%}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      {{outcome.title}}
-                      <div class="form-group form-check">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1"  name = "outcomes" value = {{outcome.title}}>
-                      </div>
-                    </li>
-                  {% endfor %}
-                  </div>
-
-                </div> -->
-              <!-- </div> -->
-                <!-- <div class="form-group">
-                <div class="dropdown">
-
-                    <button class="btn btn-secondary dropdown-toggle ml-3 mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Select Rubrics
-                    </button>
-
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {%for rubric in rubrics%}
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{rubric.title}}
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        </div>
-                      </li>
-                    {%endfor%}
-                  </div>
-                  </div>
-                </div> -->
 
                 <div class = "row p-1">
                   <div class = "col col-lg-12 ml-0.5">
@@ -116,25 +57,12 @@
             </div>
           </div>
 
-        </div>
 
-        <div class = "row">
-          <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-primary mb-3">
-              <h3 class = "card-header title"> Evaluators </h3>
-              <ul class="list-group">
-                {%for evaluator in evaluators%}
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{evaluator.name}}
-                  </li>
-                {%endfor%}
-              </ul>
-            </div>
 
-          </div>
+
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-primary mb-3">
+            <div class = "card border-dark mb-3">
               <h3 class = "card-header title"> Previous Cycles </h3>
               <ul class="list-group">
                 {%for cycle in cycles%}
@@ -153,7 +81,7 @@
           </div>
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-primary mb-3">
+            <div class = "card border-dark mb-3">
               <h3 class = "card-header title">Running Cycles </h3>
               <ul class="list-group">
                 {%for cycle in cycles%}
@@ -169,11 +97,12 @@
               </ul>
             </div>
           </div>
-        </div>
+          </div>
+            </div>
 
         <div class = "row">
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-primary mb-3">
+            <div class = "card border-dark mb-3">
               <div class="collapse" id="collapseExample" style = "overflow-y: scroll; max-height: 30vh;">
                 <ul class="list-group">
                   {%for notification in notifications%}
@@ -193,16 +122,7 @@
 
 
 
-            <!-- <div class = "card border-warning mb-3">
-              <h3 class = "card-header title">Notifications
-                  <i class="fa fa-chevron-up text-right" aria-hidden="true"></i>
-              </h3>
-              <ul class="list-group">
-                {%for notification in notifications%}
-                  <p class = "text-center list-group-item">{{notification.student}} got an average of {{notification.grade_score}} on {{notification.rubric}} rubric</p>
-                {%endfor%}
-              </ul>
-            </div> -->
+
           </div>
         </div>
 

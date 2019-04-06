@@ -67,7 +67,7 @@ class Test(models.Model):
 
 
 class Test_score(models.Model):
-    student = models.CharField(max_length=200, null=True)
+    student = models.ForeignKey(Student, null=True, on_delete=models.CASCADE)
     score = models.PositiveIntegerField()
     test = models.ForeignKey(Test, null=True, on_delete = models.CASCADE)
 
@@ -76,6 +76,17 @@ class Test_score(models.Model):
 
 
 class Measure(models.Model):
+    CUTOFF_TYPES = (('Percentage', 'Percentage'),
+                  ('Percentile', 'Percentile'),
+                  ('Average', 'Average')
+                 )
+    cutoff_type = models.CharField(max_length = 100, choices=CUTOFF_TYPES, default='Percentage')
+
+    TOOL_TYPES = (('Rubric', 'Rubric'),
+                  ('Test score', 'Test score')
+                  )
+    tool_type = models.CharField(max_length=100, choices=TOOL_TYPES, default='Rubric')
+
     measureTitle = models.CharField(max_length=200, default='', null=True)
     measureText = models.CharField(max_length=200, blank = True, null=True)
     outcome = models.ForeignKey(Outcome, null=True, on_delete = models.CASCADE)

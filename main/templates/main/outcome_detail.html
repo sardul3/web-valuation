@@ -32,7 +32,7 @@
        <div class="modal-dialog modal-dialog-centered" role="document">
          <div class="modal-content">
            <div class="modal-header">
-             <h5 class="modal-title" id="exampleModalLongTitle">Edit Measure</h5>
+             <h5 class="modal-title" id="exampleModalLongTitle">Add Measure</h5>
              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                <span aria-hidden="true">&times;</span>
              </button>
@@ -69,11 +69,16 @@
              <label for="exampleFormControlTextarea1">Select Tool Type</label>
                <select class="custom-select" name="tool_selection">
                <option selected>Select Tool</option>
-               <option value="1">Rubric</option>
-               <option value ="2">Exam Scores</option>
-               <option value="3">Standardized Test Scores</option>
-               <option value="4">Course Score</option>
+               <option value="Rubric">Rubric</option>
+               <option value ="Test score">Test score</option>
                </select>
+
+               <label for="exampleFormControlTextarea1">Select Cutoff type</label>
+                 <select class="custom-select" name="cutoff_selection">
+                 <option selected>Percentage</option>
+                 <option value="Percentile">Percentile</option>
+                 <option value ="Average">Average</option>
+                 </select>
 
                <div class="modal-footer">
                  <button type="submit" class="btn btn-primary">Add</button>
@@ -177,6 +182,20 @@
                                  value = "{{measure.cutoff_percentage}}">
                         </div>
 
+                        <label for="exampleFormControlTextarea1">Select Tool Type</label>
+                          <select class="custom-select" name="tool_selection">
+                          <option selected>Select Tool</option>
+                          <option value="Rubric">Rubric</option>
+                          <option value ="Test score">Test score</option>
+                          </select>
+
+                          <label for="exampleFormControlTextarea1">Select Cutoff type</label>
+                            <select class="custom-select" name="cutoff_selection">
+                            <option selected>Percentage</option>
+                            <option value="Percentile">Percentile</option>
+                            <option value ="Average">Average</option>
+                            </select>
+
                           <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Save changes</button>
                           </div>
@@ -214,9 +233,6 @@
 
 
 
-        {%if measure.rubric %}
-          Tools associated: {{measure.rubric.title}}
-{%endif%}
 
 
 
@@ -276,17 +292,16 @@
             </tr>
           </thead>
           <tbody>
-            {%for student in students%}
+            {% for student in measure.student.all %}
+
             <tr>
               <td scope="row">{{student.name}}</td>
               <td>{{student.classification}}</td>
             </tr>
-          {%endfor%}
+              {%endfor%}
+      
           </tbody>
       </table>
-
-
-
 
       </div>
 
@@ -298,11 +313,26 @@
 
   <br />
 
+{%if measure.tool_type == 'Rubric'%}
+    {%if measure.rubric %}
+      {{measure.tool_type}} associated: {{measure.rubric.title}}
+    {%else%}
 
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
         Add Rubric
       </button>
+    {%endif%}
+{%endif%}
+
+{%if measure.tool_type == 'Test score'%}
+    {%if measure.test_score %}
+      {{measure.tool_type}} associated: {{measure.test_score.test_name}}
+    {%else%}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
+    Add Test Score
+  </button>
+  {%endif%}
+{%endif%}
 
       <div class="modal fade" id="exampleModalCenterAddRubric{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -332,6 +362,38 @@
                 </div>
               </form>
             </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="exampleModalCenterAddTestScore{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Add test score</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action = "{%url 'main:upload' measure.id outcome_id%}"method="post" enctype="multipart/form-data">
+              {%csrf_token%}
+              <div class="form-group">
+                <label for="exampleInputEmail1">Test Title</label>
+                <input type="textarea" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="title of the test">
+              </div>
+
+              <hr />
+              <div class="form-group">
+                <label for="exampleInputEmail1">Upload Scores</label>
+                <small id="emailHelp" class="form-text text-muted">instructions go here </small>
+              </div>
+
+                <input type="file" name="csv_file" />
+                <button type="submit" class="btn btn-primary">Upload</button>
+              </form>
+              </div>
           </div>
         </div>
       </div>

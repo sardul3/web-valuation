@@ -21,7 +21,7 @@
   <div class = "container" id = "main_content">
 		<h1> {{rubric.title}} </h1>
     <table class = "table table-bordered table-responsive">
-        {% for x in row_num %}
+        {% for x in row_num%}
           <tr>
           {% for y in row_col %}
             {% for category in categories %}
@@ -32,9 +32,21 @@
                 {%endif%}
               {%endif%}
             {%endfor%}
+
           {% endfor %}
+					{%if x <= 0 %}
+					<td> Score </td>
+					{%else%}
+				<td>
+					<div class="form-group">
+					  <input class = "form-control" type = "number"  name = "score{{x}}">
+					</div>
+				</td>
+					{%endif%}
           </tr>
         {% endfor %}
+
+
 
   </div>
 

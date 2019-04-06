@@ -48,9 +48,15 @@ textarea{
       {%for row in rows%}
       <tr>
         {%for col in cols%}
+				{%if row == 0%}
+				<div class = "form-group">
+					<td> <input class="form-control" id="exampleFormControlTextarea1" name = "{{row}}{{col}}"></td>
+				</div>
+				{%else%}
 				<div class = "form-group">
           <td> <textarea rows="5" class="form-control" id="exampleFormControlTextarea1" name = "{{row}}{{col}}"></textarea></td>
 				</div>
+				{%endif%}
         {%endfor%}
         </tr>
       {%endfor%}
