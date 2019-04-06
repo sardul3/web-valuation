@@ -69,10 +69,8 @@ class Test(models.Model):
 class Test_score(models.Model):
     student = models.ForeignKey(Student, null=True, on_delete=models.CASCADE)
     score = models.PositiveIntegerField()
-    test = models.ForeignKey(Test, null=True, on_delete = models.CASCADE)
+    test = models.CharField(max_length=200, default='Test', null=True, blank=True)
 
-    def __str__(self):
-        return self.student
 
 
 class Measure(models.Model):
@@ -93,7 +91,7 @@ class Measure(models.Model):
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)
     cutoff_score = models.FloatField(null=True, blank=True, default=0)
     rubric = models.ForeignKey(Rubric,null=True, blank = True, on_delete = models.CASCADE)
-    test_score = models.ForeignKey(Test, null=True, blank = True, on_delete = models.CASCADE)
+    test_score = models.ForeignKey(Test_score, null=True, blank = True, on_delete = models.CASCADE)
     student = models.ManyToManyField(Student)
     evaluator = models.ManyToManyField(Evaluator)
 

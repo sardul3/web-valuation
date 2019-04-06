@@ -13,6 +13,14 @@ urlpatterns = [
     path('rubric_render/<int:rubric_id>', views.rubric_render, name = 'rubric_render'),
     path('evaluate_students/', views.evaluate_students, name = 'evaluate_students'),
 
+    path('view_test_score/<str:test_score_test>', views.view_test_score, name = 'view_test_score'),
+
+    path('evaluate_single_student', views.evaluate_single_student, name = "evaluate_single_student"),
+
+    path('remove_rubric_association/<int:measure_id>/<int:outcome_id>', views.remove_rubric_association, name = "remove_rubric_association"),
+    path('remove_test_association/<int:measure_id>/<int:outcome_id>', views.remove_test_association, name = "remove_test_association"),
+
+
 
     path('add_individual_student/<int:outcome_id>/<int:measure_id>', views.add_individual_student, name = 'add_individual_student'),
     path('upload_student/<int:outcome_id>/<int:measure_id>', views.upload_student, name = 'upload_student'),

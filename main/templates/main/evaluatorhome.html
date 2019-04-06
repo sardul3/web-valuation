@@ -95,6 +95,8 @@
           </li>
             {% for student in measure.student.all %}
                   <li class="list-group-item">{{student.name}}</li>
+
+                  
             {%empty%}
               <li class="list-group-item"> No students added yet </li>
             {%endfor%}

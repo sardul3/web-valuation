@@ -70,7 +70,10 @@ def grade(request):
 def evaluator_rubric_select(request, measure_id):
     measures = Measure.objects.get(id=measure_id)
     students = measures.student.all()
-    context = { 'measures':measures, 'students':students, 'measure_id':measure_id}
+    rubric = measures.rubric
+    categories = Category.objects.all()
+    context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
+                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col)}
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 def evaluate_students(request):
@@ -137,6 +140,8 @@ def outcome_detail(request, outcome_id):
 def upload(request, measure_id, outcome_id):
     if request.method=='POST' and request.FILES:
         measure = Measure.objects.filter(id=measure_id)
+        test_name = request.POST.get('test_title')
+        max_points = request.POST.get('max_points')
 
         csvfile = request.FILES['csv_file']
         datset = csvfile.read().decode("UTF-8")
@@ -145,8 +150,7 @@ def upload(request, measure_id, outcome_id):
 
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
             student = Student.objects.create(name=column[0])
-            test = Test.objects.create(test_name=column[1])
-            student_score = Test_score(student=student, test=test, score=column[2])
+            student_score = Test_score(student=student, test=test_name, score=column[1])
             student_score.save()
             measure.update(test_score=student_score)
 
@@ -292,19 +296,21 @@ def add_individual_student(request, outcome_id, measure_id):
 
 def upload_student(request, outcome_id, measure_id):
     if request.method=='POST' and request.FILES:
+        measure = Measure.objects.get(id=measure_id)
+
         csvfile = request.FILES['csv_file']
         datset = csvfile.read().decode("UTF-8")
         io_string = io.StringIO(datset)
-        measure = Measure.objects.get(id=measure_id)
 
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
+
             student = Student(name=column[0], classification=column[1])
             student.save()
             measure.student.add(student)
 
             messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
 
-            return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+        return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -334,3 +340,26 @@ def delete_outcome(request, outcome_id, cycle_id):
     messages.add_message(request, messages.WARNING, 'Outcome was deleted successfully')
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
+
+def view_test_score(request, test_score_test):
+    test_score = Test_score.objects.filter(test=test_score_test)
+    context = {'test_score': test_score}
+    return render(request, 'main/test_scores.html', context)
+
+def evaluate_single_student(request):
+    student_name = request.POST.getlist('student_to_be_evaluated',None)[0]
+    print(student_name)
+    context = {'student_name':student_name}
+    return render(request, 'main/rubric_render_evaluator.html', context)
+
+def remove_rubric_association(request, measure_id, outcome_id):
+    measure = Measure.objects.filter(id = measure_id)
+    measure.update(rubric=None)
+
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+def remove_test_association(request, measure_id, outcome_id):
+    measure = Measure.objects.filter(id = measure_id)
+    measure.update(test_score=None)
+
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))

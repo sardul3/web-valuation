@@ -1,0 +1,32 @@
+{% extends  'base.html' %}
+{%load static%}
+{% block body_block %}
+
+<div class  = "container-fluid" id = "main_content">
+  <div class = "container" >
+    <div class = "d-flex justify-content-between" style = "margin-top: 15px;padding:15px;">
+    		<h1> {{test_score.test}} </h1>
+        <a href="" class = "btn btn-warning btn-lg">Edit</a>
+    </div>
+    <table class = "table table-bordered table-responsive">
+      <thead>
+        <tr>
+           <td> Test Name </td>
+           <td> Student </td>
+           <td> Score </td>
+        </tr>
+      </thead>
+      <tbody>
+        {%for st in test_score%}
+          <tr>
+            <td> {{st.test}} </td>
+            <td> {{st.student}} </td>
+            <td> {{st.score}} </td>
+          </tr>
+        {%endfor%}
+        </tbody>
+        </table>
+  </div>
+</div>
+
+{%endblock%}

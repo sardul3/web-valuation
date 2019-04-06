@@ -3,39 +3,54 @@
 {% block body_block %}
 
 <div class = "container" id = "main_content">
-  <form action = "{% url 'main:evaluate_students' %}" method = "POST" >
-    {% csrf_token%}
-<div class = "row">
-  <div class = "col-lg-6">
-    <label for="exampleFormControlSelect1">Evaluate a team</label>
-    <div class="form-group">
-       <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="team name">
-     </div>
-    <ul class="list-group">
-        {% for student in students %}
-          <label class="form-check-label list-group-item" for="defaultCheck{{student.id}}">{{student.name}}  </label>
-            <span class = "text-right" style="right:0;">
-              <input type="checkbox" class="form-check-input " id="exampleCheck{{student.id}}">
-            </span>
-          {%endfor%}
-    </ul>
-    <button type = "submit" class = "btn btn-primary btn-lg"> Evaluate </button>
+  <div class = "col-lg-12">
+    <form action = "{%url 'main:evaluate_single_student'%}" method = "POST">
+      {%csrf_token%}
+        <label for="exampleFormControlSelect1">Evaluate a student</label>
+             <select class="form-control" name = "student_to_be_evaluated">
+                   {% for student in students %}
+                        <option value = "{{student.name}}">{{student.name}}</option>
+                  {%endfor%}
+              </select>
 
-  </div>
 
-  <div class = "col-lg-6">
-    <label for="exampleFormControlSelect1">Evaluate a student</label>
-    <ul class="list-group">
 
-         <select id="inputStudent" class="form-control">
-           {% for student in students %}
-                <option selected>{{student.name}}</option>
-         </select>
-          {%endfor%}
-    </ul>
-    <button type = "submit" class = "btn btn-primary btn-lg"> Evaluate </button>
 
-  </div>
+    <h1> {{rubric.title}} </h1>
+    <table class = "table table-bordered table-responsive">
+        {% for x in row_num%}
+          <tr>
+          {% for y in col_num%}
+            {% for category in categories %}
+
+              {%if category.rubric == rubric %}
+                {% if category.index_x == x and category.index_y == y %}
+                  <td> {{category.categoryTitle}} </td>
+                {%endif%}
+              {%endif%}
+            {%endfor%}
+
+          {% endfor %}
+          {%if x <= 0 %}
+          <td> Score </td>
+          {%else%}
+        <td>
+          <div class="form-group">
+            <input class = "form-control" type = "number"  name = "score{{x}}">
+          </div>
+        </td>
+          {%endif%}
+          </tr>
+        {% endfor %}
+
+
+
+        <button type = "submit" class = "btn btn-primary btn-lg mt-3"> Evaluate </button>
+        </form>
+</div>
+</div>
+
+
 
 
 

@@ -317,6 +317,7 @@
     {%if measure.rubric %}
       {{measure.tool_type}} associated: {{measure.rubric.title}}
       <a href = "{% url 'main:rubric_render' measure.rubric.id%}" class = "btn btn-primary"> View </a>
+      <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}"class = "btn btn-warning"> Remove Association </a>
     {%else%}
 
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
@@ -327,8 +328,9 @@
 
 {%if measure.tool_type == 'Test score'%}
     {%if measure.test_score %}
-      {{measure.tool_type}} associated: {{measure.test_score.test_name}}
-      <button  class = "btn btn-primary"> View </button>
+      {{measure.tool_type}} associated: {{measure.test_score.test}}
+      <a href= "{%url 'main:view_test_score' measure.test_score.test%}"  class = "btn btn-primary"> View </a>
+      <a  href = "{% url 'main:remove_test_association' measure.id outcome_id %}" class = "btn btn-warning"> Remove Association </a>
 
     {%else%}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
@@ -384,10 +386,16 @@
               {%csrf_token%}
               <div class="form-group">
                 <label for="exampleInputEmail1">Test Title</label>
-                <input type="textarea" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="title of the test">
+                <input type="textarea" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="title of the test"
+                name="test_title">
               </div>
 
-              <hr />
+              <div class="form-group">
+                <label for="exampleInputEmail1">Full Marks</label>
+                <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="max obtainable points"
+                name="max_points">
+              </div>
+
               <div class="form-group">
                 <label for="exampleInputEmail1">Upload Scores</label>
                 <small id="emailHelp" class="form-text text-muted">instructions go here </small>
