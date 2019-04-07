@@ -6,9 +6,12 @@
 
 <head>
 <style>
-#main_content{
-  margin-top: 2%;
-}
+    #main_content{
+      margin-top: 2%;
+    }
+    #card-border-dark-mb-3{
+        background: red !important;
+    }
 </style>
 
   </head>
@@ -16,15 +19,26 @@
 {% block body_block%}
   <body>
 
+
     <div class = "container-fluid">
       <div class = "container" id = "main_content">
-        <h4 class = 'text-right' style = "font-family: 'ropa sans'"> Logged in as {{user.username}} </h4>
+        <h5 class = 'text-right' style = "font-family: 'ropa sans'"> Logged in as {{user.username}} </h5>
+
+
+       <div class="jumbotron">
+
+
+
+            <h2>Hello {{user.username}}. Welcome to the Dashboard. </h2>
+
+        </div>
+
         <div class = "row">
 
 
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-dark mb-3">
+            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
               <h3 class = "card-header title"> Start a new cycle </h3>
 
               <form action = "{% url 'main:newCycle' %}" method = "POST" >
@@ -62,7 +76,7 @@
 
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-dark mb-3">
+            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
               <h3 class = "card-header title"> Previous Cycles </h3>
               <ul class="list-group">
                 {%for cycle in cycles%}
@@ -81,7 +95,7 @@
           </div>
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-dark mb-3">
+            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
               <h3 class = "card-header title">Running Cycles </h3>
               <ul class="list-group">
                 {%for cycle in cycles%}
@@ -97,12 +111,26 @@
               </ul>
             </div>
           </div>
-          </div>
-            </div>
 
-        <div class = "row">
-          <div class = "col col-lg-4 col-md-6 col-sm-12">
-            <div class = "card border-dark mb-3">
+
+        <div class = "col col-lg-4 col-md-6 col-sm-12">
+                    <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
+                        <h3 class = "card-header title">Rubrics</h3>
+                        <ul id = "over" class="list-group">
+                            {%for rubric in rubrics%}
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{rubric.title}}
+                            </li>
+
+                            {%endfor%}
+
+                        </ul>
+                    </div>
+        </div>
+
+        <div class = "col col-lg-4 col-md-6 col-sm-12">
+            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
               <div class="collapse" id="collapseExample" style = "overflow-y: scroll; max-height: 30vh;">
                 <ul class="list-group">
                   {%for notification in notifications%}
@@ -116,21 +144,14 @@
           </button>
 
         </div>
-
-
-
-
-
-
-
-          </div>
-        </div>
-
-
-
-
-
-
       </div>
+        </div>
     </div>
+
+
+
+
+     </div>
+
+
 {%endblock%}

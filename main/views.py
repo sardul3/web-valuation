@@ -21,13 +21,18 @@ def homepage(request):
 def evaluatorhome(request):
     rubrics = Rubric.objects.all()
     students = Student.objects.all()
-    evaluatons = evaluate_rubric.objects.all()
+    evaluations = evaluate_rubric.objects.all()
+    evaluated_flag = []
+    for stu in students:
+        if evaluations.filter(student=stu.name,evaluated_by=request.user.username).exists():
+            evaluated_flag.append(stu.name)
+
+
 
     email_address = request.user.email
-    print(request.user.is_staff)
     measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
-    print(measure)
-    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluatons, 'measures':measure}
+    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure,
+                'evaluated_flag':evaluated_flag}
 
     return render(request, 'main/evaluatorhome.html', context)
 
@@ -74,8 +79,15 @@ def evaluator_rubric_select(request, measure_id):
     students = measures.student.all()
     rubric = measures.rubric
     categories = Category.objects.all()
+    evaluations = evaluate_rubric.objects.all()
+
+    evaluated_flag = []
+    for stu in students:
+        if evaluations.filter(student=stu.name,evaluated_by=request.user.username).exists():
+            evaluated_flag.append(stu.name)
+
     context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
-                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col)}
+                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':evaluated_flag}
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 def evaluate_students(request):
@@ -131,9 +143,14 @@ def outcome_detail(request, outcome_id):
     measures = Measure.objects.filter(outcome=outcome)
     rubrics = Rubric.objects.all()
     students = None
+
+    total_count = 0;
     for measure in measures:
         students = measure.student.all()
+
     evaluators = Evaluator.objects.all()
+
+
 
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators}
@@ -368,14 +385,12 @@ def view_test_score(request, test_score_test, measure_id):
     for student_score in test_score:
         if(measure.cutoff_type == 'Percentage'):
             if(student_score.score>=measure.cutoff_score):
-                bin_array.append(1)
-            else:
-                bin_array.append(0)
+                bin_array.append(student_score.student.name)
+
         elif(measure.cutoff_type == 'Average'):
             if(student_score.score>=measure.cutoff_percentage):
-                bin_array.append(1)
-            else:
-                bin_array.append(0)
+                bin_array.append(student_score.student.name)
+
     print(bin_array)
 
     if(measure.cutoff_type == 'Percentage'):
@@ -396,21 +411,29 @@ def view_test_score(request, test_score_test, measure_id):
                 'measure':measure, 'passed':passed, 'bin_array': bin_array, 'count': range(len(bin_array))}
     return render(request, 'main/test_scores.html', context)
 
-def evaluate_single_student(request, rubric_row):
+def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     student_name = request.POST.getlist('student_to_be_evaluated')[0]
+    rubric_name = Rubric.objects.get(id=rubric_id).title
+    measure = Measure.objects.get(id=measure_id)
     scores = []
     avg = 0
     total = 0
+    count=0
     for x in range(rubric_row-1):
         score = request.POST.get('score'+str(x+1))
         scores.append(score)
         total += int(score)
-
-    avg = total/rubric_row+1
+        count = count +1
     print(scores)
-    print(total/rubric_row+1)
-    context = {'student_name':student_name}
-    return render(request, 'main/rubric_render_evaluator.html', context)
+    print(count)
+    print(total)
+
+    avg = total/count
+    print(avg)
+    evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
+                student=student_name, measure=measure, evaluated_by = request.user.username)
+    evaluated.save()
+    return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
 
 def remove_rubric_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)

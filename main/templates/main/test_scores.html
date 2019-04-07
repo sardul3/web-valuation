@@ -27,7 +27,7 @@
       <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;"> </div>
     {%endif%}
     <br/>
-    <table class = "table table-bordered table-responsive">
+    <table class = "table table-bordered ">
 
       <thead>
         <tr>
@@ -44,8 +44,12 @@
             <td> {{st.test}} </td>
             <td> {{st.student}} </td>
             <td> {{st.score}} </td>
+            {%if st.student.name in bin_array%}
+              <td> passed </td>
+            {%else%}
+                <td> failed</td>
+            {%endif%}
         {%endfor%}
-
   </tr>
 
         </tbody>

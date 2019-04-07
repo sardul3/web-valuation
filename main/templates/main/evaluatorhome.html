@@ -88,15 +88,37 @@
           {%endif%}
         <h1 class = "d-flex justify-content-between"> {{measure.measureTitle}}
          </h1>
-        <p> {{measure.measureText}} </p>
+         
+         <button class = "btn btn-warning mb-3">
+         {{measure.cutoff_percentage}} % of the students need to get
+         {%if measure.cutoff_score%}
+          {{measure.cutoff_score}}
+          {%else%}
+          average
+          {%endif%}
+             or higher
+         on {{measure.tool_type}}
+         </button>
 
         <ul class="list-group mb-2">
           <li class="list-group-item active d-flex justify-content-between">Students
           </li>
             {% for student in measure.student.all %}
-                  <li class="list-group-item">{{student.name}}</li>
+                  <li class="d-flex list-group-item justify-content-between">
+                    <div>
+                    {{student.name}}
+                    </div>
+                    {%if student.name in evaluated_flag%}
+                      <em> Already Evaluated </em>
+                    {%else%}
+                      <em> Not yet evaluated </em>
+                    {%endif%}
 
-                  
+
+                  </li>
+
+
+
             {%empty%}
               <li class="list-group-item"> No students added yet </li>
             {%endfor%}

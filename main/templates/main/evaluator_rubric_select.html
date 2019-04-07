@@ -3,13 +3,16 @@
 {% block body_block %}
 
 <div class = "container" id = "main_content">
-
-    <form action = "{%url 'main:evaluate_single_student' rubric.max_row%}" method = "POST">
+{{row_num}}
+    <form action = "{%url 'main:evaluate_single_student' rubric.max_row rubric.id measure_id%}" method = "POST">
       {%csrf_token%}
         <label for="exampleFormControlSelect1">Evaluate a student</label>
              <select class="form-control" name = "student_to_be_evaluated">
                    {% for student in students %}
+                      {%if student.name in evaluated_flag%}
+                      {%else%}
                         <option value = "{{student.name}}">{{student.name}}</option>
+                      {%endif%}
                   {%endfor%}
               </select>
     <br/>

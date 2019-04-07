@@ -104,8 +104,9 @@ class evaluate_rubric(models.Model):
     rubric = models.CharField(max_length=200)
     grade_score = models.FloatField()
     student = models.CharField(max_length=200)
-    
+    measure = models.ForeignKey(Measure, null=True, on_delete=models.CASCADE)
+    evaluated_by = models.CharField(max_length=200)
+
 
     def __str__(self):
-        out = self.student + " scored "+ self.grade_score + " in rubric: "+ self.rubric
-        return out
+        return self.student
