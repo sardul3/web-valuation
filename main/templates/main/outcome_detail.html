@@ -184,6 +184,7 @@
 
                         <label for="exampleFormControlTextarea1">Select Tool Type</label>
                           <select class="custom-select" name="tool_selection">
+                            <!-- FIX selected option -->
                           <option selected>Select Tool</option>
                           <option value="Rubric">Rubric</option>
                           <option value ="Test score">Test score</option>
@@ -235,6 +236,20 @@
 
 
 
+        <button class = "btn btn-warning mb-3">
+        {{measure.cutoff_percentage}} % of the students need to get
+        {%if measure.cutoff_score%}
+         {{measure.cutoff_score}}
+         {%else%}
+         average
+         {%endif%}
+            or higher
+        on {{measure.tool_type}}
+        </button>
+
+
+
+
 
   <div class="modal fade" id="exampleModalCenterStudentUpload{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -273,41 +288,6 @@
   </div>
 
 
-  <div class="modal fade" id="exampleModalLongExpandStudentList{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">List of students</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Student Name</th>
-              <th scope="col">Classification</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for student in measure.student.all %}
-
-            <tr>
-              <td scope="row">{{student.name}}</td>
-              <td>{{student.classification}}</td>
-            </tr>
-              {%endfor%}
-
-          </tbody>
-      </table>
-
-      </div>
-
-    </div>
-  </div>
-</div>
 
 
 
@@ -318,6 +298,89 @@
       {{measure.tool_type}} associated: {{measure.rubric.title}}
       <a href = "{% url 'main:rubric_render' measure.rubric.id%}" class = "btn btn-primary"> View </a>
       <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}"class = "btn btn-warning"> Remove Association </a>
+      <div class="modal fade" id="exampleModalLongExpandStudentList{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">List of students</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Student Name</th>
+                  <th scope="col">Classification</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for student in measure.student.all %}
+
+                <tr>
+                  <td scope="row">{{student.name}}</td>
+                  <td>{{student.classification}}</td>
+                </tr>
+                  {%endfor%}
+
+              </tbody>
+          </table>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class = "row">
+        <div class = "col-lg-6 mt-3">
+          <ul class="list-group">
+            <li class="list-group-item active">Evaluators</li>
+            {%for evaluator in measure.evaluator.all%}
+                <li class="list-group-item">{{evaluator.email}}</li>
+            {%endfor%}
+
+          </ul>
+          <br />
+          <hr />
+          <h3> Add new Evaluators </h3>
+          <form class="" action = "{%url 'main:add_evaluator' outcome_id measure.id %}" method = "POST">
+            {%csrf_token%}
+            <div class="form-group mb-2">
+                <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name">
+           </div>
+            <div class="form-group mb-2">
+                <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+           </div>
+            <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+          </form>
+          </div>
+
+          <div class = "col-lg-6">
+          <ul class="list-group">
+            <li class="list-group-item active d-flex justify-content-between">Students
+
+          <div class = "d-flex justify-content-between">
+            <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
+              <i class="fas fa-plus"></i>
+            </button>
+
+            <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
+              <i class="fas fa-expand-arrows-alt"></i>
+            </button>
+          </div>
+
+            </li>
+              {% for student in measure.student.all %}
+                    <li class="list-group-item">{{student.name}}</li>
+              {%endfor%}
+          </ul>
+          </div>
+        </div>
+
     {%else%}
 
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
@@ -329,7 +392,7 @@
 {%if measure.tool_type == 'Test score'%}
     {%if measure.test_score %}
       {{measure.tool_type}} associated: {{measure.test_score.test}}
-      <a href= "{%url 'main:view_test_score' measure.test_score.test%}"  class = "btn btn-primary"> View </a>
+      <a href= "{%url 'main:view_test_score' measure.test_score.test measure.id%}"  class = "btn btn-primary"> View </a>
       <a  href = "{% url 'main:remove_test_association' measure.id outcome_id %}" class = "btn btn-warning"> Remove Association </a>
 
     {%else%}
@@ -411,51 +474,7 @@
 
 <br/>
 <br/>
-<div class = "row">
-    <div class = "col-lg-6">
-      <ul class="list-group">
-        <li class="list-group-item active">Evaluators</li>
-        {%for evaluator in measure.evaluator.all%}
-            <li class="list-group-item">{{evaluator.email}}</li>
-        {%endfor%}
 
-      </ul>
-      <br />
-      <hr />
-      <h3> Add new Evaluators </h3>
-      <form class="" action = "{%url 'main:add_evaluator' outcome_id measure.id %}" method = "POST">
-        {%csrf_token%}
-        <div class="form-group mb-2">
-            <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name">
-       </div>
-        <div class="form-group mb-2">
-            <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-       </div>
-        <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
-      </form>
-      </div>
-
-      <div class = "col-lg-6">
-      <ul class="list-group">
-        <li class="list-group-item active d-flex justify-content-between">Students
-
-      <div class = "d-flex justify-content-between">
-        <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-          <i class="fas fa-plus"></i>
-        </button>
-
-        <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </button>
-      </div>
-
-        </li>
-          {% for student in measure.student.all %}
-                <li class="list-group-item">{{student.name}}</li>
-          {%endfor%}
-      </ul>
-      </div>
-    </div>
 
 
   </div>

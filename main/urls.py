@@ -13,7 +13,7 @@ urlpatterns = [
     path('rubric_render/<int:rubric_id>', views.rubric_render, name = 'rubric_render'),
     path('evaluate_students/', views.evaluate_students, name = 'evaluate_students'),
 
-    path('view_test_score/<str:test_score_test>', views.view_test_score, name = 'view_test_score'),
+    path('view_test_score/<str:test_score_test>/<int:measure_id>', views.view_test_score, name = 'view_test_score'),
 
     path('evaluate_single_student', views.evaluate_single_student, name = "evaluate_single_student"),
 

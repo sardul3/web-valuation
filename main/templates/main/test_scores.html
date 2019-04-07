@@ -5,25 +5,49 @@
 <div class  = "container-fluid" id = "main_content">
   <div class = "container" >
     <div class = "d-flex justify-content-between" style = "margin-top: 15px;padding:15px;">
-    		<h1> {{test_score.test}} </h1>
-        <a href="" class = "btn btn-warning btn-lg">Edit</a>
+      <button class = "btn btn-warning mb-3">
+      {{measure.cutoff_percentage}} % of the students need to get
+      {%if measure.cutoff_score%}
+       {{measure.cutoff_score}}
+       {%else%}
+       average
+       {%endif%}
+          or higher
+      on {{measure.tool_type}}
+      </button>
+
+
+
+      <a href="" class = "btn btn-warning btn-lg">Edit</a>
     </div>
+
+    {%if passed%}
+      <div style = "background-color:green; height:40px; width: 40px; border-radius: 50%;"></div>
+    {%else%}
+      <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;"> </div>
+    {%endif%}
+    <br/>
     <table class = "table table-bordered table-responsive">
+
       <thead>
         <tr>
            <td> Test Name </td>
            <td> Student </td>
            <td> Score </td>
+           <td> Status </td>
         </tr>
       </thead>
       <tbody>
+
         {%for st in test_score%}
-          <tr>
+         <tr>
             <td> {{st.test}} </td>
             <td> {{st.student}} </td>
             <td> {{st.score}} </td>
-          </tr>
+            
         {%endfor%}
+  </tr>
+
         </tbody>
         </table>
   </div>

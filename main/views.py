@@ -11,6 +11,8 @@ import csv
 import codecs
 import io
 from django.utils.timezone import datetime
+from django.db.models import Avg, Count, Min, Sum
+
 
 def homepage(request):
     return render(request, 'main/homepage.html', {})
@@ -143,16 +145,25 @@ def upload(request, measure_id, outcome_id):
         test_name = request.POST.get('test_title')
         max_points = request.POST.get('max_points')
 
+        total_points = 0
+
         csvfile = request.FILES['csv_file']
         datset = csvfile.read().decode("UTF-8")
         io_string = io.StringIO(datset)
 
 
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
+            total_points += int(column[1])
             student = Student.objects.create(name=column[0])
-            student_score = Test_score(student=student, test=test_name, score=column[1])
+            student_score = Test_score(student=student, test=test_name, score=int(column[1]))
             student_score.save()
             measure.update(test_score=student_score)
+
+        number_of_students = Test_score.objects.filter(test=test_name).count()
+        print(total_points)
+        print(number_of_students)
+        average = total_points / number_of_students
+        print(average)
 
         return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -341,9 +352,48 @@ def delete_outcome(request, outcome_id, cycle_id):
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
-def view_test_score(request, test_score_test):
+def view_test_score(request, test_score_test, measure_id):
+
+
+    measure = Measure.objects.get(id=measure_id)
     test_score = Test_score.objects.filter(test=test_score_test)
-    context = {'test_score': test_score}
+    total_students = test_score.count()
+    test_average = test_score.aggregate(Avg('score'))['score__avg']
+    above_threshold = test_score.filter(score__gte = 75).count()
+    percentage = above_threshold / total_students * 100
+    greater_than_avg = test_score.filter(score__gte = test_average).count()
+    passed = False
+
+    bin_array = []
+    for student_score in test_score:
+        if(measure.cutoff_type == 'Percentage'):
+            if(student_score.score>=measure.cutoff_score):
+                bin_array.append(1)
+            else:
+                bin_array.append(0)
+        elif(measure.cutoff_type == 'Average'):
+            if(student_score.score>=measure.cutoff_percentage):
+                bin_array.append(1)
+            else:
+                bin_array.append(0)
+    print(bin_array)
+
+    if(measure.cutoff_type == 'Percentage'):
+            above_threshold = test_score.filter(score__gte = measure.cutoff_percentage).count()
+            percentage = above_threshold / total_students * 100
+            if(percentage>=measure.cutoff_score):
+                passed = True
+    elif(measure.cutoff_type == 'Average'):
+            test_average = test_score.aggregate(Avg('score'))['score__avg']
+            above_threshold = test_score.filter(score__gte = test_average).count()
+            percentage = above_threshold / total_students * 100
+            if(percentage>=measure.cutoff_percentage):
+                passed = True
+
+    context = {'test_score': test_score, 'total_students':total_students,
+                'test_average': test_average, 'above_threshold': above_threshold,
+                'percentage':percentage, 'greater_than_avg': greater_than_avg,
+                'measure':measure, 'passed':passed, 'bin_array': bin_array, 'count': range(len(bin_array))}
     return render(request, 'main/test_scores.html', context)
 
 def evaluate_single_student(request):
