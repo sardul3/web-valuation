@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- CSS cdn to connect bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href = "{% static 'css/landing.css' %}">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato|Merienda|Merriweather|Ropa+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script
+    			  src="https://code.jquery.com/jquery-3.3.1.js"
+    			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    			  crossorigin="anonymous"></script>
+    <title>Add Individual Test Score</title>
+  </head>
+  <body>
+    <div class="container">
+      <form  class="form-group" method="post">
+
+
+        <h4>Add Individual Test Score</h4>
+        <p></p>
+        <!--<label for="test">Test Name</label>-->
+        <input class="form-control"type="text" name="test" placeholder="Enter Test Name">
+
+        <p></p>
+        <div class="form-row">
+
+        <div class="col">
+
+
+        <!--<label for="Student">Student's Name</label>-->
+        <input class="form-control" type="text" name="Student" placeholder="Student's Name">
+          </div>
+          <div class="col">
+
+
+      <!--  <label for="Score">Score</label>-->
+        <input class="form-control" type="text" name="Score" placeholder="Score">
+          </div>
+        </div>
+
+        <p></p>
+        <button class="btn btn-lg btn-primary"type="button" name="button">Submit</button>
+
+
+      </form>
+
+
+    </div>
+
+  </body>
+</html>
