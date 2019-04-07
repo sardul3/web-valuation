@@ -396,9 +396,19 @@ def view_test_score(request, test_score_test, measure_id):
                 'measure':measure, 'passed':passed, 'bin_array': bin_array, 'count': range(len(bin_array))}
     return render(request, 'main/test_scores.html', context)
 
-def evaluate_single_student(request):
-    student_name = request.POST.getlist('student_to_be_evaluated',None)[0]
-    print(student_name)
+def evaluate_single_student(request, rubric_row):
+    student_name = request.POST.getlist('student_to_be_evaluated')[0]
+    scores = []
+    avg = 0
+    total = 0
+    for x in range(rubric_row-1):
+        score = request.POST.get('score'+str(x+1))
+        scores.append(score)
+        total += int(score)
+
+    avg = total/rubric_row+1
+    print(scores)
+    print(total/rubric_row+1)
     context = {'student_name':student_name}
     return render(request, 'main/rubric_render_evaluator.html', context)
 

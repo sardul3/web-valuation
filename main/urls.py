@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('view_test_score/<str:test_score_test>/<int:measure_id>', views.view_test_score, name = 'view_test_score'),
 
-    path('evaluate_single_student', views.evaluate_single_student, name = "evaluate_single_student"),
+    path('evaluate_single_student/<int:rubric_row>', views.evaluate_single_student, name = "evaluate_single_student"),
 
     path('remove_rubric_association/<int:measure_id>/<int:outcome_id>', views.remove_rubric_association, name = "remove_rubric_association"),
     path('remove_test_association/<int:measure_id>/<int:outcome_id>', views.remove_test_association, name = "remove_test_association"),

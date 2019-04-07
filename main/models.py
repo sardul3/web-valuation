@@ -104,6 +104,7 @@ class evaluate_rubric(models.Model):
     rubric = models.CharField(max_length=200)
     grade_score = models.FloatField()
     student = models.CharField(max_length=200)
+    
 
     def __str__(self):
         out = self.student + " scored "+ self.grade_score + " in rubric: "+ self.rubric
