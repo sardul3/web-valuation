@@ -1,0 +1,59 @@
+{% extends  'base.html' %}
+{%load static%}
+{% block body_block %}
+
+<div class  = "container-fluid" id = "main_content">
+  <div class = "container" >
+    <div class = "d-flex justify-content-between" style = "margin-top: 15px;padding:15px;">
+    <button class = "btn btn-warning mb-3">
+    {{measure.cutoff_percentage}} % of the students need to get
+    {%if measure.cutoff_score%}
+     {{measure.cutoff_score}}
+     {%else%}
+     average
+     {%endif%}
+        or higher
+    on {{measure.tool_type}}
+    </button>
+    </div>
+    {%if passed%}
+      <div style = "background-color:green; height:40px; width: 40px; border-radius: 50%;"></div> Measure Passed
+    {%else%}
+      <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;"> </div>Measure Failed
+    {%endif%}
+
+      <table class = "table table-bordered ">
+
+        <thead>
+          <tr>
+             <td> Rubric </td>
+             <td> Student </td>
+             <td> Score </td>
+             <td> Evaluated by </td>
+             <td> Status </td>
+          </tr>
+        </thead>
+        <tbody>
+
+          {%for st in evaluated_list%}
+           <tr>
+              <td> {{st.rubric}} </td>
+              <td> {{st.student}} </td>
+              <td> {{st.grade_score}} </td>
+              <td> {{st.evaluated_by}} </td>
+
+              {%if st.student in bin_array%}
+                <td> <div style = "background-color:green; height:20px; width: 20px; border-radius: 50%;"></div> </td>
+              {%else%}
+                  <td><div style = "background-color:red; height:20px; width: 20px; border-radius: 50%;"> </div></td>
+              {%endif%}
+          {%endfor%}
+    </tr>
+
+          </tbody>
+          </table>
+
+  </div>
+</div>
+
+{%endblock%}

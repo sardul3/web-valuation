@@ -121,7 +121,8 @@
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{rubric.title}}
-                            </li>
+                            <a href = "{%url 'main:created_test_rubric'}" class = "btn btn-warning">Edit</a>
+                             </li>
 
                             {%endfor%}
 
@@ -138,7 +139,8 @@
                   {%endfor%}
                 </ul>
               </div>
-          <button class="btn card-header title" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >
+          <button class="btn card-header title" type="button" data-toggle="collapse" data-target="#collapseExample"
+           aria-expanded="false" aria-controls="collapseExample" >
               Notifications
               <i class="fa fa-chevron-up text-right" aria-hidden="true"></i>
           </button>

@@ -18,13 +18,12 @@
 
 
 
-      <a href="" class = "btn btn-warning btn-lg">Edit</a>
     </div>
 
     {%if passed%}
-      <div style = "background-color:green; height:40px; width: 40px; border-radius: 50%;"></div>
+      <div style = "background-color:green; height:40px; width: 40px; border-radius: 50%;"></div> Measure Passed
     {%else%}
-      <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;"> </div>
+      <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;"> </div>Measure Failed
     {%endif%}
     <br/>
     <table class = "table table-bordered ">
@@ -35,6 +34,7 @@
            <td> Student </td>
            <td> Score </td>
            <td> Status </td>
+
         </tr>
       </thead>
       <tbody>
@@ -45,9 +45,9 @@
             <td> {{st.student}} </td>
             <td> {{st.score}} </td>
             {%if st.student.name in bin_array%}
-              <td> passed </td>
+              <td> <div style = "background-color:green; height:20px; width: 20px; border-radius: 50%;"></div> </td>
             {%else%}
-                <td> failed</td>
+                <td><div style = "background-color:red; height:20px; width: 20px; border-radius: 50%;"> </div></td>
             {%endif%}
         {%endfor%}
   </tr>

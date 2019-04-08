@@ -20,6 +20,7 @@ urlpatterns = [
     path('remove_rubric_association/<int:measure_id>/<int:outcome_id>', views.remove_rubric_association, name = "remove_rubric_association"),
     path('remove_test_association/<int:measure_id>/<int:outcome_id>', views.remove_test_association, name = "remove_test_association"),
 
+    path('view_rubric_data/<int:measure_id>', views.view_rubric_data, name = "view_rubric_data"),
 
 
     path('add_individual_student/<int:outcome_id>/<int:measure_id>', views.add_individual_student, name = 'add_individual_student'),

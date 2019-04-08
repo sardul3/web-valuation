@@ -86,7 +86,6 @@ class Measure(models.Model):
     tool_type = models.CharField(max_length=100, choices=TOOL_TYPES, default='Rubric')
 
     measureTitle = models.CharField(max_length=200, default='', null=True)
-    measureText = models.CharField(max_length=200, blank = True, null=True)
     outcome = models.ForeignKey(Outcome, null=True, on_delete = models.CASCADE)
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)
     cutoff_score = models.FloatField(null=True, blank=True, default=0)

@@ -143,17 +143,21 @@ def outcome_detail(request, outcome_id):
     measures = Measure.objects.filter(outcome=outcome)
     rubrics = Rubric.objects.all()
     students = None
+    evaluators = Evaluator.objects.all()
+    num_of_evaluations = []
 
-    total_count = 0;
+
     for measure in measures:
         students = measure.student.all()
-
-    evaluators = Evaluator.objects.all()
+        evaluations = evaluate_rubric.objects.filter(measure=measure).count()
+        if(evaluations>0):
+            num_of_evaluations.append(measure.measureTitle)
+        print(num_of_evaluations)
 
 
 
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
-                'students': students, 'evaluators': evaluators}
+                'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -219,12 +223,11 @@ def add_learning_outcome(request, cycle_id):
 
 def update_measure(request, measure_id):
     measure_title = request.POST.get('measure_title')
-    measure_desc = request.POST.get('measure_desc')
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
     cutoff_type = request.POST.get('cutoff_selection')
     tool_type = request.POST.get('tool_selection')
-    measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,measureText= measure_desc,
+    measure = Measure.objects.filter(id=measure_id).update(measureTitle= measure_title,
     cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent,
     cutoff_type=cutoff_type, tool_type=tool_type)
 
@@ -237,14 +240,13 @@ def update_measure(request, measure_id):
 
 def new_measure(request, outcome_id):
     measure_title = request.POST.get('measure_title')
-    measure_desc = request.POST.get('measure_desc')
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
     tool_type = request.POST.get('tool_selection')
     cutoff_type = request.POST.get('cutoff_selection')
 
     outcome_found = Outcome.objects.get(id=outcome_id)
-    measure = Measure(measureTitle= measure_title,measureText= measure_desc,
+    measure = Measure(measureTitle= measure_title,
                       cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent,
                       outcome=outcome_found, tool_type=tool_type, cutoff_type=cutoff_type)
     measure.save()
@@ -274,7 +276,6 @@ def delete_measure(request, measure_id):
     return render(request, 'main/cycle.html')
 
 def add_test_to_measure(request, measure_id):
-
     return HttpResponseRedirect(reverse_lazy('main:upload'))
 
 def test_rubric(request):
@@ -394,9 +395,9 @@ def view_test_score(request, test_score_test, measure_id):
     print(bin_array)
 
     if(measure.cutoff_type == 'Percentage'):
-            above_threshold = test_score.filter(score__gte = measure.cutoff_percentage).count()
+            above_threshold = test_score.filter(score__gte = measure.cutoff_score).count()
             percentage = above_threshold / total_students * 100
-            if(percentage>=measure.cutoff_score):
+            if(percentage>=measure.cutoff_percentage):
                 passed = True
     elif(measure.cutoff_type == 'Average'):
             test_average = test_score.aggregate(Avg('score'))['score__avg']
@@ -446,3 +447,57 @@ def remove_test_association(request, measure_id, outcome_id):
     measure.update(test_score=None)
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+def view_rubric_data(request, measure_id):
+    measure = Measure.objects.get(id=measure_id)
+
+    total_count = 0;
+    evaluator_count = 0;
+    student_count = 0;
+    evaluated_student_count = 0;
+
+    students = measure.student.all()
+    # evaluator_count = measure.evaluator.all().count()
+    # student_count = measure.student.all().count()
+    evaluated_student_count = evaluate_rubric.objects.filter(measure=measure).count()
+    # total_count = evaluator_count * student_count
+
+    # avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
+
+    number_of_pass_cases = evaluate_rubric.objects.filter(grade_score__gte = measure.cutoff_score).count()
+    percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100
+
+    # number_pass_cases_avg = evaluate_rubric.objects.filter(grade_score__gte = avg_points).count()
+    # percent_pass_cases_avg = number_pass_cases_avg/total_count * 100
+
+    # data = {
+    #     'total_count': total_count,
+    #     'evaluator_count':evaluator_count,
+    #     'student_count':student_count,
+    #     'evaluated_student_count': evaluated_student_count,
+    #     'avg_points': avg_points,
+    #     'number_of_pass_cases': number_of_pass_cases,
+    #     'percent_pass_cases': percent_pass_cases,
+    #     'number_pass_cases_avg':number_pass_cases_avg,
+    #     'percent_pass_cases_avg': percent_pass_cases_avg
+    # }
+    # print(data)
+
+    evaluated_list = evaluate_rubric.objects.filter(measure = measure)
+
+    bin_array = []
+    for student_score in evaluated_list:
+        if(measure.cutoff_type == 'Percentage'):
+            if(student_score.grade_score>=measure.cutoff_score):
+                bin_array.append(student_score.student)
+
+    passed = False
+    if(measure.cutoff_type == 'Percentage'):
+            if(percent_pass_cases>=measure.cutoff_percentage):
+                passed = True
+
+
+    context = {'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed}
+
+
+    return render(request, 'main/rubric_scores.html', context)
