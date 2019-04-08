@@ -181,9 +181,15 @@
                         <label for="exampleFormControlTextarea1">Select Tool Type</label>
                           <select class="custom-select" name="tool_selection">
                             <!-- FIX selected option -->
-                          <option selected>Select Tool</option>
-                          <option value="Rubric">Rubric</option>
-                          <option value ="Test score">Test score</option>
+                            {%if measure.tool_type == 'Rubric'%}
+                              <option selected>Rubric</option>
+                            {%elif measure.tool_type == 'Test score'%}
+                              <option selected>Test score</option>
+                            {%else%}
+                              <option selected>Select Tool</option>
+                              <option value="Rubric">Rubric</option>
+                              <option value ="Test score">Test score</option>
+                            {%endif%}
                           </select>
 
                           <label for="exampleFormControlTextarea1">Select Cutoff type</label>
@@ -395,7 +401,7 @@
 {%if measure.tool_type == 'Test score'%}
     {%if measure.test_score %}
       {{measure.tool_type}} associated: {{measure.test_score.test}}
-      <a href= "{%url 'main:view_test_score' measure.test_score.test measure.id%}"  class = "btn btn-primary"> View </a>
+      <a href= "{%url 'main:view_test_score' measure.test_score.test measure.id%}"  class = "btn btn-primary"> View Status</a>
       <a  href = "{% url 'main:remove_test_association' measure.id outcome_id %}" class = "btn btn-warning"> Remove Association </a>
 
     {%else%}
