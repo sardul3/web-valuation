@@ -28,12 +28,23 @@
               <h5 class="card-title">Started at</h5>
               <p class="card-text">{{cycle.startDate}}</p>
               <hr>
+              {%if cycle.isCurrent == False%}
+                <h5 class="card-title">Ended at</h5>
+                <p class="card-text">{{cycle.endDate}}</p>
+                <hr>
+              {%endif%}
               <h5 class="card-title">Created by</h5>
               <p class="card-text">{{user.username}}</p>
               <hr>
+              {%if cycle.isCurrent%}
               <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger btn-lg">
                 End Cycle
               </a>
+              {%else%}
+              <a href = ""class = "btn btn-lg btn-success btn-lg">
+                Reactivate
+              </a>
+              {%endif%}
             </div>
           </div>
       </div>
@@ -42,10 +53,11 @@
 
     <div class = "col col-lg-6 objs card border-dark ">
     <h1 class="text-center d-flex justify-content-between mb-3">  Learning outcomes
-
-      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
-       <i class="fas fa-plus"></i>
-      </button>
+    {%if cycle.isCurrent%}
+          <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+           <i class="fas fa-plus"></i>
+          </button>
+    {%endif%}
     </h1>
     <br />
       <div class="list-group">

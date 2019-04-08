@@ -3,9 +3,12 @@
 {% block body_block %}
 
 <div class  = "container-fluid" id = "main_content">
-  <div class = "container" >
-    <div class = "d-flex justify-content-between" style = "margin-top: 15px;padding:15px;">
+  <div class = "container card border-dark" style = "margin-top: 15px;padding:15px;" >
+    <div class = "d-flex justify-content-between" >
+
       <button class = "btn btn-warning mb-3">
+        <strong>Measure Objective: </strong>
+        <em>
       {{measure.cutoff_percentage}} % of the students need to get
       {%if measure.cutoff_score%}
        {{measure.cutoff_score}}
@@ -14,17 +17,19 @@
        {%endif%}
           or higher
       on {{measure.tool_type}}
+     </em>
       </button>
 
-
-
+      <div class = "d-flex justify-content-center">
+      {%if passed%}
+        <div  style = "background-color:green; height:40px; width: 40px; border-radius: 50%; margin-right: 5px;"></div><p> Measure Passed</p>
+      {%else%}
+        <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;  margin-right: 5px;"> </div><p>Measure Failed by<em> {{margin|floatformat:"0"}}</em>% </p>
+      {%endif%}
+      </div>
     </div>
 
-    {%if passed%}
-      <div style = "background-color:green; height:40px; width: 40px; border-radius: 50%;"></div> Measure Passed
-    {%else%}
-      <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;"> </div>Measure Failed
-    {%endif%}
+
     <br/>
     <table class = "table table-bordered ">
 

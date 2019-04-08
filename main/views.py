@@ -130,7 +130,7 @@ def cycle(request, cycle_id):
     return render(request, 'main/cycle.html', context)
 
 def end_cycle(request, cycle_id):
-    cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=False)
+    cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=False, endDate=datetime.today())
 
     messages.add_message(request, messages.WARNING, 'Cycle was deleted successfully')
 
@@ -381,6 +381,7 @@ def view_test_score(request, test_score_test, measure_id):
     percentage = above_threshold / total_students * 100
     greater_than_avg = test_score.filter(score__gte = test_average).count()
     passed = False
+    margin = 0.0
 
     bin_array = []
     for student_score in test_score:
@@ -399,17 +400,23 @@ def view_test_score(request, test_score_test, measure_id):
             percentage = above_threshold / total_students * 100
             if(percentage>=measure.cutoff_percentage):
                 passed = True
+            else:
+                margin = measure.cutoff_percentage - percentage
     elif(measure.cutoff_type == 'Average'):
             test_average = test_score.aggregate(Avg('score'))['score__avg']
             above_threshold = test_score.filter(score__gte = test_average).count()
             percentage = above_threshold / total_students * 100
             if(percentage>=measure.cutoff_percentage):
                 passed = True
+            else:
+                margin = measure.cutoff_percentage - percentage
+
 
     context = {'test_score': test_score, 'total_students':total_students,
                 'test_average': test_average, 'above_threshold': above_threshold,
                 'percentage':percentage, 'greater_than_avg': greater_than_avg,
-                'measure':measure, 'passed':passed, 'bin_array': bin_array, 'count': range(len(bin_array))}
+                'measure':measure, 'passed':passed, 'bin_array': bin_array,
+                 'count': range(len(bin_array)), 'margin':margin}
     return render(request, 'main/test_scores.html', context)
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):

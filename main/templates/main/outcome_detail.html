@@ -131,11 +131,15 @@
 
           <div>
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
-                  Edit
+            <span style="font-size: 2em; color: white;">
+              <i class="far fa-edit"></i>
+          </span>
           </button>
 
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterDeleteMeasure{{measure.id}}" data-measure-id = "{{measure.id}}">
-                        Delete
+            <span style="font-size: 2em; color: white;">
+              <i class="far fa-trash-alt"></i>
+          </span>
           </button>
           <div>
 
@@ -240,7 +244,7 @@
         </button>
 
         {%if measure.measureTitle in num_of_evaluations%}
-        <a href = "{%url 'main:view_rubric_data' measure.id%}" class = "btn btn-primary">
+        <a href = "{%url 'main:view_rubric_data' measure.id%}" class = "btn btn-primary mb-3">
             View Status
         </a>
         {%else%}
