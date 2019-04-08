@@ -24,6 +24,8 @@ urlpatterns = [
 
     path('remove_evaluator_access/<int:evaluator_id>/<int:measure_id>/<int:outcome_id>', views.remove_evaluator_access, name = "remove_evaluator_access"),
 
+    path('migrate_cycle/<int:cycle_id>', views.migrate_cycle, name = "migrate_cycle"),
+
 
 
     path('add_individual_student/<int:outcome_id>/<int:measure_id>', views.add_individual_student, name = 'add_individual_student'),

@@ -125,8 +125,10 @@ def cycle(request, cycle_id):
     measures = Measure.objects.all()
     rubrics = Rubric.objects.all()
     cycle = Cycle.objects.get(id=cycle_id)
+    prev_cycles = Cycle.objects.filter(isCurrent=False)
 
-    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators, 'measures': measures, 'rubrics': rubrics, 'cycle':cycle}
+    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
+                'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles}
     return render(request, 'main/cycle.html', context)
 
 def end_cycle(request, cycle_id):
@@ -136,7 +138,25 @@ def end_cycle(request, cycle_id):
 
     return HttpResponseRedirect(reverse('main:dashboard'))
 
+def migrate_cycle(request, cycle_id):
+    from_cycle_id = request.POST.get('cycle_migrate')
+    from_cycle = Cycle.objects.get(id=from_cycle_id)
+    outcomes = Outcome.objects.filter(cycle=from_cycle)
 
+    to_cycle = Cycle.objects.get(id = cycle_id)
+
+    for outcome in outcomes:
+        measures = Measure.objects.filter(outcome = outcome)
+        new_outcome = Outcome.objects.create(title=outcome.title, status = outcome.status)
+        new_outcome.cycle.add(to_cycle)
+        for mea in measures:
+            new_measure = Measure(measureTitle= mea.measureTitle,
+                      cutoff_score= mea.cutoff_score,cutoff_percentage= mea.cutoff_percentage,
+                      outcome=new_outcome, tool_type=mea.tool_type, cutoff_type=mea.cutoff_type)
+            new_measure.save()
+
+
+    return HttpResponseRedirect(reverse('main:dashboard'))
 
 def outcome_detail(request, outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)

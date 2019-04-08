@@ -37,7 +37,7 @@
               <p class="card-text">{{user.username}}</p>
               <hr>
               {%if cycle.isCurrent%}
-              <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger btn-lg">
+              <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger mb-3">
                 End Cycle
               </a>
               {%else%}
@@ -45,8 +45,12 @@
                 Reactivate
               </a>
               {%endif%}
+
+
             </div>
+
           </div>
+
       </div>
     </div>
 
@@ -157,12 +161,52 @@
         <div class="container text-center ">
           <h1 class="display-4">No outcomes yet</h1>
           <p class="lead">Click the <strong style="font-size: 2rem;"> + </strong> icon above to add outcomes</p>
+          <hr>
+          <p> or </p>
+          <a class = "btn btn-lg btn-dark" href="" data-toggle="modal" data-target="#exampleModalCenterMigrateCycle"> Migrate</a>
         </div>
       </div>
   {%endfor%}
 
+
+
   </div>
     </div>
+
+
+            <div class="modal fade" id="exampleModalCenterMigrateCycle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Migrate Cycle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action = "{%url 'main:migrate_cycle' cycle_id%}" method="POST">
+                      {%csrf_token%}
+                      <input type="hidden" id="url" name = "url" value={{request.path}}>
+
+                      <div class="form-group">
+                       <label for="exampleFormControlSelect1">Select from the cycles</label>
+                       <select class="form-control" id="exampleFormControlSelect1" name = "cycle_migrate">
+                         {%for cycle in prev_cycles%}
+                         <option value = "{{cycle.id}}">{{cycle.semester}} {{cycle.year}}</option>
+                        {%endfor%}
+                       </select>
+                     </div>
+
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Migrate</button>
+                      </div>
+                    </form>
+                  </div>
+
+              </div>
+            </div>
+
+          </div>
 
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">

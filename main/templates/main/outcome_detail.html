@@ -345,7 +345,7 @@
 
 
     <div class = "row">
-        <div class = "col-lg-6 mt-3">
+        <div class = "col-lg-4 mt-3">
           <ul class="list-group">
             <li class="list-group-item active">Evaluators</li>
             {%for evaluator in measure.evaluator.all%}
@@ -373,7 +373,7 @@
           </form>
           </div>
 
-          <div class = "col-lg-6">
+          <div class = "col-lg-4 mt-3">
           <ul class="list-group">
             <li class="list-group-item active d-flex justify-content-between">Students
 
@@ -389,7 +389,9 @@
 
             </li>
               {% for student in measure.student.all %}
+                    {%if forloop.counter <= 3%}
                     <li class="list-group-item">{{student.name}}</li>
+                    {%endif%}
               {%endfor%}
           </ul>
           </div>
