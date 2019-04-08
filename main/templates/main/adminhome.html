@@ -121,7 +121,7 @@
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{rubric.title}}
-                            <a href = "{%url 'main:created_test_rubric'}" class = "btn btn-warning">Edit</a>
+                            <a href = "{%url 'main:edit_rubric' rubric.id%}" class = "btn btn-warning">Edit</a>
                              </li>
 
                             {%endfor%}

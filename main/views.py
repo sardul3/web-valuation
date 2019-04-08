@@ -154,7 +154,10 @@ def migrate_cycle(request, cycle_id):
                       cutoff_score= mea.cutoff_score,cutoff_percentage= mea.cutoff_percentage,
                       outcome=new_outcome, tool_type=mea.tool_type, cutoff_type=mea.cutoff_type)
             new_measure.save()
-
+            if mea.tool_type=='Rubric':
+                Measure.objects.filter(id=new_measure.id).update(rubric=mea.rubric)
+            elif mea.tool_type=='Test score':
+                Measure.objects.filter(id=new_measure.id).update(test_score=mea.test_score)
 
     return HttpResponseRedirect(reverse('main:dashboard'))
 
@@ -330,6 +333,25 @@ def rubric_render(request, rubric_id):
     categories = Category.objects.all()
     context = {'rubric': rubrics, 'categories':categories, 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col)}
     return render(request, 'main/rubric_render_admin.html',context)
+
+def edit_rubric(request, rubric_id):
+    rubric_found = Rubric.objects.get(id=rubric_id)
+    categories = Category.objects.all()
+    rows = range(rubric_found.max_row)
+    cols = range(rubric_found.max_col)
+
+    if request.method == 'POST':
+        rubric_title = request.POST.get('rubric_title')
+        Rubric.objects.filter(id=rubric_id).update(title=rubric_title)
+        for x in rows:
+            for y in cols:
+                text = request.POST.get(str(x)+str(y))
+                category = Category.objects.filter(index_x=x,index_y=y,rubric=rubric_found )
+                category.update(categoryTitle=text)
+        return HttpResponseRedirect(reverse_lazy('main:dashboard'))
+
+    context={'rubric_id':rubric_id,'rubric':rubric_found,'rows': rows, 'cols': cols, 'categories':categories}
+    return render(request, 'main/edit_rubric.html', context)
 
 def add_individual_student(request, outcome_id, measure_id):
     student_name = request.POST.get('student_name')
