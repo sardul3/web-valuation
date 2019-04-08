@@ -100,10 +100,11 @@ def dashboard(request):
     evaluators = Evaluator.objects.all()
     outcomes = Outcome.objects.all()
     cycles = Cycle.objects.all()
+    measures = Measure.objects.all()
     notifications = evaluate_rubric.objects.all()
 
     context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
-                'cycles': cycles, 'notifications':notifications}
+                'cycles': cycles, 'notifications':notifications, 'measures':measures}
     return render(request, 'main/adminhome.html', context)
 
 
@@ -450,6 +451,8 @@ def view_test_score(request, test_score_test, measure_id):
             percentage = above_threshold / total_students * 100
             if(percentage>=measure.cutoff_percentage):
                 passed = True
+                Measure.objects.filter(id=measure_id).update(status='passing')
+
             else:
                 margin = measure.cutoff_percentage - percentage
 
@@ -553,6 +556,7 @@ def view_rubric_data(request, measure_id):
     if(measure.cutoff_type == 'Percentage'):
             if(percent_pass_cases>=measure.cutoff_percentage):
                 passed = True
+                Measure.objects.filter(id=measure_id).update(status='passing')
 
 
     context = {'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed}

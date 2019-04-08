@@ -26,17 +26,73 @@
 
 
        <div class="jumbotron">
-
-
-
             <h2>Hello {{user.username}}. Welcome to the Dashboard. </h2>
-
         </div>
 
+<h1> Outcomes and their status </h1>
+<div class = "row">
+  {%for outcome in outcomes%}
+  <div class = "col col-lg-6">
+        <div class="accordion" id="accordionExample">
+          {%for cycle in outcome.cycle.all%}
+          {%if cycle.isCurrent%}
+          <div class="card">
+            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne{{outcome.id}}" aria-expanded="true" aria-controls="collapseOne">
+              <h2 class="mb-0">
+                <button class="btn btn-link" type="button" >
+                  {{outcome.title}}
+                </button>
+              </h2>
+            </div>
+
+            <div id="collapseOne{{outcome.id}}" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div class="card-body">
+                <ul class="list-group">
+                  {%for measure in measures%}
+                    {%if measure.outcome == outcome%}
+                      <li class="list-group-item d-flex justify-content-between">
+                      <div>
+                        {{measure.measureTitle}}
+                      <span class = "btn btn-sm btn-warning ml-0">
+                      {{measure.cutoff_percentage}} % of the students need to get
+                      {%if measure.cutoff_score%}
+                       {{measure.cutoff_score}}
+                       {%else%}
+                       average
+                       {%endif%}
+                          or higher
+                      on {{measure.tool_type}}:
+                      {%if measure.tool_type == "Rubric"%}
+                        <strong>{{measure.rubric}}</strong>
+                      {%elif measure.tool_type == "Test score"%}
+                        <strong>{{measure.test_score}}</strong>
+                      {%endif%}
+                    </span>
+                  </div>
+                    <em class = "align-item-center">{{measure.status}}</em>
+                  </li>
+                    {%endif%}
+                  {%endfor%}
+                </ul>
+              </div>
+            </div>
+          </div>
+          {%endif%}
+          {%endfor%}
+        </div>
+      </div>
+  {%endfor%}
+</div>
+
+<br>
+
+
+
+
+
+
+
         <div class = "row">
-
-
-
           <div class = "col col-lg-4 col-md-6 col-sm-12">
             <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
               <h3 class = "card-header title"> Start a new cycle </h3>

@@ -71,6 +71,9 @@ class Test_score(models.Model):
     score = models.PositiveIntegerField()
     test = models.CharField(max_length=200, default='Test', null=True, blank=True)
 
+    def __str__(self):
+        return self.test
+
 
 
 class Measure(models.Model):
@@ -85,6 +88,12 @@ class Measure(models.Model):
                   )
     tool_type = models.CharField(max_length=100, choices=TOOL_TYPES, default='Rubric')
 
+    STATUS_TYPES = (('passing', 'passing'),
+                    ('failing', 'failing'),
+                    ('passed', 'passed'),
+                    ('failed', 'failed')
+                    )
+    status = models.CharField(max_length=100, choices=STATUS_TYPES, default='failing')
     measureTitle = models.CharField(max_length=200, default='', null=True)
     outcome = models.ForeignKey(Outcome, null=True, on_delete = models.CASCADE)
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)
