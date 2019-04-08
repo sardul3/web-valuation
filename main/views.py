@@ -455,6 +455,15 @@ def remove_test_association(request, measure_id, outcome_id):
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
+def remove_evaluator_access(request, evaluator_id, measure_id, outcome_id):
+    evaluator = Evaluator.objects.get(id=evaluator_id)
+    measure = Measure.objects.get(id=measure_id)
+    measure.evaluator.remove(evaluator)
+
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+
+
 def view_rubric_data(request, measure_id):
     measure = Measure.objects.get(id=measure_id)
 

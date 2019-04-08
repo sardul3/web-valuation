@@ -349,7 +349,12 @@
           <ul class="list-group">
             <li class="list-group-item active">Evaluators</li>
             {%for evaluator in measure.evaluator.all%}
-                <li class="list-group-item">{{evaluator.email}}</li>
+                <li class="list-group-item d-flex justify-content-between">{{evaluator.email}}
+                <a href = "{%url 'main:remove_evaluator_access' evaluator.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
+                  <i class="fas fa-user-slash"></i>
+                </a>
+                  </li>
+
             {%endfor%}
 
           </ul>
