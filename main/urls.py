@@ -6,7 +6,8 @@ app_name = 'main'
 
 urlpatterns = [
     #path('', views.homepage, name='homepage'),
-    path('home', views.evaluatorhome, name='evaluatorhome'),
+    path('home', views.dashboard, name='dashboard'),
+    path('evaluatorhome', views.evaluatorhome, name="evaluatorhome"),
 
     path('test_rubric/', views.test_rubric, name = 'test_rubric'),
     path('created_test_rubric/', views.created_test_rubric, name = 'created_test_rubric'),

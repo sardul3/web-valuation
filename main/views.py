@@ -105,7 +105,7 @@ def dashboard(request):
 
     context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
                 'cycles': cycles, 'notifications':notifications, 'measures':measures}
-    return render(request, 'main/adminhome.html', context)
+    return render(request, 'main/dash_admin.html', context)
 
 
 @login_required
