@@ -1,4 +1,4 @@
-{% extends  'base.html' %}
+{% extends  'main/adminbase.html' %}
 {%load static%}
 
 {%block body_block%}
@@ -15,7 +15,7 @@
 
                <form action = "{% url 'main:newCycle' %}" method = "POST" >
                  {% csrf_token%}
-                 <div class="row m-1">
+                 <div class="row mt-4 ml-2 mr-2">
                    <div class="col ">
                       <div class="form-group">
                         <input type="text" name = "year" class="form-control" placeholder="Year" required>
