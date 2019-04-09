@@ -58,14 +58,13 @@ body{
   transition: all 0.25s ease-out;
 }
 
-li a,span{
+/* li a,span{
   margin: 10px;
-  /* font-family: "Merienda"; */
   color: #020800;
   font-size: 2.2rem;
   line-height: 21px;
   font-weight: 700;
-}
+} */
 
 th, label{
   /* font-family: 'Ropa Sans'; */
@@ -88,6 +87,14 @@ td{
   font-size: 1.5rem;
   z-index: 1;
 
+}
+
+.active{
+  border-bottom: 2px solid black;
+}
+
+.nav-item{
+  font-size: 1.5rem;
 }
 
 #card-border-dark-mb-3{

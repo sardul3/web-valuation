@@ -1,0 +1,30 @@
+{% extends  'base.html' %}
+{%load static%}
+
+
+{%block body_block%}
+    <div class = "container-fluid">
+      <div class = "container" id = "main_content">
+
+    
+        <div class = "col col-lg-4 col-md-6 col-sm-12">
+                    <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
+                        <h3 class = "card-header title">Rubrics</h3>
+                        <ul id = "over" class="list-group">
+                            {%for rubric in rubrics%}
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{rubric.title}}
+                            <a href = "{%url 'main:edit_rubric' rubric.id%}" class = "btn btn-warning">Edit</a>
+                             </li>
+
+                            {%endfor%}
+
+                        </ul>
+                    </div>
+</div>
+</div>
+</div>
+
+
+{%endblock%}

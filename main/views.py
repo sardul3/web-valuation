@@ -15,7 +15,26 @@ from django.db.models import Avg, Count, Min, Sum
 
 
 def homepage(request):
-    return render(request, 'main/homepage.html', {})
+    return render(request, 'main/homepage.html')
+
+def outcomes(request):
+    outcomes = Outcome.objects.all()
+    measures = Measure.objects.all()
+    cycles = Cycle.objects.all()
+
+    context = {'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active'}
+    return render(request, 'main/outcomes.html', context)
+
+def rubrics(request):
+    rubrics = Rubric.objects.all()
+    context = {'rubrics':rubrics, 'rubric': 'active'}
+    return render(request, 'main/rubrics.html', context)
+
+def cycles(request):
+    cycles = Cycle.objects.all()
+    context = {'cycles':cycles, 'cycle': 'active'}
+    return render(request, 'main/cycles.html', context)
+
 
 @login_required
 def evaluatorhome(request):
@@ -96,16 +115,12 @@ def evaluate_students(request):
 
 @login_required
 def dashboard(request):
-    rubrics = Rubric.objects.all()
-    evaluators = Evaluator.objects.all()
-    outcomes = Outcome.objects.all()
-    cycles = Cycle.objects.all()
-    measures = Measure.objects.all()
-    notifications = evaluate_rubric.objects.all()
-
-    context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
-                'cycles': cycles, 'notifications':notifications, 'measures':measures}
-    return render(request, 'main/adminhome.html', context)
+    # evaluators = Evaluator.objects.all()
+    # notifications = evaluate_rubric.objects.all()
+    #
+    # context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
+    #             'cycles': cycles, 'notifications':notifications, 'measures':measures}
+    return render(request, 'main/adminhome.html', {'dashboard':'active'})
 
 
 @login_required

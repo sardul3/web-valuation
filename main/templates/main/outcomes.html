@@ -1,0 +1,68 @@
+{% extends  'base.html' %}
+{%load static%}
+{% block body_block%}
+
+    <div class = "container-fluid">
+      <div class = "container" id = "main_content">
+
+<h1> Outcomes and their status </h1>
+<div class = "row">
+  <div class = "col col-lg-12">
+    {%for outcome in outcomes%}
+        <div class="accordion" id="accordionExample">
+          {%for cycle in outcome.cycle.all%}
+          {%if cycle.isCurrent%}
+          <div class="card" >
+            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne{{outcome.id}}" aria-expanded="true" aria-controls="collapseOne">
+              <h2 class="mb-0 d-flex justify-content-between" >
+                <button class="btn btn-link text-left " type="button" style="text-decoration:none;">
+                    {{outcome.title}}
+                </button>
+                <i class="fas fa-chevron-down"></i>
+
+              </h2>
+            </div>
+
+            <div id="collapseOne{{outcome.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div class="card-body">
+                <ul class="list-group">
+                  {%for measure in measures%}
+                    {%if measure.outcome == outcome%}
+                      <li class="list-group-item d-flex justify-content-between">
+                      <div>
+                        {{measure.measureTitle}}
+                      <span class = "btn btn-sm btn-warning ml-0">
+                      {{measure.cutoff_percentage}} % of the students need to get
+                      {%if measure.cutoff_score%}
+                       {{measure.cutoff_score}}
+                       {%else%}
+                       average
+                       {%endif%}
+                          or higher
+                      on {{measure.tool_type}}:
+                      {%if measure.tool_type == "Rubric"%}
+                        <strong>{{measure.rubric}}</strong>
+                      {%elif measure.tool_type == "Test score"%}
+                        <strong>{{measure.test_score}}</strong>
+                      {%endif%}
+                    </span>
+                  </div>
+                    <em class = "align-item-center">{{measure.status}}</em>
+                  </li>
+                    {%endif%}
+                  {%endfor%}
+                </ul>
+              </div>
+            </div>
+          </div>
+          {%endif%}
+          {%endfor%}
+        </div>
+
+  {%endfor%}
+</div>
+</div>
+</div>
+</div>
+
+{%endblock%}

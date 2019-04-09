@@ -46,6 +46,9 @@ urlpatterns = [
     path('end_cycle/<int:cycle_id>', views.end_cycle, name = 'end_cycle'),
 
 
+    path('outcomes', views.outcomes, name = 'outcomes'),
+    path('rubrics', views.rubrics, name = 'rubrics'),
+    path('cycles', views.cycles, name = 'cycles'),
 
 
 
