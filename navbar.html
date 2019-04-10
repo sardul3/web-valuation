@@ -1,0 +1,45 @@
+
+    <div class = "container-fluid">
+      <div class = "container" id = "main_content">
+<nav class="navbar sticky-top navbar-expand-lg  navbar-light ">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+    <ul class="navbar-nav w-100 mr-auto mt-2 mt-lg-0 justify-content-around">
+
+      <li class="nav-item {{dashboard}}" >
+        <a class="nav-link" href="{%url 'main:dashboard'%}" >Dashboard</a>
+      </li>
+      <li class="nav-item {{outcome}}" >
+        <a class="nav-link" href="{%url 'main:outcomes'%}">Outcomes</a>
+      </li>
+
+      <li class="nav-item {{cycle}}" >
+        <a class="nav-link" href="{%url 'main:cycles'%}">Cycles</a>
+      </li>
+      <li class="nav-item {{rubric}}" >
+        <a class="nav-link" href="{%url 'main:rubrics'%}">Rubrics</a>
+      </li>
+      <li class="nav-item {{evaluatorhome}}">
+        <a class = "nav-link" href="{%url 'main:homepage'%}">Act as Evaluator</a>
+      </li>
+      <li class="nav-item {{logout}}">
+        <a class = "nav-link" href="{%url 'main:logout'%}">Log Out</a>
+      </li>
+
+
+
+    </ul>
+    <!-- <span class="navbar-text">
+        {{user.username}}
+        <i class="fas fa-power-off"></i>
+  </span> -->
+
+  </div>
+</nav>
+<br/>
+</div>
+</div>
