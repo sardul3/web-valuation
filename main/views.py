@@ -458,7 +458,6 @@ def add_evaluator(request, outcome_id, measure_id):
         evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'))
         evaluator.save()
         measure.evaluator.add(evaluator)
-
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
 
