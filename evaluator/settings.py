@@ -149,3 +149,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # The URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ulmevaluation@gmail.com'
+EMAIL_HOST_PASSWORD = 'ulmevaluation1'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
