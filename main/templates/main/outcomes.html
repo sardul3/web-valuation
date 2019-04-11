@@ -5,7 +5,7 @@
     <div class = "container-fluid">
       <div class = "container" id = "main_content">
 
-<h1> Outcomes and their status </h1>
+<h4> Outcomes and their status </h4>
 <div class = "row">
   <div class = "col col-lg-12">
     {%for outcome in outcomes%}
@@ -15,9 +15,9 @@
           <div class="card" >
             <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne{{outcome.id}}" aria-expanded="true" aria-controls="collapseOne">
               <h2 class="mb-0 d-flex justify-content-between" >
-                <button class="btn btn-link text-left " type="button" style="text-decoration:none;">
+                <span class="btn text-left " type="button" style="text-decoration:none;">
                     {{outcome.title}}
-                </button>
+                </span>
                 <i class="fas fa-chevron-down"></i>
 
               </h2>

@@ -1,32 +1,11 @@
 {% load static %}
 body{
   height: 100vh;
-  /* background: rgb(131,58,180);
-  background: linear-gradient(318deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%); */
+
+
 }
 
-/* #main_content{
-  margin-top: 7vh;
-  border: 0.7px solid #BF360C;
-  border-radius: 15px;
-  width: auto;
-  background-color: #FFFFFF;
-  padding: 10px;
-  box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
-  -webkit-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
-  -moz-box-shadow: -1px 3px 17px -1px rgba(22,22,2,0.58);
-}
 
-.login_opts, h1{
-  margin: 10px;
-  font-family: "Merienda";
-}
-
-#logo{
-  height: 300px;
-  width: 300px;
-}
- */
 .login input {
   display: block;
   padding: 15px 10px;
@@ -58,24 +37,14 @@ body{
   transition: all 0.25s ease-out;
 }
 
-/* li a,span{
-  margin: 10px;
-  color: #020800;
-  font-size: 2.2rem;
-  line-height: 21px;
-  font-weight: 700;
-} */
+
 
 th, label{
-  /* font-family: 'Ropa Sans'; */
   font-size: 1.5rem;
-
 }
 
 td{
-  /* font-family: Lato; */
   font-size: 1.5rem;
-
 }
 
 .alert{
@@ -86,7 +55,6 @@ td{
   border: 0.5px solid #007aff;
   font-size: 1.5rem;
   z-index: 1;
-
 }
 
 .active{

@@ -15,7 +15,7 @@ from django.db.models import Avg, Count, Min, Sum
 
 
 def homepage(request):
-    return render(request, 'main/homepage.html')
+    return render(request, 'main/evaluatorhome.html')
 
 def outcomes(request):
     outcomes = Outcome.objects.all()
@@ -38,22 +38,72 @@ def cycles(request):
 
 @login_required
 def evaluatorhome(request):
-    rubrics = Rubric.objects.all()
-    students = Student.objects.all()
-    evaluations = evaluate_rubric.objects.all()
-    evaluated_flag = []
-    for stu in students:
-        if evaluations.filter(student=stu.name,evaluated_by=request.user.username).exists():
-            evaluated_flag.append(stu.name)
+    if request.user.is_superuser:
+        email_address = request.user.email
+        measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+
+        cyc = Cycle.objects.all()
+        mycyc = 0
+        for cycles in cyc:
+            if(cycles.isCurrent):
+                mycyc = cycles
+        #print(mycyc)
+        #print(Evaluator.objects.all())
+        outcome_a = Outcome.objects.all()
+        outcome_list = []
+        for oc in outcome_a:
+            for v in oc.cycle.all():
+                if(v == mycyc):
+                    outcome_list.append(oc)
+        measure_a = Measure.objects.all()
+        measure_list = []
+        #print(outcome_list)
+        for me in measure_a:
+            for o in outcome_list:
+                if(me.outcome==o):
+                    measure_list.append(me)
+        #print(measure_list)
+        eval_a = Evaluator.objects.all()
+        evaluator_list = []
+        for eval in eval_a:
+            for mymea in measure_list:
+                for eval_more in mymea.evaluator.all():
+                    if(eval==eval_more):
+                        evaluator_list.append(eval)
+        context = {'measure':measure,'evaluator':evaluator_list}
+        return render(request, 'main/adminhome.html', context)
+    else:
+        rubrics = Rubric.objects.all()
+        students = Student.objects.all()
+        evaluations = evaluate_rubric.objects.all()
+        evaluated_flag = []
+        for stu in students:
+            if evaluations.filter(student=stu.name,evaluated_by=request.user.username).exists():
+                evaluated_flag.append(stu.name)
 
 
 
-    email_address = request.user.email
-    measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
-    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure,
-                'evaluated_flag':evaluated_flag}
+        email_address = request.user.email
+        measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+        x = []
+        for me in measure:
+            x = me.student.all()
+        student_count = len(x)
+        eval_student = len(evaluated_flag)
+        #print(student_count)
+        #print(eval_student)
+        perc =100.0* (eval_student/student_count)
+        eval = request.user.email
+        current_eval = 0
+        for myeval in Evaluator.objects.all():
+            if(myeval.email==eval):
+                current_eval = myeval
+        myeval.perc_completed = perc
+        myeval.save()
+        context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure,
+                    'evaluated_flag':evaluated_flag,'percent':perc}
 
-    return render(request, 'main/evaluatorhome.html', context)
+        return render(request, 'main/evaluatorhome.html', context)
 
 
 @login_required

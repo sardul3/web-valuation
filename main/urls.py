@@ -5,8 +5,9 @@ from django.contrib.auth import views as auth_views
 app_name = 'main'
 
 urlpatterns = [
-    #path('', views.homepage, name='homepage'),
+    path('eval', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
+
 
     path('test_rubric/', views.test_rubric, name = 'test_rubric'),
     path('created_test_rubric/', views.created_test_rubric, name = 'created_test_rubric'),

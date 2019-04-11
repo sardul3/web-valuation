@@ -1,4 +1,3 @@
-
 {% extends  'base.html' %}
 {% load static %}
 {% block body_block %}
@@ -7,18 +6,13 @@
     padding: 0.7%;
     align:center;
   }
-
   #main_content{
   margin-top:2%;
   }
-
-
   .measure_section{
     padding: 3%;
   }
-
   .speech-bubble { position: relative; background: #f7f7f7; border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color: #f7f7f7; border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
-
 </style>
 
 <div class = "container-fluid">
@@ -88,7 +82,7 @@
           {%endif%}
         <h1 class = "d-flex justify-content-between"> {{measure.measureTitle}}
          </h1>
-         
+
          <button class = "btn btn-warning mb-3">
          {{measure.cutoff_percentage}} % of the students need to get
          {%if measure.cutoff_score%}
@@ -117,18 +111,14 @@
 
                   </li>
 
-
-
             {%empty%}
               <li class="list-group-item"> No students added yet </li>
             {%endfor%}
+            <p> The {{percent}}% students have already been evaluated</p>
             </ul>
             <form action = "{%url 'main:evaluator_rubric_select' measure.id%}" class = "text-center">
               <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>
             </form>
-
-
-
   </div>
 
 

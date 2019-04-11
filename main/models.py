@@ -4,6 +4,7 @@ from django.contrib.auth.models import  User
 class Evaluator(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=200)
+    perc_completed = models.FloatField(null=True,blank=True,default=0.0)
 
     def __str__(self):
         return self.name
