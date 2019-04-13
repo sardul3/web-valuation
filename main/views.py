@@ -13,12 +13,16 @@ import io
 from django.utils.timezone import datetime
 from django.db.models import Avg, Count, Min, Sum
 from django.core.mail import EmailMessage
+from django.contrib.auth.decorators import user_passes_test
 
+def admin_test(user):
+    return user.is_superuser
 
 
 def homepage(request):
     return render(request, 'main/evaluatorhome.html')
 
+@user_passes_test(admin_test)
 def outcomes(request):
     outcomes = Outcome.objects.all()
     measures = Measure.objects.all()
@@ -32,6 +36,7 @@ def rubrics(request):
     context = {'rubrics':rubrics, 'rubric': 'active'}
     return render(request, 'main/rubrics.html', context)
 
+@user_passes_test(admin_test)
 def cycles(request):
     cycles = Cycle.objects.all()
     context = {'cycles':cycles, 'cycle': 'active'}
@@ -49,8 +54,6 @@ def evaluatorhome(request):
         for cycles in cyc:
             if(cycles.isCurrent):
                 mycyc = cycles
-        #print(mycyc)
-        #print(Evaluator.objects.all())
         outcome_a = Outcome.objects.all()
         outcome_list = []
         for oc in outcome_a:
@@ -59,12 +62,10 @@ def evaluatorhome(request):
                     outcome_list.append(oc)
         measure_a = Measure.objects.all()
         measure_list = []
-        #print(outcome_list)
         for me in measure_a:
             for o in outcome_list:
                 if(me.outcome==o):
                     measure_list.append(me)
-        #print(measure_list)
         eval_a = Evaluator.objects.all()
         evaluator_list = []
         for eval in eval_a:
@@ -92,9 +93,10 @@ def evaluatorhome(request):
             x = me.student.all()
         student_count = len(x)
         eval_student = len(evaluated_flag)
-        #print(student_count)
-        #print(eval_student)
-        perc =100.0* (eval_student/student_count)
+        if student_count==0:
+            perc=100.0
+        else:
+            perc =100.0* (eval_student/student_count)
         eval = request.user.email
         current_eval = 0
         for myeval in Evaluator.objects.all():
@@ -172,8 +174,41 @@ def dashboard(request):
     #
     # context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
     #             'cycles': cycles, 'notifications':notifications, 'measures':measures}
-    return render(request, 'main/adminhome.html', {'dashboard':'active'})
+    if request.user.is_superuser:
+        return render(request, 'main/adminhome.html', {'dashboard':'active'})
+    else:
+        rubrics = Rubric.objects.all()
+        students = Student.objects.all()
+        evaluations = evaluate_rubric.objects.all()
+        evaluated_flag = []
+        for stu in students:
+            if evaluations.filter(student=stu.name, evaluated_by=request.user.username).exists():
+                evaluated_flag.append(stu.name)
 
+        email_address = request.user.email
+        measure = Measure.objects.filter(evaluator__in=Evaluator.objects.filter(email=email_address))
+        x = []
+        for me in measure:
+            x = me.student.all()
+        student_count = len(x)
+        eval_student = len(evaluated_flag)
+        # print(student_count)
+        # print(eval_student)
+        if student_count==0:
+            perc=100.0
+        else:
+            perc = 100.0 * (eval_student / student_count)
+        eval = request.user.email
+        current_eval = 0
+        for myeval in Evaluator.objects.all():
+            if (myeval.email == eval):
+                current_eval = myeval
+        myeval.perc_completed = perc
+        myeval.save()
+        context = {'rubrics': rubrics, 'students': students, 'evaluations': evaluations, 'measures': measure,
+                   'evaluated_flag': evaluated_flag, 'percent': perc}
+
+        return render(request, 'main/evaluatorhome.html', context)
 
 @login_required
 def newCycle(request):
@@ -187,6 +222,7 @@ def newCycle(request):
 
     return HttpResponseRedirect(reverse('main:dashboard'))
 
+@user_passes_test(admin_test)
 def cycle(request, cycle_id):
     outcomes = Outcome.objects.filter(cycle=cycle_id)
     evaluators = Evaluator.objects.all()
@@ -199,6 +235,7 @@ def cycle(request, cycle_id):
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles}
     return render(request, 'main/cycle.html', context)
 
+@user_passes_test(admin_test)
 def end_cycle(request, cycle_id):
     cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=False, endDate=datetime.today())
 
