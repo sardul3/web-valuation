@@ -400,9 +400,17 @@ def test_rubric(request):
     if request.method == 'POST':
         rows = int(request.POST.get('rows'))
         cols = int(request.POST.get('cols'))
+        weight = request.POST.get('weight')
+        colminus = cols
+        isWeighted = True
+        if(weight=="no"):
+            isWeighted=False
         print(rows)
         print(cols)
-        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':range(cols),'row_num':rows, 'col_num': cols})
+        print(weight)
+        if isWeighted:
+            cols+=1
+        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':range(cols),'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus})
     return render(request, 'main/test_rubric.html')
 
 
@@ -411,12 +419,14 @@ def created_test_rubric(request):
         row_num = int(request.POST.get('row_num'))
         row_col = int(request.POST.get('col_num'))
         rubric_title = request.POST.get("rubric_title")
-        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col)
+        isWeighted = request.POST.get("isWeighted")
+        print(isWeighted)
+        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted)
         rubric_new.save()
         for x in range(row_num):
             for y in range(row_col):
                 text = request.POST.get(str(x)+str(y))
-                category = Category(categoryTitle=text,index_x=x,index_y=y,rubric=rubric_new)
+                category = Category(categoryTitle=text,index_x=x, index_y=y, rubric=rubric_new)
                 category.save()
 
     return render(request, 'main/test_rubric.html')

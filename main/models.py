@@ -28,6 +28,7 @@ class Cycle(models.Model):
 
 class Rubric(models.Model):
     title = models.CharField(max_length=200, blank=True, default="Untitled")
+    isWeighted = models.BooleanField(null=True, default=False)
     max_row = models.PositiveIntegerField(null=True)
     max_col = models.PositiveIntegerField(null=True)
     created_by = models.CharField(max_length=200)
