@@ -76,12 +76,6 @@
      </div>
 
 
-     <h4 class = "d-flex justify-content-between mb-3 align-items-center "> {{outcome.title}}
-
-       <button type="button" class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
-          <i class="fas fa-plus"></i>
-        </button>
-       </h4>
 
 
   <div class="row d-flex align-items-center">
@@ -107,6 +101,14 @@
     </div>
   </div>
   <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" >
+
+    <h4 class = "d-flex justify-content-between mb-3 align-items-center "> {{outcome.title}}
+
+      <button type="button" class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
+         <i class="fas fa-plus"></i>
+       </button>
+      </h4>
+
     <div class="tab-content speech-bubble" id="nav-tabContent">
       {%for measure in measures%}
         {%if measure.outcome == outcome%}

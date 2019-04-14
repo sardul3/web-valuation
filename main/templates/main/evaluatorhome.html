@@ -1,4 +1,4 @@
-{% extends  'base.html' %}
+{% extends  'main/evaluatorbase.html' %}
 {% load static %}
 {% block body_block %}
 <style>
@@ -18,36 +18,23 @@
 <div class = "container-fluid">
 <div class = "container" id = "main_content">
 
-
   <div class="row d-flex align-items-center">
   <div class="col-4 ">
-
     {% if user.is_authenticated %}
       <ol class = 'breadcrumb'>
         <h4 class = "breadcrumb-item"> Hi {{ user.username }}</h4>
         <h4 class = "breadcrumb-item"> Evaluator View </h4>
-
     </ol>
-        <p>
-      <br>
-        </p>
-            {% if user.is_superuser %}
-            <p> <a class = "btn btn-dark btn-lg" href="{%url 'main:dashboard'%}"> Act as Admin</a> </p>
-            {% endif %}
-
-
-
-
+    {% if user.is_superuser %}
+    <p> <a class = "btn btn-dark btn-lg" href="{%url 'main:dashboard'%}"> Act as Admin</a> </p>
+    {% endif %}
 
     <div>
-      <h3 class = "d-flex justify-content-between mb-3 "> Measures assigned
-        </h3>
+      <h3 class = "d-flex justify-content-between mb-3 "> Measures assigned </h3>
     </div>
+
     <div class="list-group " id="list-tab" role="tablist">
-
-
       {%for measure in measures%}
-
           {%if forloop.first %}
           <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
           {%else%}
@@ -66,8 +53,6 @@
         <p>You can't view this page</p>
       {% endif %}
       </div>
-
-
     </div>
   </div>
 
@@ -80,8 +65,7 @@
           {%else%}
                 <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
           {%endif%}
-        <h1 class = "d-flex justify-content-between"> {{measure.measureTitle}}
-         </h1>
+        <h4 class = "d-flex justify-content-between"> {{measure.measureTitle}} </h4>
 
          <button class = "btn btn-warning mb-3">
          {{measure.cutoff_percentage}} % of the students need to get
@@ -135,16 +119,17 @@
 
     </div>
   </div>
-</div>
-
-
-
-
 
 
 </div>
-<br/>
+
+
+
+
+
 
 </div>
+
 </div>
+
 {%endblock%}
