@@ -342,7 +342,7 @@ def add_learning_outcome(request, cycle_id):
     outcome.save()
     cycle_found = Cycle.objects.get(id=cycle_id)
     outcome.cycle.add(cycle_found)
-
+    
     messages.add_message(request, messages.SUCCESS, 'Learning outcome created')
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
@@ -595,7 +595,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     avg = 0
     total = 0
     count=0
-    
+
     for x in range(rubric_row-1):
         score = request.POST.get('score'+str(x+1))
         max_col = rub.max_col
