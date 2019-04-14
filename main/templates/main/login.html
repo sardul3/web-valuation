@@ -3,16 +3,21 @@
 {% load crispy_forms_tags %}
 {%block body_block %}
 <style>
-  body{
-    margin: 10px;
-  }
   #main_content{
     border: 3px solid black;
-    margin-top: 25%;
+    margin-top: 5%;
     padding: 2%;
+    width: 30rem;
+  }
+  @media (max-width: 576px) {
+    #main_content{
+      width: 17rem;
+      margin-top: 10px;
+      padding: 2%;
+    }
   }
 </style>
-<div class = "container login" id = "main_content" class = "container card border-primary bg-light mb-3 form-row">
+<div class = "container login" id = "main_content" class = "container card border-primary bg-light mb-3 form-row" >
 
   <form method="POST">
     {% csrf_token %}
