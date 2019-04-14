@@ -381,7 +381,7 @@ def new_measure(request, outcome_id):
 
 def add_rubric_to_measure(request, measure_id, outcome_id):
     rubric_title = request.POST.get('select_rubric', None)
-    rubric_found = Rubric.objects.get(title = rubric_title)
+    rubric_found = Rubric.objects.filter(title = rubric_title)[0]
     measure = Measure.objects.filter(id=measure_id).update(rubric=rubric_found)
 
     messages.add_message(request, messages.SUCCESS, 'Rubric is now associated with the measure')

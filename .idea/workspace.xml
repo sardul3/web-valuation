@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52c1edcd-a7e6-4937-8966-5b750b856102" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,8 +16,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="616" column="67" selection-start-line="616" selection-start-column="67" selection-end-line="616" selection-end-column="67" />
+            <state relative-caret-position="570">
+              <caret line="383" column="40" selection-start-line="383" selection-start-column="40" selection-end-line="383" selection-end-column="40" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -138,9 +139,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="825" />
+    <option name="x" value="-1" />
+    <option name="y" value="-22" />
+    <option name="width" value="1602" />
+    <option name="height" value="899" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -214,10 +216,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="12" y="-9" width="781" height="873" extended-state="0" />
+    <frame x="-1" y="-22" width="1602" height="899" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.35978836" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17247939" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -461,8 +463,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="616" column="67" selection-start-line="616" selection-start-column="67" selection-end-line="616" selection-end-column="67" />
+        <state relative-caret-position="570">
+          <caret line="383" column="40" selection-start-line="383" selection-start-column="40" selection-end-line="383" selection-end-column="40" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>
