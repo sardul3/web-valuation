@@ -77,9 +77,13 @@ def evaluatorhome(request):
         students = Student.objects.all()
         evaluations = evaluate_rubric.objects.all()
         evaluated_flag = []
+        measures = Measure.objects.all()
         for stu in students:
             if evaluations.filter(student=stu.name,evaluated_by=request.user.username).exists():
-                evaluated_flag.append(stu.name)
+                evaluation = evaluations.get(student=stu.name,evaluated_by=request.user.username)
+                for mea in measures:
+                    if mea == evaluation.measure:
+                        evaluated_flag.append(stu.name)
 
 
 
@@ -591,6 +595,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     avg = 0
     total = 0
     count=0
+    
     for x in range(rubric_row-1):
         score = request.POST.get('score'+str(x+1))
         max_col = rub.max_col
