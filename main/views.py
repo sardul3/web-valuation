@@ -474,6 +474,14 @@ def add_individual_student(request, outcome_id, measure_id):
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
+def delete_student(request, outcome_id, measure_id, student_id):
+    student = Student.objects.get(id=student_id)
+    measure = Measure.objects.get(id=measure_id)
+    measure.student.remove(student)
+
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+
 def upload_student(request, outcome_id, measure_id):
     if request.method=='POST' and request.FILES:
         measure = Measure.objects.get(id=measure_id)

@@ -309,8 +309,19 @@
         <h5 class="card-title"> {{measure.rubric.title}}</h5>
         <p class="card-text"><em>Type: {{measure.tool_type}}</em></p>
         <div class = "text-center">
-          <a href = "{% url 'main:rubric_render' measure.rubric.id%}" class = "btn btn-primary"> View </a>
+          {%if measure.measureTitle in num_of_evaluations%}
+          <a href = "{%url 'main:view_rubric_data' measure.id%}" class = "btn btn-primary mb-3">
+              View Status
+          </a>
+          {%else%}
+
+          {%endif%}
         </div>
+
+
+
+
+
       </div>
     </div>
   </div>
@@ -398,11 +409,11 @@
             </li>
               {% for student in measure.student.all %}
                     <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
-                      <button type="button" class="btn btn-md mr-3">
+                      <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
                             <span style="font-size: 1em; color: #7a2831;">
                                 <i class="fas fa-times"></i>
                             </span>
-                      </button>
+                      </a>
                     </li>
               {%endfor%}
           </ul>
@@ -419,12 +430,29 @@
 
 {%if measure.tool_type == 'Test score'%}
     {%if measure.test_score %}
-      {{measure.tool_type}} associated: {{measure.test_score.test}}
-      <a href= "{%url 'main:view_test_score' measure.test_score.test measure.id%}"  class = "btn btn-primary"> View Status</a>
-      <a  href = "{% url 'main:remove_test_association' measure.id outcome_id %}" class = "btn btn-warning"> Remove Association </a>
+
+    <div class = "col col-lg-4 md-6 sm-12 xs-12">
+        <div class="card bg-light ml-2 mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
+            <a href = "{% url 'main:remove_test_association' measure.id outcome_id %}" class = "btn btn-primary">
+              <span style="font-size: 1.5em;">
+                <i class="far fa-trash-alt"></i>
+            </span>
+             </a>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title"> {{measure.test_score.test}}</h5>
+            <p class="card-text"><em>Type: {{measure.tool_type}}</em></p>
+            <div class = "text-center">
+              <a href = "{%url 'main:view_test_score' measure.test_score.test measure.id%}" class = "btn btn-primary"> View Status </a>
+            </div>
+          </div>
+        </div>
+      </div>
 
     {%else%}
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
+    <br />
+<button type="button" class="btn btn-primary ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
     Add Test Score
   </button>
   {%endif%}

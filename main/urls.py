@@ -28,6 +28,8 @@ urlpatterns = [
     path('view_rubric_data/<int:measure_id>', views.view_rubric_data, name = "view_rubric_data"),
 
     path('remove_evaluator_access/<int:evaluator_id>/<int:measure_id>/<int:outcome_id>', views.remove_evaluator_access, name = "remove_evaluator_access"),
+    path('delete_student/<int:outcome_id>/<int:measure_id>/<int:student_id>', views.delete_student, name = "delete_student"),
+
 
     path('migrate_cycle/<int:cycle_id>', views.migrate_cycle, name = "migrate_cycle"),
     path('reactivate_cycle/<int:cycle_id>', views.reactivate_cycle, name = "reactivate_cycle"),
