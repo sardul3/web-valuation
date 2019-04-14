@@ -88,6 +88,7 @@ td{
 .card-header {
     background-color: #BD955A;
     color: rgb(252, 248, 242);
+    
 }
 
 .card-header span{
@@ -110,4 +111,11 @@ td{
 textarea {
   resize: none;
   overflow: hidden;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: #7a2831 ;
+    border-color: #fff300;
 }

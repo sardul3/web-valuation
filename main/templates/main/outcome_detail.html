@@ -5,21 +5,18 @@
 <style>
 
 
+.button_main{
+  padding:0 !important;
+}
 
-  .measure_section{
-    padding: 3%;
-  }
-
-  .speech-bubble { position: relative; background: rgba(189,149,90, 0.25); border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color:rgba(189,149,90,0.25); border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
+  .speech-bubble { position: relative; background: rgba(189,149,90, 0.15); border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color:rgba(189,149,90,0.15); border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
 
 </style>
 
 <div class = "container-fluid" >
   <div class = "container" id = "main_content" >
 
-    <br />
 
-   </div>
      <div class="modal fade" id="exampleModalCenterNewMeasure{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
        <div class="modal-dialog modal-dialog-centered" role="document">
          <div class="modal-content">
@@ -40,7 +37,6 @@
                  <input type="text" class="form-control" id="exampleInputPassword1"
                         placeholder="Measure title" name = "measure_title">
                </div>
-             <hr/>
 
                <div class="form-group">
                  <label for="exampleFormControlTextarea1">Cutoff-percent</label>
@@ -89,10 +85,8 @@
 
 
   <div class="row d-flex align-items-center">
-  <div class="col-2">
-    <div>
+  <div class="col col-lg-2 md-6 sm-12 xs-12 mb-1">
 
-    </div>
     <div class="list-group " id="list-tab" role="tablist">
 
 
@@ -121,21 +115,21 @@
           {%else%}
                 <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
           {%endif%}
-        <h1 class = "d-flex justify-content-between"> {{measure.measureTitle}}
+        <h1 class = "d-flex justify-content-between pl-3"> {{measure.measureTitle}}
 
-          <div>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
-            <span style="font-size: 2em; color: white;">
+          <div class = "mr-3">
+          <button  class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
+            <span style="font-size: 2em; color: #bd955a;">
               <i class="far fa-edit"></i>
           </span>
           </button>
 
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterDeleteMeasure{{measure.id}}" data-measure-id = "{{measure.id}}">
-            <span style="font-size: 2em; color: white;">
+          <button class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenterDeleteMeasure{{measure.id}}" data-measure-id = "{{measure.id}}">
+            <span style="font-size: 2em; color:#7a2831;">
               <i class="far fa-trash-alt"></i>
           </span>
           </button>
-          <div>
+          </div>
 
                 <div class="modal fade" id="exampleModalCenter{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -177,8 +171,12 @@
                             <!-- FIX selected option -->
                             {%if measure.tool_type == 'Rubric'%}
                               <option selected>Rubric</option>
+                              <option value ="Test score">Test score</option>
+
                             {%elif measure.tool_type == 'Test score'%}
                               <option selected>Test score</option>
+                              <option value="Rubric">Rubric</option>
+
                             {%else%}
                               <option selected>Select Tool</option>
                               <option value="Rubric">Rubric</option>
@@ -232,7 +230,7 @@
 
 
 
-        <button class = "btn btn-warning mb-3">
+        <button class = "btn btn-warning ml-2 mb-3">
         {{measure.cutoff_percentage}} % of the students need to get
         {%if measure.cutoff_score%}
          {{measure.cutoff_score}}
@@ -294,13 +292,29 @@
 
 
 
-  <br />
-
 {%if measure.tool_type == 'Rubric'%}
     {%if measure.rubric %}
-      {{measure.tool_type}} associated: {{measure.rubric.title}}
-      <a href = "{% url 'main:rubric_render' measure.rubric.id%}" class = "btn btn-primary"> View </a>
-      <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}"class = "btn btn-warning"> Remove Association </a>
+<div class = "row">
+
+<div class = "col col-lg-4 md-6 sm-12 xs-12">
+    <div class="card bg-light ml-2 mb-3">
+      <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
+        <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}" class = "btn btn-primary">
+          <span style="font-size: 1.5em;">
+            <i class="far fa-trash-alt"></i>
+        </span>
+         </a>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"> {{measure.rubric.title}}</h5>
+        <p class="card-text"><em>Type: {{measure.tool_type}}</em></p>
+        <div class = "text-center">
+          <a href = "{% url 'main:rubric_render' measure.rubric.id%}" class = "btn btn-primary"> View </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
       <div class="modal fade" id="exampleModalLongExpandStudentList{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -338,10 +352,10 @@
     </div>
 
 
-    <div class = "row">
-        <div class = "col-lg-4 mt-3">
+
+        <div class = "col col-lg-4 md-6 sm-12 xs-12">
           <ul class="list-group">
-            <li class="list-group-item active">Evaluators</li>
+            <li class="list-group-item card-header align-items-center"><h4>Evaluators</h4></li>
             {%for evaluator in measure.evaluator.all%}
                 <li class="list-group-item d-flex justify-content-between">{{evaluator.email}}
                 <a href = "{%url 'main:remove_evaluator_access' evaluator.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
@@ -367,9 +381,9 @@
           </form>
           </div>
 
-          <div class = "col-lg-4 mt-3">
-          <ul class="list-group">
-            <li class="list-group-item active d-flex justify-content-between">Students
+          <div class = "col col-lg-4 md-6 sm-12 xs-12">
+          <ul class="list-group" style="overflow-y:scroll; height: 40vh">
+            <li class="list-group-item d-flex justify-content-between card-header sticky-top align-items-center"> <h4>Students</h4>
 
           <div class = "d-flex justify-content-between">
             <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
@@ -383,9 +397,13 @@
 
             </li>
               {% for student in measure.student.all %}
-                    {%if forloop.counter <= 3%}
-                    <li class="list-group-item">{{student.name}}</li>
-                    {%endif%}
+                    <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
+                      <button type="button" class="btn btn-md mr-3">
+                            <span style="font-size: 1em; color: #7a2831;">
+                                <i class="fas fa-times"></i>
+                            </span>
+                      </button>
+                    </li>
               {%endfor%}
           </ul>
           </div>
@@ -393,7 +411,7 @@
 
     {%else%}
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
+    <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
         Add Rubric
       </button>
     {%endif%}
@@ -507,6 +525,6 @@
 
 </div>
 </div>
-
+   </div>
 
 {%endblock%}
