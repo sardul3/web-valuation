@@ -14,7 +14,7 @@
 </style>
 
 <div class = "container-fluid" >
-  <div class = "container" id = "main_content" >
+  <!-- <div class = "container" id = "main_content" > -->
 
 
      <div class="modal fade" id="exampleModalCenterNewMeasure{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -106,7 +106,7 @@
 
     </div>
   </div>
-  <div class="col-10" >
+  <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" >
     <div class="tab-content speech-bubble" id="nav-tabContent">
       {%for measure in measures%}
         {%if measure.outcome == outcome%}
@@ -241,13 +241,13 @@
         on {{measure.tool_type}}
         </button>
 
-        {%if measure.measureTitle in num_of_evaluations%}
+        <!-- {%if measure.measureTitle in num_of_evaluations%}
         <a href = "{%url 'main:view_rubric_data' measure.id%}" class = "btn btn-primary mb-3">
             View Status
         </a>
         {%else%}
 
-        {%endif%}
+        {%endif%} -->
 
 
 
@@ -296,7 +296,7 @@
     {%if measure.rubric %}
 <div class = "row">
 
-<div class = "col col-lg-4 md-6 sm-12 xs-12">
+<div class = "col col-lg-4 md-12 sm-12 xs-12">
     <div class="card bg-light ml-2 mb-3">
       <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
         <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}" class = "btn btn-primary">
@@ -364,7 +364,7 @@
 
 
 
-        <div class = "col col-lg-4 md-6 sm-12 xs-12">
+        <div class = "col col-lg-4 md-12 sm-12 xs-12">
           <ul class="list-group">
             <li class="list-group-item card-header align-items-center"><h4>Evaluators</h4></li>
             {%for evaluator in measure.evaluator.all%}
@@ -392,7 +392,7 @@
           </form>
           </div>
 
-          <div class = "col col-lg-4 md-6 sm-12 xs-12">
+          <div class = "col col-lg-4 md-12 sm-12 xs-12">
           <ul class="list-group" style="overflow-y:scroll; height: 40vh">
             <li class="list-group-item d-flex justify-content-between card-header sticky-top align-items-center"> <h4>Students</h4>
 
@@ -553,6 +553,6 @@
 
 </div>
 </div>
-   </div>
+   <!-- </div> -->
 
 {%endblock%}
