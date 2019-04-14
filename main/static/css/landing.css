@@ -37,7 +37,7 @@ body{
 .login input:focus {
   outline: none;
   color: #444;
-  border-color: #2196f3;
+  border-color: #BD955A;
   border-left-width: 35px;
 }
 .login input:focus + i.fa {
@@ -100,4 +100,9 @@ td{
 
 .btn-primary:hover {
     border-color: #0f0110e6;
+}
+
+.form-control:focus {
+  border-color: #7a2831;
+  box-shadow: inset 0 0.5px 0.5px rgba(128, 0, 41, 0.075), 0 0 8px rgba(128, 0, 41, 0.6);
 }
