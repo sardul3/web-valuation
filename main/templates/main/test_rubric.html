@@ -20,6 +20,9 @@
 	padding: 2%;
 	margin-top: 10%;
 }
+#wei{
+	outline: 2px solid green;
+}
 </style>
 
 
@@ -41,11 +44,16 @@
 		<div class="form-group">
     	<input class = "form-control" type = "number" name = "cols" placeholder="enter the number of columns" required >
 		</div>
-	  	Weighted:
-	  	<select name="weight">
+
+
+		<div class="form-group">
+    <label for="exampleFormControlSelect1">Weighted Rubric?</label>
+    <select class="form-control" id="exampleFormControlSelect1" name="weight" id="wei">
 			<option value="no">No</option>
 			<option value="yes">Yes</option>
-		</select>
+    </select>
+  </div>
+
     <button class = "btn btn-primary btn-block btn-lg" type = "submit"> Create </button>
 	</div>
 </div>

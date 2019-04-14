@@ -4,21 +4,13 @@
 {% block body_block %}
 <style>
 
-  .objs{
-    padding: 0.7%;
-    align:center;
-  }
-
-#main_content{
-  margin-top:2%;
-}
 
 
   .measure_section{
     padding: 3%;
   }
 
-  .speech-bubble { position: relative; background: #f7f7f7; border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color: #f7f7f7; border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
+  .speech-bubble { position: relative; background: rgba(189,149,90, 0.25); border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color:rgba(189,149,90,0.25); border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
 
 </style>
 
@@ -88,16 +80,18 @@
      </div>
 
 
+     <h4 class = "d-flex justify-content-between mb-3 align-items-center "> {{outcome.title}}
+
+       <button type="button" class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
+          <i class="fas fa-plus"></i>
+        </button>
+       </h4>
+
 
   <div class="row d-flex align-items-center">
-  <div class="col-4 ">
+  <div class="col-2">
     <div>
-      <h1 class = "d-flex justify-content-between mb-3 "> {{outcome.title}}
 
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
-           <i class="fas fa-plus"></i>
-         </button>
-        </h1>
     </div>
     <div class="list-group " id="list-tab" role="tablist">
 
@@ -118,7 +112,7 @@
 
     </div>
   </div>
-  <div class="col-8" >
+  <div class="col-10" >
     <div class="tab-content speech-bubble" id="nav-tabContent">
       {%for measure in measures%}
         {%if measure.outcome == outcome%}
@@ -488,8 +482,7 @@
         </div>
       </div>
 
-<br/>
-<br/>
+
 
 
 
