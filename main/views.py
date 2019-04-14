@@ -584,6 +584,7 @@ def view_test_score(request, test_score_test, measure_id):
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     student_name = request.POST.getlist('student_to_be_evaluated')[0]
+    rub = Rubric.objects.get(id=rubric_id)
     rubric_name = Rubric.objects.get(id=rubric_id).title
     measure = Measure.objects.get(id=measure_id)
     scores = []
@@ -592,20 +593,28 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     count=0
     for x in range(rubric_row-1):
         score = request.POST.get('score'+str(x+1))
-        scores.append(score)
-        total += int(score)
+        max_col = rub.max_col
+        if rub.isWeighted:
+            for cat in Category.objects.filter(rubric=rub):
+                if cat.index_y==max_col-1:
+                    if cat.index_x==x+1:
+                        #print(score)
+                        #print(cat.categoryTitle)
+                        myscore = float(cat.categoryTitle)*int(score)/100.0
+        scores.append(myscore)
+        print(myscore)
+        total += float(myscore)
         count = count +1
-    print(scores)
-    print(count)
-    print(total)
+    #print(scores)
+    #print(count)
+    #print(total)
 
     avg = total/count
-    print(avg)
+    #print(avg)
     evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
                 student=student_name, measure=measure, evaluated_by = request.user.username)
     evaluated.save()
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
-
 def remove_rubric_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
     measure.update(rubric=None)
