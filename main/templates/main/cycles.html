@@ -42,9 +42,9 @@
                </div>
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
-           <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
+           <div id= "card-border-dark-mb-3" class = "card border-dark mb-3" >
              <h3 class = "card-header title"> Previous Cycles </h3>
-             <ul class="list-group">
+             <ul class="list-group" style="overflow-y:scroll; height: 40vh">
                {%for cycle in cycles%}
                  {%if cycle.isCurrent == False %}
                  <li class="list-group-item d-flex justify-content-between align-items-center">
