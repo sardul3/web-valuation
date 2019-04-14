@@ -3,9 +3,12 @@
 {% block body_block %}
 
 <div class = "container-fluid" id = "main_content">
+
   <div class = "row d-flex justify-content-center  ">
-      <div class = "col col-lg-2 col-md-12 col-sm-12">
+
+      <div class = "col col-lg-2 col-md-12 col-sm-12 col-xs-12 col-12">
         <div class="card border-dark mb-3">
+
             <div class="card-header text-center"><h5>{{cycle.semester}} {{cycle.year}}</h5></div>
             <div class="card-body text-dark text-center">
               <h5 class="card-title">Started at</h5>
@@ -34,7 +37,7 @@
       </div>
 
 
-    <div class = "col col-lg-10 col-md-12 col-md-12 ">
+    <div class = "col col-lg-10 col-md-12 col-sm-12 col-xs-12 col-12 ">
       <div class = "card border-dark">
     <h1 class="d-flex justify-content-between card-header">  Learning outcomes
     {%if cycle.isCurrent%}
@@ -52,6 +55,7 @@
               <h5 class="mb-1 p-1">{{outcome.title}}</h5>
           </a>
       </div>
+
         <div class="btn-group align-items-center">
           <a  href = "" class = "btn btn-lg "  data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: #bd955a;">
@@ -123,7 +127,7 @@
       </div>
 
       </div>
-      </div>
+
 
       {%empty%}
       <div class="jumbotron jumbotron-fluid" style="background-color:#f7f7f7;">
@@ -137,7 +141,7 @@
       </div>
 
   {%endfor%}
-
+  </div>
   </div>
 </div>
 
@@ -199,14 +203,11 @@
                   </div>
                 </form>
               </div>
-
           </div>
         </div>
-
       </div>
+</div>
+</div>
 
-</div>
-</div>
-</div>
 
 {%endblock%}
