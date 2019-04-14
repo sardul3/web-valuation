@@ -64,7 +64,7 @@ td{
 .nav-item{
   font-size: 1.5rem;
 }
-
+/*
 #card-border-dark-mb-3{
     position: relative;
     display: -ms-flexbox;
@@ -79,4 +79,7 @@ td{
     border-radius: .25rem;
     height: 40vh;
     overflow: scroll;
-}
+} */
+
+.progress {background: rgba(208, 237, 23, 1); border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px;}
+.progress-bar-custom {background: rgba(189, 15, 55, 1);}
