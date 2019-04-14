@@ -1,19 +1,11 @@
-{% extends  'base.html' %}
+{% extends  'main/adminbase.html' %}
 {% load static %}
 {% block body_block %}
 
 <style>
 
-  .objs{
-    padding: 0.7%;
-    align:center;
-  }
-  #main_content{
-    margin: 1%;
-  }
-  a{
-    font-size: 2rem;
-  }
+
+
 </style>
 
 
@@ -41,7 +33,7 @@
                 End Cycle
               </a>
               {%else%}
-              <a href = ""class = "btn btn-lg btn-success btn-lg">
+              <a href = "{%url 'main:reactivate_cycle' cycle_id%}"class = "btn btn-lg btn-success btn-lg">
                 Reactivate
               </a>
               {%endif%}

@@ -208,7 +208,7 @@ def newCycle(request):
     cycle.save()
     messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
 
-    return HttpResponseRedirect(reverse('main:dashboard'))
+    return HttpResponseRedirect(reverse_lazy('main:cycles'))
 
 @user_passes_test(admin_test)
 def cycle(request, cycle_id):
@@ -253,6 +253,12 @@ def migrate_cycle(request, cycle_id):
                 Measure.objects.filter(id=new_measure.id).update(test_score=mea.test_score)
 
     return HttpResponseRedirect(reverse('main:dashboard'))
+
+def reactivate_cycle(request, cycle_id):
+    cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=True, endDate=None)
+    return HttpResponseRedirect(reverse('main:dashboard'))
+
+
 
 def outcome_detail(request, outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
@@ -428,8 +434,8 @@ def created_test_rubric(request):
                 text = request.POST.get(str(x)+str(y))
                 category = Category(categoryTitle=text,index_x=x, index_y=y, rubric=rubric_new)
                 category.save()
+    return HttpResponseRedirect(reverse_lazy('main:rubrics'))
 
-    return render(request, 'main/test_rubric.html')
 
 def rubric_render(request, rubric_id):
     rubrics = Rubric.objects.filter(id=rubric_id)[0]
