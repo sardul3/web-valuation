@@ -195,7 +195,7 @@ def dashboard(request):
             for eval_more in mymea.evaluator.all():
                 if (eval == eval_more):
                     evaluator_list.append(eval)
-    context = {'evaluator': evaluator_list}
+    context = {'evaluator': evaluator_list, 'dashboard':'active'}
     return render(request, 'main/adminhome.html', context)
 
 @login_required
@@ -229,7 +229,7 @@ def end_cycle(request, cycle_id):
 
     messages.add_message(request, messages.WARNING, 'Cycle was deleted successfully')
 
-    return HttpResponseRedirect(reverse('main:dashboard'))
+    return HttpResponseRedirect(reverse_lazy('main:cycles'))
 
 def migrate_cycle(request, cycle_id):
     from_cycle_id = request.POST.get('cycle_migrate')

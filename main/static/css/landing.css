@@ -1,10 +1,19 @@
 {% load static %}
-body{
-  height: 100vh;
 
-
+ul::-webkit-scrollbar {
+    width: 1em;
+}
+ul::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ul::-webkit-scrollbar-thumb {
+  background-color: #7a2831;
+  outline: 5px solid #bd955a;
 }
 
+body{
+  height: 100vh;
+}
 
 .login input {
   display: block;
@@ -37,8 +46,6 @@ body{
   transition: all 0.25s ease-out;
 }
 
-
-
 th, label{
   font-size: 1.5rem;
 }
@@ -64,22 +71,33 @@ td{
 .nav-item{
   font-size: 1.5rem;
 }
-/*
-#card-border-dark-mb-3{
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0,0,0,.125);
-    border-radius: .25rem;
-    height: 40vh;
-    overflow: scroll;
-} */
 
 .progress {background: rgba(208, 237, 23, 1); border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px;}
 .progress-bar-custom {background: rgba(189, 15, 55, 1);}
+
+.btn-primary {
+    color: #ffefef !important;
+    background-color: #7a2831 !important;
+    border-color: #fff300;
+}
+.card-header{
+  background-color: rgb(219,217,214)
+}
+
+
+.card-header {
+    background-color: #BD955A;
+    color: rgb(252, 248, 242);
+}
+
+.card-header span{
+  color: rgb(252, 248, 242);
+
+}
+.card-header span:hover{
+  color: rgb(252, 248, 242);
+}
+
+.btn-primary:hover {
+    border-color: #0f0110e6;
+}

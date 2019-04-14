@@ -13,7 +13,7 @@
 
   <div class = "row d-flex justify-content-center ">
     <div class = "row mr-5">
-      <div class = "col">
+      <div class = "col ">
         <div class="card border-dark mb-3" style="max-width: 18rem;">
             <div class="card-header">{{cycle.semester}} {{cycle.year}}</div>
             <div class="card-body text-dark">
@@ -47,10 +47,10 @@
     </div>
 
 
-    <div class = "col col-lg-6 objs card border-dark ">
-    <h1 class="text-center d-flex justify-content-between mb-3">  Learning outcomes
+    <div class = "col col-lg-6 objs card border-dark  ">
+    <h1 class="text-center d-flex justify-content-between card-header mt-2 mb-1 ">  Learning outcomes
     {%if cycle.isCurrent%}
-          <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+          <button type="button" class="btn btn-primary btn-lg mt-1" data-toggle="modal" data-target="#exampleModalCenter">
            <i class="fas fa-plus"></i>
           </button>
     {%endif%}
@@ -58,12 +58,12 @@
     <br />
       <div class="list-group">
       {%for outcome in outcomes%}
+    <div class = "row">
       <div class = "d-flex justify-content-center">
       <div class="d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
               <h5 class="mb-1 p-1">{{outcome.title}}</h5>
           </a>
-
       </div>
       <div style = "margin-left: 10px;">
         <div class="btn-group">
@@ -157,6 +157,9 @@
           <p> or </p>
           <a class = "btn btn-lg btn-dark" href="" data-toggle="modal" data-target="#exampleModalCenterMigrateCycle"> Migrate</a>
         </div>
+      </div>
+
+
       </div>
   {%endfor%}
 

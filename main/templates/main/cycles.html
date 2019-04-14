@@ -11,7 +11,7 @@
         <div class = "row">
            <div class = "col col-lg-4 col-md-6 col-sm-12">
              <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
-               <h3 class = "card-header title"> Start a new cycle </h3>
+               <h3 class = "card-header title text-center"> Start a new cycle </h3>
 
                <form action = "{% url 'main:newCycle' %}" method = "POST" >
                  {% csrf_token%}
@@ -43,7 +43,7 @@
 
           <div class = "col col-lg-4 col-md-6 col-sm-12">
            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3" >
-             <h3 class = "card-header title"> Previous Cycles </h3>
+             <h3 class = "card-header title text-center"> Previous Cycles </h3>
              <ul class="list-group" style="overflow-y:scroll; height: 40vh">
                {%for cycle in cycles%}
                  {%if cycle.isCurrent == False %}
@@ -62,7 +62,7 @@
 
          <div class = "col col-lg-4 col-md-6 col-sm-12">
            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
-             <h3 class = "card-header title">Running Cycles </h3>
+             <h3 class = "card-header title text-center">Running Cycles </h3>
              <ul class="list-group">
                {%for cycle in cycles%}
                  {%if cycle.isCurrent %}
