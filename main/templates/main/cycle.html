@@ -2,18 +2,9 @@
 {% load static %}
 {% block body_block %}
 
-<style>
-
-
-
-</style>
-
-
 <div class = "container-fluid" id = "main_content">
-
-  <div class = "row d-flex justify-content-center ">
-    <div class = "row mr-5">
-      <div class = "col ">
+  <div class = "row d-flex justify-content-center  ">
+      <div class = "col col-lg-4 col-md-12 col-sm-12">
         <div class="card border-dark mb-3" style="max-width: 18rem;">
             <div class="card-header">{{cycle.semester}} {{cycle.year}}</div>
             <div class="card-body text-dark">
@@ -38,17 +29,14 @@
               </a>
               {%endif%}
 
-
             </div>
-
           </div>
-
       </div>
-    </div>
 
 
-    <div class = "col col-lg-6 objs card border-dark  ">
-    <h1 class="text-center d-flex justify-content-between card-header mt-2 mb-1 ">  Learning outcomes
+    <div class = "col col-lg-8 col-md-12 col-md-12 ">
+      <div class = "card border-dark">
+    <h1 class="d-flex justify-content-between card-header">  Learning outcomes
     {%if cycle.isCurrent%}
           <button type="button" class="btn btn-primary btn-lg mt-1" data-toggle="modal" data-target="#exampleModalCenter">
            <i class="fas fa-plus"></i>
@@ -56,19 +44,17 @@
     {%endif%}
     </h1>
     <br />
-      <div class="list-group">
+      <div class="list-group list-group-flush">
       {%for outcome in outcomes%}
-    <div class = "row">
       <div class = "d-flex justify-content-center">
       <div class="d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
               <h5 class="mb-1 p-1">{{outcome.title}}</h5>
           </a>
       </div>
-      <div style = "margin-left: 10px;">
         <div class="btn-group">
-          <a  href = "" class = "btn  btn-light btn-lg" data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
-            <span style="font-size: 2em; color: black;">
+          <a  href = "" class = "btn btn-lg"  data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
+            <span style="font-size: 2em; color: #bd955a;">
               <i class="far fa-edit"></i>
           </span>
           </a>
@@ -103,11 +89,8 @@
             </div>
           </div>
 
-
-
-
-          <a  href = "#" class = "btn  btn-light btn-lg" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
-            <span style="font-size: 2em; color: black;">
+          <a  href = "#" class = "btn btn-lg" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
+            <span style="font-size: 2em; color: #7a2831;">
               <i class="far fa-trash-alt"></i>
           </span>
           </a>
@@ -132,21 +115,15 @@
                     </div>
                   </form>
                 </div>
+
               </div>
             </div>
           </div>
 
-
-
-
-
-
-
       </div>
 
       </div>
       </div>
-
 
       {%empty%}
       <div class="jumbotron jumbotron-fluid" style="background-color:#f7f7f7;">
@@ -159,17 +136,12 @@
         </div>
       </div>
 
-
-      </div>
   {%endfor%}
 
-
-
   </div>
-    </div>
+</div>
 
-
-            <div class="modal fade" id="exampleModalCenterMigrateCycle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal fade" id="exampleModalCenterMigrateCycle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -201,9 +173,9 @@
               </div>
             </div>
 
-          </div>
+      </div>
 
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -233,20 +205,8 @@
 
       </div>
 
-
-    <br/>
-
-
-
-
 </div>
-
-
-
 </div>
-
-
-
-
+</div>
 
 {%endblock%}
