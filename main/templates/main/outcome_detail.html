@@ -314,6 +314,8 @@
           <a href = "{%url 'main:view_rubric_data' measure.id%}" class = "btn btn-primary mb-3">
               View Status
           </a>
+
+
           {%else%}
 
           {%endif%}
@@ -384,10 +386,10 @@
           <form class="" action = "{%url 'main:add_evaluator' outcome_id measure.id %}" method = "POST">
             {%csrf_token%}
             <div class="form-group mb-2">
-                <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name">
+                <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name" required>
            </div>
             <div class="form-group mb-2">
-                <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
            </div>
             <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
           </form>
@@ -422,7 +424,7 @@
         </div>
 
     {%else%}
-
+    <br/>
     <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
         Add Rubric
       </button>

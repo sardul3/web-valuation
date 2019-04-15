@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 
 
-def data(test_score_test, measure_id):
+def test_score_data(test_score_test, measure_id):
 
     measure = Measure.objects.get(id=measure_id)
     test_score = Test_score.objects.filter(test=test_score_test)
@@ -26,6 +26,7 @@ def data(test_score_test, measure_id):
     greater_than_avg = test_score.filter(score__gte = test_average).count()
     passed = False
     margin = 0.0
+    data = {}
 
     bin_array = []
     for student_score in test_score:
@@ -57,14 +58,68 @@ def data(test_score_test, measure_id):
             else:
                 margin = measure.cutoff_percentage - percentage
 
-    context = {'test_score': test_score, 'total_students':total_students,
-                        'test_average': test_average, 'above_threshold': above_threshold,
-                        'percentage':percentage, 'greater_than_avg': greater_than_avg,
-                        'measure':measure, 'passed':passed, 'bin_array': bin_array,
-                         'count': range(len(bin_array)), 'margin':margin}
-    print(context)
+    data = dict(test_score= test_score, total_students = total_students,
+                        test_average= test_average, above_threshold= above_threshold,
+                        percentage=percentage, greater_than_avg= greater_than_avg,
+                        measure=measure, passed=passed, bin_array=bin_array,
+                         count=range(len(bin_array)), margin= margin)
+    print(data)
 
-    return context
+    return data
+
+def rubric_data(measure_id):
+    measure = Measure.objects.get(id=measure_id)
+
+    total_count = 0;
+    evaluator_count = 0;
+    student_count = 0;
+    evaluated_student_count = 0;
+
+    students = measure.student.all()
+    evaluator_count = measure.evaluator.all().count()
+    student_count = measure.student.all().count()
+    evaluated_student_count = evaluate_rubric.objects.filter(measure=measure).count()
+    total_count = evaluator_count * student_count
+
+    avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
+    print(avg_points)
+    number_of_pass_cases = evaluate_rubric.objects.filter(grade_score__gte = measure.cutoff_score).count()
+    percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100
+
+    number_pass_cases_avg = evaluate_rubric.objects.filter(grade_score__gte = avg_points).count()
+    percent_pass_cases_avg = number_pass_cases_avg/total_count * 100
+
+    data = {
+        'total_count': total_count,
+        'evaluator_count':evaluator_count,
+        'student_count':student_count,
+        'evaluated_student_count': evaluated_student_count,
+        'avg_points': avg_points,
+        'number_of_pass_cases': number_of_pass_cases,
+        'percent_pass_cases': percent_pass_cases,
+        'number_pass_cases_avg':number_pass_cases_avg,
+        'percent_pass_cases_avg': percent_pass_cases_avg
+    }
+
+    evaluated_list = evaluate_rubric.objects.filter(measure = measure)
+
+    bin_array = []
+    for student_score in evaluated_list:
+        if(measure.cutoff_type == 'Percentage'):
+            if(student_score.grade_score>=measure.cutoff_score):
+                bin_array.append(student_score.student)
+
+    passed = False
+    if(measure.cutoff_type == 'Percentage'):
+            if(percent_pass_cases>=measure.cutoff_percentage):
+                passed = True
+                Measure.objects.filter(id=measure_id).update(status='passing')
+
+
+    # context = {'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed, 'data':data}
+
+
+    return data
 
 
 def admin_test(user):
@@ -308,7 +363,7 @@ def migrate_cycle(request, cycle_id):
             elif mea.tool_type=='Test score':
                 Measure.objects.filter(id=new_measure.id).update(test_score=mea.test_score)
 
-    return HttpResponseRedirect(reverse('main:dashboard'))
+    return HttpResponseRedirect(reverse('main:cycles'))
 
 def reactivate_cycle(request, cycle_id):
     cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=True, endDate=None)
@@ -324,6 +379,7 @@ def outcome_detail(request, outcome_id):
     evaluators = Evaluator.objects.all()
     num_of_evaluations = []
     test_data = {}
+    data = {}
 
     for measure in measures:
         students = measure.student.all()
@@ -331,20 +387,25 @@ def outcome_detail(request, outcome_id):
         if(evaluations>0):
             num_of_evaluations.append(measure.measureTitle)
 
+        if measure.tool_type == 'Rubric':
+            if measure.rubric:
+                if len(num_of_evaluations)  > 0:
+                    data = rubric_data(measure.id)
+                    print(rubric_data)
+
         if measure.tool_type=='Test score':
-            if measure.test_score:
-                test_data = data(measure.test_score.test, measure.id)
-                print(test_data['passed'])
+            if measure.test_score!= None:
+                test_data = test_score_data(measure.test_score.test, measure.id)
 
                 if(test_data['passed']==True):
                      Measure.objects.filter(id=measure.id).update(status='passing', statusPercent = test_data['percentage'])
                 else:
-                     Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = 100 - test_data['percentage'])
+                     Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = measure.cutoff_percentage - test_data['percentage'])
 
 
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
-                'test_data':test_data}
+                'test_data':test_data, 'rubric_data':data}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -544,6 +605,8 @@ def delete_student(request, outcome_id, measure_id, student_id):
     measure = Measure.objects.get(id=measure_id)
     measure.student.remove(student)
 
+    messages.add_message(request, messages.SUCCESS, 'Student deleted')
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 
@@ -561,7 +624,7 @@ def upload_student(request, outcome_id, measure_id):
             student.save()
             measure.student.add(student)
 
-            messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
+        messages.add_message(request, messages.SUCCESS, 'Successfully added Students to the Measure')
 
         return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -644,7 +707,7 @@ def view_test_score(request, test_score_test, measure_id):
     #             'percentage':percentage, 'greater_than_avg': greater_than_avg,
     #             'measure':measure, 'passed':passed, 'bin_array': bin_array,
     #              'count': range(len(bin_array)), 'margin':margin}
-    context = data(test_score_test, measure_id)
+    context = test_score_data(test_score_test, measure_id)
     return render(request, 'main/test_scores.html', context)
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
@@ -656,7 +719,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     avg = 0
     total = 0
     count=0
-
+    myscore=0
     for x in range(rubric_row-1):
         score = request.POST.get('score'+str(x+1))
         max_col = rub.max_col
@@ -681,6 +744,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
                 student=student_name, measure=measure, evaluated_by = request.user.username)
     evaluated.save()
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
+
 def remove_rubric_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
     measure.update(rubric=None)
