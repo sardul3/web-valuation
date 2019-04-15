@@ -27,7 +27,7 @@
     {%for outcome in outcomes%}
         <div class="accordion" id="accordionExample">
           {%for cycle in outcome.cycle.all%}
-          {%if cycle.isCurrent%}
+            {%if cycle.isCurrent%}
 
 
 
@@ -73,38 +73,13 @@
             </div>
 
             <div id="collapseOne{{outcome.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-              <div class="card-body">
-                <ul class="list-group">
+              <div class="card-body justify-content-between">
+                <ul class="list-group ">
                   {%for measure in measures%}
                     {%if measure.outcome == outcome%}
-                      <!-- <li class="list-group-item d-flex justify-content-between">
-                      <div>
-                        {{measure.measureTitle}}
-                      <span class = "btn btn-sm btn-warning ml-0">
-                      {{measure.cutoff_percentage}} % of the students need to get
-                      {%if measure.cutoff_score%}
-                       {{measure.cutoff_score}}
-                       {%else%}
-                       average
-                       {%endif%}
-                          or higher
-                      on {{measure.tool_type}}:
-                      {%if measure.tool_type == "Rubric"%}
-                        <strong>{{measure.rubric}}</strong>
-                      {%elif measure.tool_type == "Test score"%}
-                        <strong>{{measure.test_score}}</strong>
-                      {%endif%}
-                    </span>
-                  </div>
-                    <em class = "align-item-center">{{measure.status}}</em>
-                  </li> -->
-
-
-
-                  <div class = "col col-lg-12 md-6 sm-12 xs-12">
-                      <div class="card bg-light ml-2 mb-3">
-                        <div class="card-header d-flex justify-content-between"><h4 class = "">{{measure.measureTitle}} </h4>
-                          <span class = "btn btn-sm btn-warning ml-0 col-6">
+                    <div class = "row ">
+                      <div class = "col col-lg-12 ">
+                          <span class = "btn btn-sm btn-warning mb-2 ">
                           {{measure.cutoff_percentage}} % of the students need to get
                           {%if measure.cutoff_score%}
                            {{measure.cutoff_score}}
@@ -119,26 +94,22 @@
                             <strong>{{measure.test_score}}</strong>
                           {%endif%}
                           </span>
-                          <p class="card-text"><em class = "align-item-center">
-                            {%if measure.statusPercent > 0.0%}
-                            {{measure.statusPercent|floatformat:2}}% {{measure.status}}</em></p>
-                            {%else%}
-                            not started </em></p>
-                            {%endif%}
 
-                        </div>
-                </div>
+                          <span>
+                          {%if measure.statusPercent > 0.0%}
+                          {{measure.statusPercent|floatformat:2}}% {{measure.status}}
+                          {%else%}
+                            <span>  not started </span>
+                          {%endif%} </span>
+                      </div>
+
                     </div>
-
-
-
-
                     {%endif%}
                   {%endfor%}
                 </ul>
               </div>
             </div>
-          </div>
+    </div>
           {%endif%}
           {%endfor%}
         </div>
@@ -148,5 +119,6 @@
 </div>
 </div>
 </div>
+
 
 {%endblock%}

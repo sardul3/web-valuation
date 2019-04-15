@@ -76,8 +76,8 @@ td{
   font-size: 1.5rem;
 }
 
-.progress-admin {background: rgba(208, 237, 23, 1); border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px;}
-.progress-bar-custom {background: rgba(189, 15, 55, 1);}
+.progress-admin {background: :#9aa1a7; border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px;}
+.progress-bar-custom {background: green;}
 
 .btn-primary {
     color: #ffefef !important;
@@ -132,3 +132,21 @@ textarea {
   color: #f7f3f3 !important;
 
 } */
+
+.bg-danger {
+    background-color: #02c63c !important;
+}
+
+.progress-admin {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    color: #111405;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #007bff;
+    transition: width .6s ease;
+}
