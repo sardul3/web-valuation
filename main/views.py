@@ -15,6 +15,58 @@ from django.db.models import Avg, Count, Min, Sum
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
 
+
+
+def data(test_score_test, measure_id):
+
+    measure = Measure.objects.get(id=measure_id)
+    test_score = Test_score.objects.filter(test=test_score_test)
+    total_students = test_score.count()
+    test_average = test_score.aggregate(Avg('score'))['score__avg']
+    greater_than_avg = test_score.filter(score__gte = test_average).count()
+    passed = False
+    margin = 0.0
+
+    bin_array = []
+    for student_score in test_score:
+        if(measure.cutoff_type == 'Percentage'):
+            if(student_score.score>=measure.cutoff_score):
+                bin_array.append(student_score.student.name)
+
+        elif(measure.cutoff_type == 'Average'):
+            if(student_score.score>=measure.cutoff_percentage):
+                bin_array.append(student_score.student.name)
+
+    print(bin_array)
+
+    if(measure.cutoff_type == 'Percentage'):
+            above_threshold = test_score.filter(score__gte = measure.cutoff_score).count()
+            percentage = above_threshold / total_students * 100
+            if(percentage>=measure.cutoff_percentage):
+                passed = True
+
+            else:
+                margin = measure.cutoff_percentage - percentage
+    elif(measure.cutoff_type == 'Average'):
+            test_average = test_score.aggregate(Avg('score'))['score__avg']
+            above_threshold = test_score.filter(score__gte = test_average).count()
+            percentage = above_threshold / total_students * 100
+            if(percentage>=measure.cutoff_percentage):
+                passed = True
+
+            else:
+                margin = measure.cutoff_percentage - percentage
+
+    context = {'test_score': test_score, 'total_students':total_students,
+                        'test_average': test_average, 'above_threshold': above_threshold,
+                        'percentage':percentage, 'greater_than_avg': greater_than_avg,
+                        'measure':measure, 'passed':passed, 'bin_array': bin_array,
+                         'count': range(len(bin_array)), 'margin':margin}
+    print(context)
+
+    return context
+
+
 def admin_test(user):
     return user.is_superuser
 
@@ -271,19 +323,28 @@ def outcome_detail(request, outcome_id):
     students = None
     evaluators = Evaluator.objects.all()
     num_of_evaluations = []
-
+    test_data = {}
 
     for measure in measures:
         students = measure.student.all()
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
         if(evaluations>0):
             num_of_evaluations.append(measure.measureTitle)
-        print(num_of_evaluations)
 
+        if measure.tool_type=='Test score':
+            if measure.test_score:
+                test_data = data(measure.test_score.test, measure.id)
+                print(test_data['passed'])
+
+                if(test_data['passed']==True):
+                     Measure.objects.filter(id=measure.id).update(status='passing', statusPercent = test_data['percentage'])
+                else:
+                     Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = 100 - test_data['percentage'])
 
 
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
-                'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations}
+                'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
+                'test_data':test_data}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -342,7 +403,7 @@ def add_learning_outcome(request, cycle_id):
     outcome.save()
     cycle_found = Cycle.objects.get(id=cycle_id)
     outcome.cycle.add(cycle_found)
-    
+
     messages.add_message(request, messages.SUCCESS, 'Learning outcome created')
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
@@ -536,54 +597,54 @@ def delete_outcome(request, outcome_id, cycle_id):
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
 def view_test_score(request, test_score_test, measure_id):
-
-
-    measure = Measure.objects.get(id=measure_id)
-    test_score = Test_score.objects.filter(test=test_score_test)
-    total_students = test_score.count()
-    test_average = test_score.aggregate(Avg('score'))['score__avg']
-    above_threshold = test_score.filter(score__gte = 75).count()
-    percentage = above_threshold / total_students * 100
-    greater_than_avg = test_score.filter(score__gte = test_average).count()
-    passed = False
-    margin = 0.0
-
-    bin_array = []
-    for student_score in test_score:
-        if(measure.cutoff_type == 'Percentage'):
-            if(student_score.score>=measure.cutoff_score):
-                bin_array.append(student_score.student.name)
-
-        elif(measure.cutoff_type == 'Average'):
-            if(student_score.score>=measure.cutoff_percentage):
-                bin_array.append(student_score.student.name)
-
-    print(bin_array)
-
-    if(measure.cutoff_type == 'Percentage'):
-            above_threshold = test_score.filter(score__gte = measure.cutoff_score).count()
-            percentage = above_threshold / total_students * 100
-            if(percentage>=measure.cutoff_percentage):
-                passed = True
-            else:
-                margin = measure.cutoff_percentage - percentage
-    elif(measure.cutoff_type == 'Average'):
-            test_average = test_score.aggregate(Avg('score'))['score__avg']
-            above_threshold = test_score.filter(score__gte = test_average).count()
-            percentage = above_threshold / total_students * 100
-            if(percentage>=measure.cutoff_percentage):
-                passed = True
-                Measure.objects.filter(id=measure_id).update(status='passing')
-
-            else:
-                margin = measure.cutoff_percentage - percentage
-
-
-    context = {'test_score': test_score, 'total_students':total_students,
-                'test_average': test_average, 'above_threshold': above_threshold,
-                'percentage':percentage, 'greater_than_avg': greater_than_avg,
-                'measure':measure, 'passed':passed, 'bin_array': bin_array,
-                 'count': range(len(bin_array)), 'margin':margin}
+    #
+    # measure = Measure.objects.get(id=measure_id)
+    # test_score = Test_score.objects.filter(test=test_score_test)
+    # total_students = test_score.count()
+    # test_average = test_score.aggregate(Avg('score'))['score__avg']
+    # above_threshold = test_score.filter(score__gte = 75).count()
+    # percentage = above_threshold / total_students * 100
+    # greater_than_avg = test_score.filter(score__gte = test_average).count()
+    # passed = False
+    # margin = 0.0
+    #
+    # bin_array = []
+    # for student_score in test_score:
+    #     if(measure.cutoff_type == 'Percentage'):
+    #         if(student_score.score>=measure.cutoff_score):
+    #             bin_array.append(student_score.student.name)
+    #
+    #     elif(measure.cutoff_type == 'Average'):
+    #         if(student_score.score>=measure.cutoff_percentage):
+    #             bin_array.append(student_score.student.name)
+    #
+    # print(bin_array)
+    #
+    # if(measure.cutoff_type == 'Percentage'):
+    #         above_threshold = test_score.filter(score__gte = measure.cutoff_score).count()
+    #         percentage = above_threshold / total_students * 100
+    #         if(percentage>=measure.cutoff_percentage):
+    #             passed = True
+    #         else:
+    #             margin = measure.cutoff_percentage - percentage
+    # elif(measure.cutoff_type == 'Average'):
+    #         test_average = test_score.aggregate(Avg('score'))['score__avg']
+    #         above_threshold = test_score.filter(score__gte = test_average).count()
+    #         percentage = above_threshold / total_students * 100
+    #         if(percentage>=measure.cutoff_percentage):
+    #             passed = True
+    #             Measure.objects.filter(id=measure_id).update(status='passing')
+    #
+    #         else:
+    #             margin = measure.cutoff_percentage - percentage
+    #
+    #
+    # context = {'test_score': test_score, 'total_students':total_students,
+    #             'test_average': test_average, 'above_threshold': above_threshold,
+    #             'percentage':percentage, 'greater_than_avg': greater_than_avg,
+    #             'measure':measure, 'passed':passed, 'bin_array': bin_array,
+    #              'count': range(len(bin_array)), 'margin':margin}
+    context = data(test_score_test, measure_id)
     return render(request, 'main/test_scores.html', context)
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):

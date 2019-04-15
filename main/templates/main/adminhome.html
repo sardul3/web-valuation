@@ -20,7 +20,7 @@
               <ul class="list-group list-group-flush ">
              {% for eval in evaluator %}
                  <li class = "list-group-item d-flex justify-content-between d-flex align-items-center">{{eval}}
-               <div class="progress ">
+               <div class="progress progress-admin ">
                    <div class="progress-bar bg-danger " role="progressbar" aria-valuenow="40"
                    aria-valuemin="0" aria-valuemax="100" style="width:{{eval.perc_completed}}%">
                      {{eval.perc_completed|floatformat:0}}% Evaluation Completed

@@ -96,6 +96,7 @@ class Measure(models.Model):
                     ('failed', 'failed')
                     )
     status = models.CharField(max_length=100, choices=STATUS_TYPES, default='failing')
+    statusPercent = models.FloatField(default=0.0)
     measureTitle = models.CharField(max_length=200, default='', null=True)
     outcome = models.ForeignKey(Outcome, null=True, on_delete = models.CASCADE)
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)

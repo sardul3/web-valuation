@@ -1,5 +1,9 @@
 {% load static %}
 
+body{
+  font-family: Montserrat, Lato, 'Nunito Sans', Helvetica, Arial, Platino, Garamond, Bookman, Lucidia;
+
+}
 ul::-webkit-scrollbar {
     width: 1em;
 }
@@ -72,7 +76,7 @@ td{
   font-size: 1.5rem;
 }
 
-.progress {background: rgba(208, 237, 23, 1); border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px;}
+.progress-admin {background: rgba(208, 237, 23, 1); border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px;}
 .progress-bar-custom {background: rgba(189, 15, 55, 1);}
 
 .btn-primary {
