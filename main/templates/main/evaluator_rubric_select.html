@@ -7,10 +7,10 @@
       {%csrf_token%}
         <label for="exampleFormControlSelect1">Evaluate a student</label>
              <select class="form-control" name = "student_to_be_evaluated">
-                   {% for student in students %}
-                      {%if student.name in evaluated_flag%}
+                   {% for student in evaluated_flag %}
+                      {%if student.graded %}
                       {%else%}
-                        <option value = "{{student.name}}">{{student.name}}</option>
+                        <option value = "{{student.id}}">{{student.student_name}}</option>
                       {%endif%}
                   {%endfor%}
               </select>
