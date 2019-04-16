@@ -291,11 +291,7 @@ def evaluator_rubric_select(request, measure_id):
         if st.measure==measures:
             final_cust.append(st)
     context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
-<<<<<<< HEAD
-                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':evaluated_flag, 'max_in':rubric.max_row}
-=======
                 ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':final_cust}
->>>>>>> 8010d46aed85b5c6cd05419948f9e1cace117b3b
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 def evaluate_students(request):
