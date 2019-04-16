@@ -667,6 +667,8 @@ def upload_student(request, outcome_id, measure_id):
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
 
             student = Student(name=column[0], classification=column[1])
+            cust = custom_students(student_name=column[0],measure=measure)
+            cust.save()
             student.save()
             measure.student.add(student)
 
