@@ -648,8 +648,10 @@ def delete_student(request, outcome_id, measure_id, student_id):
     student = Student.objects.get(id=student_id)
     measure = Measure.objects.get(id=measure_id)
     measure.student.remove(student)
-
     messages.add_message(request, messages.SUCCESS, 'Student deleted')
+    for st in custom_students.objects.all():
+        if(st.student_name==student.name and st.measure==measure):
+            st.delete()
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
