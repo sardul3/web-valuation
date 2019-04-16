@@ -128,3 +128,10 @@ class evaluate_rubric(models.Model):
 class evaluation_flag(models.Model):
     student_name = models.CharField(max_length=200)
     measure = models.ForeignKey(Measure, on_delete=models.CASCADE)
+
+class custom_students(models.Model):
+    student_name = models.CharField(max_length=200)
+    measure = models.ForeignKey(Measure,null=True,on_delete=models.CASCADE)
+    evaluator = models.ForeignKey(Evaluator,null=True,on_delete=  models.CASCADE)
+    graded = models.BooleanField(null=True,default=False)
+    grade = models.FloatField(null=True)

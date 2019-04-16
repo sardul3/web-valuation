@@ -71,18 +71,20 @@
           <li class="list-group-item active d-flex justify-content-between">Students
 
           </li>
-            {% for student in measure.student.all %}
+            {% for student in safety %}
+                {% if student.measure == measure %}
                   <li class="d-flex list-group-item justify-content-between" >
-                <div>
-                    {{student.name}}
+                    <div>
+                    {{student.student_name}}
                     </div>
-                    {%if student.name in flag%}
+                    {%if student.graded %}
                       <em> Already Evaluated </em>
                     {%else%}
                       <em> Not yet evaluated </em>
                     {%endif%}
 
                   </li>
+                {% endif %}
 
             {%empty%}
               <li class="list-group-item"> No students added yet </li>
