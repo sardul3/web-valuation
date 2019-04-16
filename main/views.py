@@ -273,7 +273,7 @@ def evaluator_rubric_select(request, measure_id):
             evaluated_flag.append(stu.name)
 
     context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
-                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':evaluated_flag}
+                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':evaluated_flag, 'max_in':rubric.max_row}
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 def evaluate_students(request):
@@ -861,3 +861,6 @@ def past_assessments(request):
 
     context = {'past':'active', 'evaluations': evaluations}
     return render(request, 'main/past_assessments.html', context)
+
+def assign_evaluator(request, measure_id):
+    return 0;

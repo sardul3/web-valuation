@@ -414,6 +414,70 @@
           </form>
           </div>
 
+          <hr/>
+          <h3> New Evaluator (assign different sets of students) </h3>
+
+
+
+
+
+
+          <button class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenterAddEvaluator">
+          Add Evaluator
+          </button>
+
+
+          <div class="modal fade" id="exampleModalCenterAddEvaluator" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Add evaluator</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{%url 'main:assign_evaluator' measure.id%}" method="POST">
+                    {%csrf_token%}
+
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Evaluator Name</label>
+                      <input type="text" class="form-control" id="exampleInputPassword1"
+                             placeholder="name of the evaluator" name = "student_name">
+
+                       <label for="exampleFormControlTextarea1">Evaluator Email</label>
+                        <input type="text" class="form-control" id="exampleInputPassword1"
+                              placeholder="email address of the evaluator" name = "student_name">
+
+                          <div class="form-group">
+                           <label for="exampleFormControlSelect2">Select Students</label>
+                           <select multiple class="form-control" id="exampleFormControlSelect2">
+                             {%for student in measure.student.all%}
+                             <option>{{student.name}}</option>
+                             {%endfor%}
+                           </select>
+                         </div>
+
+
+                      <button type = "submit" class = "btn btn-primary"> Assign </button>
+                    </div>
+                  </form>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
           <div class = "col col-lg-4 md-12 sm-12 xs-12">
           <ul class="list-group" style="overflow-y:scroll; height: 40vh">
             <li class="list-group-item d-flex justify-content-between card-header sticky-top align-items-center"> <h4>Students</h4>
