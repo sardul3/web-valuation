@@ -28,7 +28,7 @@
             {%if passed%}
               <div style = "background-color:green; height:40px; width: 40px; border-radius: 50%;   margin-right: 5px;"></div> Measure Passed
             {%else%}
-              <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;   margin-right: 5px;"> </div>Measure Failed by<em> {{margin|floatformat:"0"}}</em>%
+              <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;   margin-right: 5px;"> </div>Measure Failed by <em> {{measure.statusPercent|floatformat:"0"}}</em>%
             {%endif%}
           </div>
           </div>

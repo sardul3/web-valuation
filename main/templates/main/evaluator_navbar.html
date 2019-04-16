@@ -10,11 +10,11 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
     <ul class="navbar-nav w-100 mr-auto mt-2 mt-lg-0 justify-content-around">
 
-      <li class="nav-item {{dashboard}}" >
-        <a class="nav-link" href="" >Current Assessments</a>
+      <li class="nav-item {{now}}" >
+        <a class="nav-link" href="{%url 'main:evaluatorhome'%}" >Current Assessments</a>
       </li>
-      <li class="nav-item {{outcome}}" >
-        <a class="nav-link" href="">Past Assessments</a>
+      <li class="nav-item {{past}}" >
+        <a class="nav-link" href="{%url 'main:past_assessments'%}">Past Assessments</a>
       </li>
 
 <li class="nav-item {{logout}}">

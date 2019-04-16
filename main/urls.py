@@ -59,8 +59,12 @@ urlpatterns = [
 
 
     path('upload/<int:measure_id>/<int:outcome_id>', views.upload, name = 'upload'),
+    path('add_test_score/<int:measure_id>/<int:outcome_id>', views.add_test_score, name = 'add_test_score'),
+
     path('grade', views.grade, name = 'grade'),
     path('add_rubric_to_measure/<int:measure_id>/<int:outcome_id>', views.add_rubric_to_measure, name = 'add_rubric_to_measure'),
+
+    path('past_assessments', views.past_assessments, name = 'past_assessments'),
 
 
     path('add_test_to_measure/<int:measure_id>', views.add_test_to_measure, name = 'add_test_to_measure'),

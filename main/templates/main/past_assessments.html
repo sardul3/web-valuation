@@ -1,0 +1,35 @@
+{% extends  'main/evaluatorbase.html' %}
+{% load static %}
+{% block body_block %}
+
+
+<div class = "container">
+<table class="table">
+  <thead class=" card-header">
+    <tr>
+      <th scope="col">Student</th>
+      <th scope="col">Measure Title</th>
+      <th scope="col">Score</th>
+      <th scope="col"></th>
+
+    </tr>
+  </thead>
+  <tbody >
+    {%for evaluation in evaluations%}
+    <tr>
+      <td> {{evaluation.student}}</td>
+      <td>  {{evaluation.measure.measureTitle}}</td>
+      <td class = "justify-content-between">
+      {{evaluation.grade_score}}
+      </td>
+      <td>
+        <div class = "btn btn-primary"> Edit </div>
+      </td>
+    </tr>
+
+    {%endfor%}
+  </tbody>
+</table>
+
+</div>
+{%endblock%}

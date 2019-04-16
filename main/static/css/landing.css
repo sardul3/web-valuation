@@ -159,3 +159,7 @@ textarea {
     background-color: #007bff;
     transition: width .6s ease;
 }
+
+h4{
+  font-family: lato;
+}
