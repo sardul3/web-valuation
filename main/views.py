@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students
 from django.contrib import messages
 from .forms import RegisterForm
 import csv
@@ -81,15 +81,17 @@ def rubric_data(measure_id):
 
     avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
     number_of_pass_cases = evaluate_rubric.objects.filter(grade_score__gte = measure.cutoff_score).count()
+    if evaluated_student_count>0:
+        percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
+    else:
+        percent_pass_cases=100
+    #print(number_of_pass_cases/evaluated_student_count)
+    #print(number_of_pass_cases)
+    #print(evaluated_student_count)
 
-    percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
-    print(number_of_pass_cases/evaluated_student_count)
-    print(number_of_pass_cases)
-    print(evaluated_student_count)
 
-
-    number_pass_cases_avg = evaluate_rubric.objects.filter(grade_score__gte = avg_points).count()
-    percent_pass_cases_avg = number_pass_cases_avg/total_count * 100
+    #number_pass_cases_avg = evaluate_rubric.objects.filter(grade_score__gte = avg_points).count()
+    #percent_pass_cases_avg = number_pass_cases_avg/total_count * 100
 
 
     evaluated_list = evaluate_rubric.objects.filter(measure = measure)
@@ -116,8 +118,8 @@ def rubric_data(measure_id):
         'avg_points': avg_points,
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
-        'number_pass_cases_avg':number_pass_cases_avg,
-        'percent_pass_cases_avg': percent_pass_cases_avg,
+        #'number_pass_cases_avg':number_pass_cases_avg,
+        #'percent_pass_cases_avg': percent_pass_cases_avg,
         'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed
     }
 
@@ -217,7 +219,14 @@ def evaluatorhome(request):
         myeval.perc_completed = perc
         myeval.save()
 
-        context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':flag
+        cust_student_list=[]
+        for stu in custom_students.objects.all():
+            for evaluator in stu.measure.evaluator.all():
+                if(evaluator.email==email_address):
+                    cust_student_list.append(stu)
+
+
+        context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
         , 'now':'active'}
 
         return render(request, 'main/evaluatorhome.html', context)
@@ -272,8 +281,21 @@ def evaluator_rubric_select(request, measure_id):
         if evaluations.filter(student=stu.name,evaluated_by=request.user.username).exists():
             evaluated_flag.append(stu.name)
 
+    cust_student_list = []
+    for stu in custom_students.objects.all():
+        for evaluator in stu.measure.evaluator.all():
+            if (evaluator.email == request.user.email):
+                cust_student_list.append(stu)
+    final_cust=[]
+    for st in cust_student_list:
+        if st.measure==measures:
+            final_cust.append(st)
     context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
+<<<<<<< HEAD
                 ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':evaluated_flag, 'max_in':rubric.max_row}
+=======
+                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':final_cust}
+>>>>>>> 8010d46aed85b5c6cd05419948f9e1cace117b3b
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 def evaluate_students(request):
@@ -620,7 +642,8 @@ def add_individual_student(request, outcome_id, measure_id):
 
     measure = Measure.objects.get(id=measure_id)
     measure.student.add(student)
-
+    cust_stu  = custom_students(student_name=student_name,measure=measure)
+    cust_stu.save()
     messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
@@ -629,8 +652,10 @@ def delete_student(request, outcome_id, measure_id, student_id):
     student = Student.objects.get(id=student_id)
     measure = Measure.objects.get(id=measure_id)
     measure.student.remove(student)
-
     messages.add_message(request, messages.SUCCESS, 'Student deleted')
+    for st in custom_students.objects.all():
+        if(st.student_name==student.name and st.measure==measure):
+            st.delete()
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -646,6 +671,8 @@ def upload_student(request, outcome_id, measure_id):
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
 
             student = Student(name=column[0], classification=column[1])
+            cust = custom_students(student_name=column[0],measure=measure)
+            cust.save()
             student.save()
             measure.student.add(student)
 
@@ -664,7 +691,7 @@ def add_evaluator(request, outcome_id, measure_id):
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        email_send.send()
+        #email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
 
@@ -737,7 +764,9 @@ def view_test_score(request, test_score_test, measure_id):
     return render(request, 'main/test_scores.html', context)
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
-    student_name = request.POST.getlist('student_to_be_evaluated')[0]
+    student_id = int(request.POST.getlist('student_to_be_evaluated')[0])
+    student_real = custom_students.objects.get(id=student_id)
+    student_name = student_real.student_name
     rub = Rubric.objects.get(id=rubric_id)
     rubric_name = Rubric.objects.get(id=rubric_id).title
     measure = Measure.objects.get(id=measure_id)
@@ -765,7 +794,11 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
                 student=student_name, measure=measure, evaluated_by = request.user.username)
     evaluated.save()
-
+    eval = Evaluator.objects.filter(email=request.user.email)[0]
+    student_real.graded=True
+    student_real.grade = avg
+    student_real.evaluator = eval
+    student_real.save()
     flag = evaluation_flag(student_name=student_name, measure=measure)
     flag.save()
 
