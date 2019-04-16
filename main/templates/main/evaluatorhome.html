@@ -47,8 +47,6 @@
 
 
       <div class = "mt-2">
-      <b>Ready to sign out?</b>
-      <p><a href="/logout">Sign out</a></p>
       {% else %}
         <p>You can't view this page</p>
       {% endif %}
@@ -67,38 +65,28 @@
           {%endif%}
         <h4 class = "d-flex justify-content-between"> {{measure.measureTitle}} </h4>
 
-         <button class = "btn btn-warning mb-3">
-         {{measure.cutoff_percentage}} % of the students need to get
-         {%if measure.cutoff_score%}
-          {{measure.cutoff_score}}
-          {%else%}
-          average
-          {%endif%}
-             or higher
-         on {{measure.tool_type}}
-         </button>
+        <p> The {{percent|floatformat:0}}% students have already been evaluated</p>
 
-        <ul class="list-group mb-2">
+        <ul class="list-group mb-2" style = "overflow-y:scroll; height: 40vh;">
           <li class="list-group-item active d-flex justify-content-between">Students
+
           </li>
             {% for student in measure.student.all %}
-                  <li class="d-flex list-group-item justify-content-between">
-                    <div>
+                  <li class="d-flex list-group-item justify-content-between" >
+                <div>
                     {{student.name}}
                     </div>
-                    {%if student.name in evaluated_flag%}
+                    {%if student.name in flag%}
                       <em> Already Evaluated </em>
                     {%else%}
                       <em> Not yet evaluated </em>
                     {%endif%}
-
 
                   </li>
 
             {%empty%}
               <li class="list-group-item"> No students added yet </li>
             {%endfor%}
-            <p> The {{percent}}% students have already been evaluated</p>
             </ul>
             <form action = "{%url 'main:evaluator_rubric_select' measure.id%}" class = "text-center">
               <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>

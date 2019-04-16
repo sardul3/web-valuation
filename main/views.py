@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag
 from django.contrib import messages
 from .forms import RegisterForm
 import csv
@@ -183,28 +183,29 @@ def evaluatorhome(request):
         rubrics = Rubric.objects.all()
         students = Student.objects.all()
         evaluations = evaluate_rubric.objects.all()
-        evaluated_flag = []
         measures = Measure.objects.all()
-        for stu in students:
-            if evaluations.filter(student=stu.name,evaluated_by=request.user.username).exists():
-                evaluation = evaluations.get(student=stu.name,evaluated_by=request.user.username)
-                for mea in measures:
-                    if mea == evaluation.measure:
-                        evaluated_flag.append(stu.name)
-
-
+        flags = evaluation_flag.objects.all()
+        flag = []
 
         email_address = request.user.email
         measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+
         x = []
+        y = 0
         for me in measure:
             x = me.student.all()
+            y = evaluate_rubric.objects.filter(measure=me).count()
+            for f in flags:
+                if f.measure == me:
+                    flag.append(f.student_name)
+
         student_count = len(x)
-        eval_student = len(evaluated_flag)
+        eval_student = y
         if student_count==0:
             perc=100.0
         else:
             perc =100.0* (eval_student/student_count)
+
         eval = request.user.email
         current_eval = 0
         for myeval in Evaluator.objects.all():
@@ -212,8 +213,8 @@ def evaluatorhome(request):
                 current_eval = myeval
         myeval.perc_completed = perc
         myeval.save()
-        context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure,
-                    'evaluated_flag':evaluated_flag,'percent':perc}
+
+        context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':flag}
 
         return render(request, 'main/evaluatorhome.html', context)
 
@@ -391,7 +392,6 @@ def outcome_detail(request, outcome_id):
             if measure.rubric:
                 if len(num_of_evaluations)  > 0:
                     data = rubric_data(measure.id)
-                    print(rubric_data)
 
         if measure.tool_type=='Test score':
             if measure.test_score!= None:
@@ -429,10 +429,7 @@ def upload(request, measure_id, outcome_id):
             measure.update(test_score=student_score)
 
         number_of_students = Test_score.objects.filter(test=test_name).count()
-        print(total_points)
-        print(number_of_students)
         average = total_points / number_of_students
-        print(average)
 
         return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -537,9 +534,6 @@ def test_rubric(request):
         isWeighted = True
         if(weight=="no"):
             isWeighted=False
-        print(rows)
-        print(cols)
-        print(weight)
         if isWeighted:
             cols+=1
         return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':range(cols),'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus})
@@ -552,7 +546,6 @@ def created_test_rubric(request):
         row_col = int(request.POST.get('col_num'))
         rubric_title = request.POST.get("rubric_title")
         isWeighted = request.POST.get("isWeighted")
-        print(isWeighted)
         rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted)
         rubric_new.save()
         for x in range(row_num):
@@ -722,6 +715,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     myscore=0
     for x in range(rubric_row-1):
         score = request.POST.get('score'+str(x+1))
+        print(score)
         max_col = rub.max_col
         if rub.isWeighted:
             for cat in Category.objects.filter(rubric=rub):
@@ -743,6 +737,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
                 student=student_name, measure=measure, evaluated_by = request.user.username)
     evaluated.save()
+
+    flag = evaluation_flag(student_name=student_name, measure=measure)
+    flag.save()
+    print(flag)
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
 
 def remove_rubric_association(request, measure_id, outcome_id):

@@ -4,6 +4,7 @@ from django.contrib.auth.models import  User
 class Evaluator(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=200)
+    invited_by = models.CharField(max_length=200, default="Admin")
     perc_completed = models.FloatField(null=True,blank=True,default=0.0)
 
     def __str__(self):
@@ -15,6 +16,7 @@ class Student(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Cycle(models.Model):
     year = models.PositiveIntegerField()
@@ -97,6 +99,7 @@ class Measure(models.Model):
                     )
     status = models.CharField(max_length=100, choices=STATUS_TYPES, default='failing')
     statusPercent = models.FloatField(default=0.0)
+    evaluationPercent = models.FloatField(default=0.0)
     measureTitle = models.CharField(max_length=200, default='', null=True)
     outcome = models.ForeignKey(Outcome, null=True, on_delete = models.CASCADE)
     cutoff_percentage = models.FloatField(null=True, blank = True, default=0)
@@ -121,3 +124,7 @@ class evaluate_rubric(models.Model):
 
     def __str__(self):
         return self.student
+
+class evaluation_flag(models.Model):
+    student_name = models.CharField(max_length=200)
+    measure = models.ForeignKey(Measure, on_delete=models.CASCADE)
