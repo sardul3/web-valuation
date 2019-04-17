@@ -78,8 +78,8 @@
                   {%for measure in measures%}
                     {%if measure.outcome == outcome%}
                     <div class = "row ">
-                      <div class = "col col-lg-12 ">
-                          <span class = "btn btn-sm btn-warning mb-2 ">
+                      <div class = "col col-lg-12 d-flex justify-content-between">
+                          <a class = "btn btn-sm btn-warning mb-2 ">
                           {{measure.cutoff_percentage}} % of the students need to get
                           {%if measure.cutoff_score%}
                            {{measure.cutoff_score}}
@@ -93,14 +93,15 @@
                           {%elif measure.tool_type == "Test score"%}
                             <strong>{{measure.test_score}}</strong>
                           {%endif%}
-                          </span>
+                          </a>
 
                           <span>
                           {%if measure.statusPercent > 0.0%}
                           {{measure.statusPercent|floatformat:2}}% {{measure.status}}
                           {%else%}
                             <span>  not started </span>
-                          {%endif%} </span>
+                          {%endif%}
+                         </span>
                       </div>
 
                     </div>

@@ -312,8 +312,8 @@
 <div class = "col col-lg-4 md-12 sm-12 xs-12">
     <div class="card bg-light ml-2 mb-3">
       <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
-        <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}" class = "btn btn-primary">
-          <span style="font-size: 1.5em;">
+        <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}" class = "btn btn-light">
+          <span style=" color: #7a2831;">
             <i class="far fa-trash-alt"></i>
         </span>
          </a>
@@ -389,7 +389,7 @@
             </li>
           {%for eval in measure.evaluator.all%}
               <li class="list-group-item d-flex  justify-content-between">{{eval.email}}
-              <a href = "" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
+              <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
                 <i class="fas fa-user-slash"></i>
               </a>
                 </li>
@@ -465,7 +465,7 @@
                       </div>
                           <div class="form-group">
                            <label for="exampleFormControlSelect2">Select Students</label>
-                           <select multiple class="form-control" id="exampleFormControlSelect2" name="students">
+                           <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="students">
                              {%for student in measure.student.all%}
                              <option value="{{student.name}}">{{student.name}}</option>
                              {%endfor%}
@@ -578,46 +578,47 @@
 
 
 
-    {%else%}
 
 
 
+    <div class = "col col-lg-4 col-md-6 col-sm-12 col-12">
+      <div class = 'text-center'>
+      <button type="button" class="btn btn-primary btn-lg ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
+          Upload Test Score
+      </button>
+      <h2> or </h2>
+    </div>
+    <h3 class = 'text-center'> Add individual scores </h3>
+    <form class="" action = "{%url 'main:add_test_score' measure.id outcome_id%}" method = "POST">
+      {%csrf_token%}
+      <div class="form-group mb-2">
+          <input type="text" name = "test_title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of the test" required
+          {%if measure.test_score%}
+            value = "{{measure.test_score.test}}"
+          {%endif%}
+          >
+     </div>
+
+      <div class="form-group mb-2">
+          <input type="text" name = "student_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name of student" required>
+     </div>
+      <div class="form-group mb-2">
+          <input type="number" name = "score" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="marks obtained" required>
+     </div>
+      <button type="submit" class="btn btn-primary mb-2">Add Score</button>
+    </form>
+</div>
+
+</div>
 
 
   {%endif%}
 
 
 
-  <div class = "col col-lg-4 col-md-6 col-sm-12 col-12">
-    <div class = 'text-center'>
-    <button type="button" class="btn btn-primary btn-lg ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
-        Upload Test Score
-    </button>
-    <h2> or </h2>
-  </div>
-  <h3 class = 'text-center'> Add individual scores </h3>
-  <form class="" action = "{%url 'main:add_test_score' measure.id outcome_id%}" method = "POST">
-    {%csrf_token%}
-    <div class="form-group mb-2">
-        <input type="text" name = "test_title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of the test" required
-        {%if measure.test_score%}
-          value = "{{measure.test_score.test}}"
-        {%endif%}
-        >
-   </div>
-
-    <div class="form-group mb-2">
-        <input type="text" name = "student_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name of student" required>
-   </div>
-    <div class="form-group mb-2">
-        <input type="number" name = "score" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="marks obtained" required>
-   </div>
-    <button type="submit" class="btn btn-primary mb-2">Add Score</button>
-  </form>
-  </div>
 
 
-</div>
+
 {%endif%}
 
 
