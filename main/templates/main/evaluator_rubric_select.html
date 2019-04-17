@@ -2,7 +2,9 @@
 {% load static %}
 {% block body_block %}
 
+
 <div class = "container" id = "main_content">
+  
     <form action = "{%url 'main:evaluate_single_student' rubric.max_row rubric.id measure_id%}" method = "POST">
       {%csrf_token%}
         <label for="exampleFormControlSelect1">Evaluate a student</label>

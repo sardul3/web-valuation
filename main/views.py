@@ -417,7 +417,7 @@ def outcome_detail(request, outcome_id):
                 if len(num_of_evaluations)  > 0:
                     data = rubric_data(measure.id)
                     print(data)
-                    if(data['percent_pass_cases']>measure.cutoff_percentage):
+                    if(data['percent_pass_cases']>=measure.cutoff_percentage):
                         Measure.objects.filter(id=measure.id).update(status='passing', statusPercent = data['percent_pass_cases'])
                     else:
                         Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = data['percent_pass_cases'])
