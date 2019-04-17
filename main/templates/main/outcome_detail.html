@@ -531,7 +531,6 @@
 {%if measure.tool_type == 'Test score'%}
 
 
-    {%if measure.test_score %}
     <div class = "row">
 
     <div class = " col col-lg-5 ml-4">
@@ -554,8 +553,9 @@
     <hr>
     <br/>
 
-
     <div class = "row">
+      {%if measure.test_score %}
+
     <div class = "col col-lg-4 md-6 sm-12 xs-12">
         <div class="card bg-light ml-2 mb-3">
           <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
@@ -574,12 +574,7 @@
           </div>
         </div>
       </div>
-
-
-
-
-
-
+      {%endif%}
 
     <div class = "col col-lg-4 col-md-6 col-sm-12 col-12">
       <div class = 'text-center'>
@@ -589,9 +584,9 @@
       <h2> or </h2>
     </div>
     <h3 class = 'text-center'> Add individual scores </h3>
-    <form class="" action = "{%url 'main:add_test_score' measure.id outcome_id%}" method = "POST">
+    <form class="ml-2" action = "{%url 'main:add_test_score' measure.id outcome_id%}" method = "POST">
       {%csrf_token%}
-      <div class="form-group mb-2">
+      <div class="form-group mb-2 ">
           <input type="text" name = "test_title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of the test" required
           {%if measure.test_score%}
             value = "{{measure.test_score.test}}"
@@ -605,7 +600,7 @@
       <div class="form-group mb-2">
           <input type="number" name = "score" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="marks obtained" required>
      </div>
-      <button type="submit" class="btn btn-primary mb-2">Add Score</button>
+      <button type="submit" class="btn btn-primary  mb-2">Add Score</button>
     </form>
 </div>
 
@@ -613,14 +608,6 @@
 
 
   {%endif%}
-
-
-
-
-
-
-{%endif%}
-
 
 
       <div class="modal fade" id="exampleModalCenterAddRubric{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
