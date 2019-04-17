@@ -35,6 +35,7 @@ class Rubric(models.Model):
     max_col = models.PositiveIntegerField(null=True)
     created_by = models.CharField(max_length=200)
     assigned_to = models.ManyToManyField(Evaluator)
+    ascending = models.BooleanField(null=True, default=True)
 
     def __str__(self):
         return self.title

@@ -291,7 +291,7 @@ def evaluator_rubric_select(request, measure_id):
         if st.measure==measures:
             final_cust.append(st)
 
-    maximum_rows = rubric.max_row
+    maximum_rows = rubric.max_col
     cat_index = range(1, maximum_rows)
     """
     if not rubric.isWeighted:
@@ -593,13 +593,17 @@ def test_rubric(request):
         rows = int(request.POST.get('rows'))
         cols = int(request.POST.get('cols'))
         weight = request.POST.get('weight')
+        ascending = request.POST.get('asc')
         colminus = cols
         isWeighted = True
+        isAscending =True
         if(weight=="no"):
             isWeighted=False
         if isWeighted:
             cols+=1
-        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':range(cols),'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus})
+        if ascending=="descending":
+            isAscending = False
+        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':range(cols),'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus,'isAsc':isAscending})
     return render(request, 'main/test_rubric.html')
 
 
@@ -609,7 +613,8 @@ def created_test_rubric(request):
         row_col = int(request.POST.get('col_num'))
         rubric_title = request.POST.get("rubric_title")
         isWeighted = request.POST.get("isWeighted")
-        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted)
+        isAscending = request.POST.get("isAscending")
+        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted,ascending=isAscending)
         rubric_new.save()
         for x in range(row_num):
             for y in range(row_col):
@@ -791,13 +796,14 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     count=0
     myscore=0
 
-    maximum_rows = rub.max_row
+    maximum_rows = rub.max_col
     cat_index = range(1, maximum_rows)
     """if not rub.isWeighted:
         cat_index = range(1, maximum_rows)
     else:
         cat_index = range(1, maximum_rows - 1)"""
     super_cat = []
+    print("This is: ",cat_index)
     for cat in categories:
         if cat.rubric == rub:
             if cat.index_y in cat_index and cat.index_x == 0:
@@ -812,7 +818,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
         if score.isdigit():
             myscore = int(score)
         else:
-            myscore=super_cat.index(score)+1
+            if rub.ascending:
+                myscore=super_cat.index(score)+1
+            else:
+                myscore=len(super_cat)-super_cat.index(score)
         print("The index is", myscore)
         max_col = rub.max_col
         if rub.isWeighted:
