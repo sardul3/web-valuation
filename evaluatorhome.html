@@ -1,0 +1,151 @@
+{% extends  'main/evaluatorbase.html' %}
+{% load static %}
+{% block body_block %}
+<style>
+  @media (max-width: 576px) {
+  .breadcrumb-item{
+    font-size: 0.875rem;
+  }
+  }
+  .objs{
+    padding: 0.7%;
+    align:center;
+  }
+  #main_content{
+  margin-top:2%;
+  }
+  .measure_section{
+    padding: 3%;
+  }
+  .speech-bubble { position: relative; background: #f7f7f7; border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color: #f7f7f7; border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
+</style>
+
+
+<div class = "container-fluid">
+<div class = "container" id = "main_content">
+
+  <div class="row d-flex align-items-center">
+  <div class="col-4 ">
+    {% if user.is_authenticated %}
+      <ol class = 'breadcrumb'>
+        <h4 class = "breadcrumb-item"> Hi {{ user.username }}</h4>
+        <h4 class = "breadcrumb-item"> Evaluator View </h4>
+    </ol>
+    {% if user.is_superuser %}
+    <p> <a class = "btn btn-dark btn-lg" href="{%url 'main:dashboard'%}"> Act as Admin</a> </p>
+    {% endif %}
+
+    <div>
+      <h3 class = "d-flex justify-content-between mb-3 "> Measures assigned </h3>
+    </div>
+
+    <div class="list-group " id="list-tab" role="tablist">
+      {%for measure in measures%}
+          {%if forloop.first %}
+          <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
+          {%else%}
+          <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="#list-home{{measure.id}}" role="tab" aria-controls="home">{{measure.measureTitle}}</a>
+          {%endif%}
+
+        {%empty%}
+        <a class="list-group-item list-group-item-action active " id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Measure Title</a>
+      {%endfor%}
+
+
+      <div class = "mt-2">
+      {% else %}
+        <p>You can't view this page</p>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-8" >
+    <div class="tab-content speech-bubble" id="nav-tabContent">
+      {%for measure in measures%}
+          {%if forloop.first %}
+                <div class="tab-pane fade show measure_section active" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
+          {%else%}
+                <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
+          {%endif%}
+        <h4 class = "d-flex justify-content-between"> {{measure.measureTitle}} </h4>
+
+        <p> The {{percent|floatformat:0}}% students have already been evaluated</p>
+
+        <ul class="list-group mb-2" style = "overflow-y:scroll; height: 40vh;">
+          <li class="list-group-item active d-flex justify-content-between">Students
+
+          </li>
+            {% for student in flag %}
+                {% if student.measure == measure %}
+                  <li class="d-flex list-group-item justify-content-between" >
+                <div>
+                    {{student.student_name}}
+                    </div>
+                    {% if student.graded %}
+                      <em> Already Evaluated </em>
+                    {%else%}
+                      <em> Not yet evaluated </em>
+                    {%endif%}
+
+                  </li>
+                {% endif %}
+
+            {%empty%}
+              <li class="list-group-item"> No students added yet </li>
+            {%endfor%}
+            </ul>
+            <form action = "{%url 'main:evaluator_rubric_select' measure.id%}" class = "text-center">
+              <input type = "submit" class = "btn btn-primary" value = "Start Evaluations">  </input>
+            </form>
+  </div>
+
+
+    {%empty%}
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">No measures Assigned</h1>
+        <p class="lead">Please contact the coordinator for more queries</p>
+      </div>
+</div>
+    {%endfor%}
+
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('a[data-toggle = "list"]').on('show.bs.tab',function(e){
+      localStorage.setItem('activeTab',
+      $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+
+    console.log(activeTab);
+
+    if(activeTab){
+      $('#list-tab a[href="' + activeTab + '"]').tab('show');
+    }
+  });
+
+
+
+
+
+</script>
+
+{%endblock%}
