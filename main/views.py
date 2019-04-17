@@ -26,6 +26,8 @@ def test_score_data(test_score_test, measure_id):
     passed = False
     margin = 0.0
     data = {}
+    above_threshold = None
+    percentage = None
 
     bin_array = []
     for student_score in test_score:
@@ -425,7 +427,6 @@ def outcome_detail(request, outcome_id):
                 else:
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
 
-    evaluator_set=()
 
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
@@ -751,6 +752,7 @@ def view_test_score(request, test_score_test, measure_id):
     #             'measure':measure, 'passed':passed, 'bin_array': bin_array,
     #              'count': range(len(bin_array)), 'margin':margin}
     context = test_score_data(test_score_test, measure_id)
+    print(context)
     return render(request, 'main/test_scores.html', context)
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
