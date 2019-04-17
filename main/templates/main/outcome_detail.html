@@ -242,13 +242,6 @@
         on {{measure.tool_type}}
         </button>
 </div>
-        <!-- {%if measure.measureTitle in num_of_evaluations%}
-        <a href = "{%url 'main:view_rubric_data' measure.id%}" class = "btn btn-primary mb-3">
-            View Status
-        </a>
-        {%else%}
-
-        {%endif%} -->
 
 
 
@@ -576,20 +569,31 @@
       </div>
 
 
+
+
     {%else%}
     <br />
 <button type="button" class="btn btn-primary ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
     Upload Test Score
   </button>
+
+
   <hr />
 
-  <!-- <div class = "row ml-1">
-    <div class = "col col-lg-4 col-md-6 col-sm-12 col-12">
+
+
+  {%endif%}
+
+  <div class = "col col-lg-4 col-md-6 col-sm-12 col-12">
   <h3> Add individual scores </h3>
   <form class="" action = "{%url 'main:add_test_score' measure.id outcome_id%}" method = "POST">
     {%csrf_token%}
     <div class="form-group mb-2">
-        <input type="text" name = "test_title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of the test" required>
+        <input type="text" name = "test_title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of the test" required
+        {%if measure.test_score%}
+          value = "{{measure.test_score.test}}"
+        {%endif%}
+        >
    </div>
 
     <div class="form-group mb-2">
@@ -601,11 +605,10 @@
     <button type="submit" class="btn btn-primary mb-2">Add Score</button>
   </form>
   </div>
-  </div> -->
 
-
-  {%endif%}
 {%endif%}
+
+
 
       <div class="modal fade" id="exampleModalCenterAddRubric{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">

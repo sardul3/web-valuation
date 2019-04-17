@@ -77,11 +77,15 @@ def rubric_data(measure_id):
     students = measure.student.all()
     evaluator_count = measure.evaluator.all().count()
     student_count = measure.student.all().count()
-    evaluated_student_count = evaluate_rubric.objects.filter(measure=measure).count()
+    # evaluated_student_count = evaluate_rubric.objects.filter(measure=measure).count()
+    evaluated_student_count = custom_students.objects.filter(measure=measure).exclude(grade__isnull = True).count()
+
     total_count = evaluator_count * student_count
 
     avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
-    number_of_pass_cases = evaluate_rubric.objects.filter(grade_score__gte = measure.cutoff_score).count()
+    # number_of_pass_cases = evaluate_rubric.objects.filter(grade_score__gte = measure.cutoff_score).count()
+    number_of_pass_cases = custom_students.objects.filter(grade__gte = measure.cutoff_score).count()
+
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
     else:
@@ -410,7 +414,7 @@ def outcome_detail(request, outcome_id):
             if measure.rubric:
                 if len(num_of_evaluations)  > 0:
                     data = rubric_data(measure.id)
-
+                    print(data)
                     if(data['percent_pass_cases']>measure.cutoff_percentage):
                         Measure.objects.filter(id=measure.id).update(status='passing', statusPercent = data['percent_pass_cases'])
                     else:
