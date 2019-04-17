@@ -35,7 +35,12 @@
           {%else%}
         <td>
           <div class="form-group">
-            <input class = "form-control" type = "number"  name = "score{{x}}">
+              <select class="form-control" name = "cat_field">
+                  {% for val in super_cat %}
+                  <option value = "{{val}}">{{val}}</option>
+                  {% endfor %}
+              </select>
+            <!--input class = "form-control" type = "number"  name = "score{{x}}"-->
           </div>
         </td>
           {%endif%}

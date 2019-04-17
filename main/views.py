@@ -290,8 +290,24 @@ def evaluator_rubric_select(request, measure_id):
     for st in cust_student_list:
         if st.measure==measures:
             final_cust.append(st)
+
+    maximum_rows = rubric.max_row
+    cat_index = range(1, maximum_rows)
+    """
+    if not rubric.isWeighted:
+        cat_index =  range(1,maximum_rows)
+    else:
+        cat_index = range(1,maximum_rows-1)
+    """
+    super_cat=[]
+    for cat in categories:
+        if cat.rubric==rubric:
+            if cat.index_y in cat_index and cat.index_x==0:
+                super_cat.append(cat.categoryTitle)
+                print(cat.categoryTitle)
+
     context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
-                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':final_cust}
+                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':final_cust,'super_cat':super_cat}
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 def evaluate_students(request):
@@ -766,22 +782,50 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     rub = Rubric.objects.get(id=rubric_id)
     rubric_name = Rubric.objects.get(id=rubric_id).title
     measure = Measure.objects.get(id=measure_id)
+    categories=Category.objects.all()
     scores = []
     avg = 0
     total = 0
     count=0
     myscore=0
+
+    maximum_rows = rub.max_row
+    cat_index = range(1, maximum_rows)
+    """if not rub.isWeighted:
+        cat_index = range(1, maximum_rows)
+    else:
+        cat_index = range(1, maximum_rows - 1)"""
+    super_cat = []
+    for cat in categories:
+        if cat.rubric == rub:
+            if cat.index_y in cat_index and cat.index_x == 0:
+                super_cat.append(cat.categoryTitle)
+                print(cat.categoryTitle)
+
+    mysc = request.POST.getlist('cat_field')
     for x in range(rubric_row-1):
-        score = request.POST.get('score'+str(x+1))
-        myscore=score
+        #print("This is: ",request.POST.getlist('cat_field'))
+        score = mysc[x]
+        print("Score is: ",score)
+        if score.isdigit():
+            myscore = int(score)
+        else:
+            myscore=super_cat.index(score)+1
+        print("The index is", myscore)
         max_col = rub.max_col
         if rub.isWeighted:
+            if score.isdigit():
+                maximum = max(mysc)
+                print("maximum is",maximum)
+            else:
+                maximum=len(mysc)
             for cat in Category.objects.filter(rubric=rub):
                 if cat.index_y==max_col-1:
                     if cat.index_x==x+1:
                         #print(score)
                         #print(cat.categoryTitle)
                         myscore = float(cat.categoryTitle)*int(score)/100.0
+                        myscore = myscore*int(maximum)
         scores.append(myscore)
         total += float(myscore)
         count = count +1
