@@ -388,46 +388,37 @@
 
         <div class = "col col-lg-4 md-12 sm-12 xs-12">
           <ul class="list-group">
-            <li class="list-group-item card-header align-items-center"><h4>Evaluators</h4></li>
-            {%for evaluator in measure.evaluator.all%}
-                <li class="list-group-item d-flex justify-content-between">{{evaluator.email}}
-                <a href = "{%url 'main:remove_evaluator_access' evaluator.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
-                  <i class="fas fa-user-slash"></i>
-                </a>
-                  </li>
+            <li class="list-group-item card-header d-flex align-items-center justify-content-between"><h4>Evaluators</h4>
+
+            <button type="button" class="btn btn-light  ml-3" data-toggle="modal" data-target="#exampleModalCenterAddEv{{measure.id}}">
+                 <i class="fas fa-plus"></i>
+            </button>
+            </li>
+          {%for eval in measure.evaluator.all%}
+              <li class="list-group-item d-flex  justify-content-between">{{eval.email}}
+              <a href = "" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
+                <i class="fas fa-user-slash"></i>
+              </a>
+                </li>
 
             {%endfor%}
 
+
           </ul>
-          <br />
-          <hr />
-          <h3> Add new Evaluators </h3>
-          <form class="" action = "{%url 'main:add_evaluator' outcome_id measure.id %}" method = "POST">
-            {%csrf_token%}
-            <div class="form-group mb-2">
-                <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name" required>
-           </div>
-            <div class="form-group mb-2">
-                <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
-           </div>
-            <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
-          </form>
+        <hr />
+
+
+          <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModalCenterAddEvaluator{{measure.id}}">
+          Assign students to Evaluators
+          </button>
+
           </div>
 
           <hr/>
-          <h3> New Evaluator (assign different sets of students) </h3>
 
 
 
-
-
-
-          <button class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenterAddEvaluator">
-          Add Evaluator
-          </button>
-
-
-          <div class="modal fade" id="exampleModalCenterAddEvaluator" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal fade" id="exampleModalCenterAddEv{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -437,37 +428,67 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form action="{%url 'main:assign_evaluator' measure.id%}" method="POST">
+                   <form class="" action = "{%url 'main:add_evaluator' outcome_id measure.id %}" method = "POST">
+                    {%csrf_token%}
+                    <div class="form-group mb-2">
+                        <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name" required>
+                   </div>
+                    <div class="form-group mb-2">
+                        <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
+                   </div>
+                    <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+          <div class="modal fade" id="exampleModalCenterAddEvaluator{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Add evaluator</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{%url 'main:assign_evaluator' measure.id outcome_id%}" method="POST">
                     {%csrf_token%}
 
                     <div class="form-group">
-                      <label for="exampleFormControlTextarea1">Evaluator Name</label>
-                      <input type="text" class="form-control" id="exampleInputPassword1"
-                             placeholder="name of the evaluator" name = "student_name">
-
-                       <label for="exampleFormControlTextarea1">Evaluator Email</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1"
-                              placeholder="email address of the evaluator" name = "student_name">
-
+                        <label for="exampleFormControlSelect1">Select Evaluator</label>
+                        <select class="form-control" id="exampleFormControlSelect1" name = "evaluator_email">
+                          {%for ev in measure.evaluator.all%}
+                          <option value="{{ev.email}}">{{ev.email}}</option>
+                          {%endfor%}
+                        </select>
+                      </div>
                           <div class="form-group">
                            <label for="exampleFormControlSelect2">Select Students</label>
-                           <select multiple class="form-control" id="exampleFormControlSelect2">
+                           <select multiple class="form-control" id="exampleFormControlSelect2" name="students">
                              {%for student in measure.student.all%}
-                             <option>{{student.name}}</option>
+                             <option value="{{student.name}}">{{student.name}}</option>
                              {%endfor%}
                            </select>
                          </div>
 
 
                       <button type = "submit" class = "btn btn-primary"> Assign </button>
+                    </form>
+
                     </div>
-                  </form>
 
 
                 </div>
               </div>
             </div>
-          </div>
 
 
 

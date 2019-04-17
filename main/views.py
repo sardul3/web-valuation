@@ -61,7 +61,6 @@ def test_score_data(test_score_test, measure_id):
                         percentage=percentage, greater_than_avg= greater_than_avg,
                         measure=measure, passed=passed, bin_array=bin_array,
                          count=range(len(bin_array)), margin= margin)
-    print(data)
 
     return data
 
@@ -85,13 +84,7 @@ def rubric_data(measure_id):
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
     else:
         percent_pass_cases=100
-    #print(number_of_pass_cases/evaluated_student_count)
-    #print(number_of_pass_cases)
-    #print(evaluated_student_count)
 
-
-    #number_pass_cases_avg = evaluate_rubric.objects.filter(grade_score__gte = avg_points).count()
-    #percent_pass_cases_avg = number_pass_cases_avg/total_count * 100
 
 
     evaluated_list = evaluate_rubric.objects.filter(measure = measure)
@@ -403,6 +396,7 @@ def outcome_detail(request, outcome_id):
     num_of_evaluations = []
     test_data = {}
     data = {}
+    custom_student = None
 
     for measure in measures:
         students = measure.student.all()
@@ -431,10 +425,11 @@ def outcome_detail(request, outcome_id):
                 else:
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
 
+    evaluator_set=()
 
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
-                'test_data':test_data, 'rubric_data':data}
+                'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -638,8 +633,8 @@ def add_individual_student(request, outcome_id, measure_id):
 
     measure = Measure.objects.get(id=measure_id)
     measure.student.add(student)
-    cust_stu  = custom_students(student_name=student_name,measure=measure)
-    cust_stu.save()
+    # cust_stu  = custom_students(student_name=student_name,measure=measure)
+    # cust_stu.save()
     messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
@@ -667,8 +662,8 @@ def upload_student(request, outcome_id, measure_id):
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
 
             student = Student(name=column[0], classification=column[1])
-            cust = custom_students(student_name=column[0],measure=measure)
-            cust.save()
+            # cust = custom_students(student_name=column[0],measure=measure)
+            # cust.save()
             student.save()
             measure.student.add(student)
 
@@ -730,7 +725,6 @@ def view_test_score(request, test_score_test, measure_id):
     #         if(student_score.score>=measure.cutoff_percentage):
     #             bin_array.append(student_score.student.name)
     #
-    # print(bin_array)
     #
     # if(measure.cutoff_type == 'Percentage'):
     #         above_threshold = test_score.filter(score__gte = measure.cutoff_score).count()
@@ -891,5 +885,15 @@ def past_assessments(request):
     context = {'past':'active', 'evaluations': evaluations}
     return render(request, 'main/past_assessments.html', context)
 
-def assign_evaluator(request, measure_id):
-    return 0;
+def assign_evaluator(request, measure_id, outcome_id):
+    measure = Measure.objects.get(id=measure_id)
+    evaluator_email = request.POST.get('evaluator_email')
+    students = request.POST.getlist('students')
+
+    evaluator = Evaluator.objects.get(email=evaluator_email)
+
+    for student in students:
+        print(student)
+        custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator)
+        custom_student.save()
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
