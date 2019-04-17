@@ -718,7 +718,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form action="{%url 'main:assign_evaluator' measure.id outcome_id%}" method="POST">
+              <form action="{%url 'main:assign_evaluatorToTest' measure.id outcome_id%}" method="POST">
                 {%csrf_token%}
 
                 <div class="form-group">

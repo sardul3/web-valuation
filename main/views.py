@@ -194,6 +194,7 @@ def evaluatorhome(request):
 
         email_address = request.user.email
         measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+        # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
 
         x = []
         y = 0
@@ -898,6 +899,20 @@ def assign_evaluator(request, measure_id, outcome_id):
     students = request.POST.getlist('students')
 
     evaluator = Evaluator.objects.filter(email=evaluator_email)[0]
+
+    for student in students:
+        print(student)
+        custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator)
+        custom_student.save()
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+def assign_evaluatorToTest(request, measure_id, outcome_id):
+    measure = Measure.objects.get(id=measure_id)
+    evaluator_email = request.POST.get('evaluator_email')
+    students = request.POST.getlist('students')
+
+    evaluator = Evaluator.objects.filter(email=evaluator_email)[0]
+    measure.evaluator.add(evaluator)
 
     for student in students:
         print(student)

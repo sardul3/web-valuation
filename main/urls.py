@@ -21,6 +21,7 @@ urlpatterns = [
     path('view_test_score/<str:test_score_test>/<int:measure_id>', views.view_test_score, name = 'view_test_score'),
 
     path('assign_evaluator/<int:measure_id>/<int:outcome_id>', views.assign_evaluator, name = 'assign_evaluator'),
+    path('assign_evaluatorToTest/<int:measure_id>/<int:outcome_id>', views.assign_evaluatorToTest, name = 'assign_evaluatorToTest'),
 
 
     path('evaluate_single_student/<int:rubric_row>/<int:rubric_id>/<int:measure_id>', views.evaluate_single_student, name = "evaluate_single_student"),
