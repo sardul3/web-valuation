@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 
 
+
 def test_score_data(test_score_test, measure_id):
     measure = Measure.objects.get(id=measure_id)
     test_score = Test_score.objects.filter(test=test_score_test)
@@ -896,7 +897,7 @@ def assign_evaluator(request, measure_id, outcome_id):
     evaluator_email = request.POST.get('evaluator_email')
     students = request.POST.getlist('students')
 
-    evaluator = Evaluator.objects.get(email=evaluator_email)
+    evaluator = Evaluator.objects.filter(email=evaluator_email)[0]
 
     for student in students:
         print(student)
