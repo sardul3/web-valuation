@@ -20,6 +20,8 @@ urlpatterns = [
     path('evaluate_students/', views.evaluate_students, name = 'evaluate_students'),
 
     path('view_test_score/<str:test_score_test>/<int:measure_id>', views.view_test_score, name = 'view_test_score'),
+    path('edit_test_score/<int:measure_id>/<str:student_name>', views.edit_test_score, name = 'edit_test_score'),
+
 
     path('assign_evaluator/<int:measure_id>/<int:outcome_id>', views.assign_evaluator, name = 'assign_evaluator'),
     path('assign_evaluatorToTest/<int:measure_id>/<int:outcome_id>', views.assign_evaluatorToTest, name = 'assign_evaluatorToTest'),

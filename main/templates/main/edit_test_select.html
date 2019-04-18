@@ -9,19 +9,12 @@
 
         <label for="exampleFormControlSelect1">Select a student</label>
              <select class="form-control" name = "student_to_be_evaluated">
-                   {% for student in evaluations %}
-                    {{student}}
-                      {%if student.graded %}
-
-                      {%else%}
                         <option value = "{{student.id}}">{{student.student_name}}</option>
-                      {%endif%}
-                  {%endfor%}
               </select>
     <br/>
     <h1> {{test_score.test}}</h1>
 
-      <h3 class = 'text-center'> Add individual scores </h3>
+      <h3 class = 'text-center'> Update score </h3>
         <div class="form-group mb-2 ">
             <input type="text" name = "test_title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name of the test" required
             {%if measure.test_score%}

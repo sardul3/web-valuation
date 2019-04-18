@@ -38,7 +38,7 @@
       {{score.grade}}
       </td>
       <td>
-        <a href = "" class = "btn btn-warning">Edit</a>
+        <a href = "{%url 'main:edit_test_score' score.measure.id score.student_name%}" class = "btn btn-warning">Edit</a>
       </td>
     </tr>
 
