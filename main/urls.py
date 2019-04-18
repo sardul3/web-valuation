@@ -46,6 +46,8 @@ urlpatterns = [
     path('upload_student/<int:outcome_id>/<int:measure_id>', views.upload_student, name = 'upload_student'),
 
     path('evaluator_rubric_select/<int:measure_id>', views.evaluator_rubric_select, name = 'evaluator_rubric_select'),
+        path('evaluator_test_select/<int:measure_id>', views.evaluator_test_select, name = 'evaluator_test_select'),
+
 
     path('outcome_detail/<int:outcome_id>', views.outcome_detail, name = 'outcome_detail'),
 
@@ -65,6 +67,8 @@ urlpatterns = [
 
     path('upload/<int:measure_id>/<int:outcome_id>', views.upload, name = 'upload'),
     path('add_test_score/<int:measure_id>/<int:outcome_id>', views.add_test_score, name = 'add_test_score'),
+    path('add_test_score_evaluator/<int:measure_id>', views.add_test_score_evaluator, name = 'add_test_score_evaluator'),
+
 
     path('grade', views.grade, name = 'grade'),
     path('add_rubric_to_measure/<int:measure_id>/<int:outcome_id>', views.add_rubric_to_measure, name = 'add_rubric_to_measure'),

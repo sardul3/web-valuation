@@ -313,8 +313,43 @@ def evaluator_rubric_select(request, measure_id):
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 
+
+def evaluator_test_select(request, measure_id):
+    measures = Measure.objects.get(id=measure_id)
+    students = measures.student.all()
+    test = measures.test_score
+    email = request.user.email
+    evaluator = Evaluator.objects.get(email=email)
+    evaluations = custom_students.objects.filter(evaluator=evaluator, measure=measures)
+
+    context = {'measure':measures, 'students': students, 'test':test, 'evaluations':evaluations, 'measure_id':measure_id}
+    return render(request, 'main/evaluator_test_select.html', context)
+
 def evaluate_students(request):
     return render(request, 'main/evaluate_students.html')
+
+
+def add_test_score_evaluator(request,measure_id):
+    measure = Measure.objects.filter(id=measure_id)
+    test_name = request.POST.get('test_title')
+    student_id = request.POST.get('student_to_be_evaluated')
+    email = request.user.email
+    evaluator = Evaluator.objects.get(email=email)
+    measures = Measure.objects.get(id=measure_id)
+
+
+    score = request.POST.get('score')
+    print(score)
+    student_score = custom_students.objects.filter(id=student_id, evaluator=evaluator, measure=measures)
+    student_score.update(grade=score, graded=True)
+
+    student = Student.objects.create(name=custom_students.objects.get(id=student_id).student_name)
+
+    test_score_student = Test_score(student=student, score=score, test=test_name)
+    test_score_student.save()
+    Measure.objects.filter(id=measure_id).update(test_score=test_score_student)
+
+    return HttpResponseRedirect(reverse_lazy('main:evaluator_test_select',kwargs={'measure_id':measure_id}))
 
 
 @user_passes_test(admin_test)
@@ -946,9 +981,14 @@ def view_rubric_data(request, measure_id):
     return render(request, 'main/rubric_scores.html', context)
 
 def past_assessments(request):
-    evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.username)
 
-    context = {'past':'active', 'evaluations': evaluations}
+    evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.username)
+    email = request.user.email
+    evaluator = Evaluator.objects.get(email=email)
+    scores = custom_students.objects.filter(evaluator=evaluator, graded=True)
+
+
+    context = {'past':'active', 'evaluations': evaluations, 'scores':scores}
     return render(request, 'main/past_assessments.html', context)
 
 
@@ -1007,7 +1047,7 @@ def edit_evaluation_student(request,evaluation_id):
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
                'super_cat': super_cat}
 
-    #evaluation_found.delete()
+    evaluation_found.delete()
     return render(request,'main/evaluator_edit_rubric_select.html',context)
 
 

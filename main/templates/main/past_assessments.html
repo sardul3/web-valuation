@@ -28,6 +28,22 @@
     </tr>
 
     {%endfor%}
+
+
+    {%for score in scores%}
+    <tr>
+      <td> {{score.student_name}}</td>
+      <td>  {{score.measure.measureTitle}}</td>
+      <td class = "justify-content-between">
+      {{score.grade}}
+      </td>
+      <td>
+        <a href = "" class = "btn btn-warning">Edit</a>
+      </td>
+    </tr>
+
+    {%endfor%}
+
   </tbody>
 </table>
 
