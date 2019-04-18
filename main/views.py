@@ -293,6 +293,8 @@ def evaluator_rubric_select(request, measure_id):
 
     maximum_rows = rubric.max_col
     cat_index = range(1, maximum_rows)
+    if rubric.isWeighted:
+        cat_index=range(1,maximum_rows-1)
     """
     if not rubric.isWeighted:
         cat_index =  range(1,maximum_rows)
@@ -798,6 +800,8 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
     maximum_rows = rub.max_col
     cat_index = range(1, maximum_rows)
+    if rub.isWeighted:
+        cat_index = range(1,maximum_rows-1)
     """if not rub.isWeighted:
         cat_index = range(1, maximum_rows)
     else:
@@ -946,6 +950,67 @@ def past_assessments(request):
 
     context = {'past':'active', 'evaluations': evaluations}
     return render(request, 'main/past_assessments.html', context)
+
+
+def edit_evaluation_student(request,evaluation_id):
+    evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
+    measure = evaluation_found.measure
+    measure_id = measure.id
+    email_eval = Evaluator.objects.get(name=evaluation_found.evaluated_by)
+    mystudent=0
+    for stu in custom_students.objects.all():
+        #print("Hello",stu.evaluator.email)
+        #print(measure.measureTitle==stu.measure.measureTitle and stu.student_name==thename)
+        if(stu.measure==measure and stu.student_name==evaluation_found.student and stu.evaluator==email_eval):
+            mystudent=stu
+
+    measures = measure
+    students = measures.student.all()
+    rubric = measures.rubric
+    categories = Category.objects.all()
+    evaluations = evaluate_rubric.objects.all()
+    evaluated_flag = []
+    for stu in students:
+        if evaluations.filter(student=stu.name, evaluated_by=request.user.username).exists():
+            evaluated_flag.append(stu.name)
+
+    cust_student_list = []
+    for stu in custom_students.objects.all():
+        for evaluator in stu.measure.evaluator.all():
+            if (evaluator.email == request.user.email):
+                cust_student_list.append(stu)
+    final_cust = []
+    for st in cust_student_list:
+        if st.measure == measures:
+            final_cust.append(st)
+
+    maximum_rows = rubric.max_col
+    cat_index = range(1, maximum_rows)
+    if rubric.isWeighted:
+        cat_index=range(1,maximum_rows-1)
+    """
+    if not rubric.isWeighted:
+        cat_index =  range(1,maximum_rows)
+    else:
+        cat_index = range(1,maximum_rows-1)
+    """
+    super_cat = []
+    for cat in categories:
+        if cat.rubric == rubric:
+            if cat.index_y in cat_index and cat.index_x == 0:
+                super_cat.append(cat.categoryTitle)
+                print(cat.categoryTitle)
+
+    context = {'measures': measures, 'mystudent':mystudent, 'measure_id': measure_id, 'rubric': rubric,
+               'categories': categories
+        , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
+               'super_cat': super_cat}
+
+    evaluation_found.delete()
+    return render(request,'main/evaluator_edit_rubric_select.html',context)
+
+
+
 
 def assign_evaluator(request, measure_id, outcome_id):
     measure = Measure.objects.get(id=measure_id)

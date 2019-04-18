@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+
+
+<div class = "container" id = "main_content">
+
+    <form action = "{%url 'main:evaluate_single_student' rubric.max_row rubric.id measure_id%}" method = "POST">
+      {%csrf_token%}
+        <label for="exampleFormControlSelect1">Evaluate a student</label>
+             <select class="form-control" name = "student_to_be_evaluated">
+                        <option value = "{{mystudent.id}}">{{mystudent.student_name}}</option>
+              </select>
+    <br/>
+    <h1> {{rubric.title}} </h1>
+    <table class = "table table-bordered table-responsive">
+        {% for x in row_num%}
+          <tr>
+          {% for y in col_num%}
+            {% for category in categories %}
+
+              {%if category.rubric == rubric %}
+                {% if category.index_x == x and category.index_y == y %}
+                  <td> {{category.categoryTitle}} </td>
+                {%endif%}
+              {%endif%}
+            {%endfor%}
+
+          {% endfor %}
+          {%if x <= 0 %}
+          <td> Score </td>
+          {%else%}
+        <td>
+          <div class="form-group">
+              <select class="form-control" name = "cat_field">
+                  {% for val in super_cat %}
+                  <option value = "{{val}}">{{val}}</option>
+                  {% endfor %}
+              </select>
+          </div>
+        </td>
+          {%endif%}
+          </tr>
+        {% endfor %}
+        </table>
+
+        <div class = "text-center">
+          <button type = "submit" class = "btn btn-primary btn-lg mt-3"> Evaluate </button>
+        </div>
+        </form>
+</div>
+
+
+{%endblock%}
