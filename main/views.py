@@ -963,6 +963,7 @@ def edit_evaluation_student(request,evaluation_id):
         #print(measure.measureTitle==stu.measure.measureTitle and stu.student_name==thename)
         if(stu.measure==measure and stu.student_name==evaluation_found.student and stu.evaluator==email_eval):
             mystudent=stu
+            mystudent.graded=False
 
     measures = measure
     students = measures.student.all()
@@ -1006,7 +1007,7 @@ def edit_evaluation_student(request,evaluation_id):
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
                'super_cat': super_cat}
 
-    evaluation_found.delete()
+    #evaluation_found.delete()
     return render(request,'main/evaluator_edit_rubric_select.html',context)
 
 
