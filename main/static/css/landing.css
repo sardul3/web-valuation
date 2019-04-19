@@ -77,7 +77,7 @@ td{
 
 
 
-.active{
+ li.nav-item.active{
   border-bottom: 2px solid black;
 }
 
@@ -173,4 +173,8 @@ h4{
 
 #list-home-list{
   word-wrap: anywhere;+
+}
+
+.fade {
+    transition: opacity .15s linear;
 }

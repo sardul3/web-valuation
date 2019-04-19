@@ -129,18 +129,23 @@
                        <div style="height:300px; overflow-y:scroll;">
                          <div class="list-group">
                            {%for alert in alerts%}
-                           <a href="#" class="list-group-item list-group-item-action">
+                              {%if alert.read == False %}
+                              <form action = "{% url 'main:mark_read' alert.id%}" method="POST">
+                                {%csrf_token%}
+                           <div class="list-group-item ">
                              <div class="d-flex w-100 justify-content-between">
                                <h5 class="mb-1">{{alert.sender}}</h5>
-                               <small class="text-muted">{{alert.sent_at}}</small>
+                               <small class="text-muted">{{alert.sent_at|timesince}}</small>
                              </div>
                              <p class="mb-1">{{alert.message}}</p>
-                             <form>
-                               <button class = "btn" style="font-size: 2em; color: #7a2831;">
+                             <div class = "text-right">
+                               <button class = "btn" type='submit' style="font-size: 1.5em; color: #7a2831;">
                                  <i class="far fa-check-circle"></i>
                                </button>
-                             </form>
-                           </a>
+                            </div>
+                           </div>
+                           </form>
+                            {%endif%}
                            {%endfor%}
                           </div>
 
@@ -200,7 +205,7 @@
         });
 
         $('#notifications').click(function () {
-            return false;       // DO NOTHING WHEN CONTAINER IS CLICKED.
+            return true;       // DO NOTHING WHEN CONTAINER IS CLICKED.
         });
     });
 </script>

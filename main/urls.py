@@ -8,6 +8,9 @@ urlpatterns = [
     path('eval', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('broadcast', views.broadcast, name='broadcast'),
+    path('mark_read/<int:alert_id>', views.mark_read, name='mark_read'),
+
+
 
     path('create_curriculum', views.create_curriculum, name = 'create_curriculum'),
 

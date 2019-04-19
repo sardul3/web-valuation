@@ -190,7 +190,7 @@ def evaluatorhome(request):
         evaluations = evaluate_rubric.objects.all()
         measures = Measure.objects.all()
         flags = evaluation_flag.objects.all()
-        alerts = Broadcast.objects.filter(receiver=request.user.username)
+        alerts = Broadcast.objects.filter(receiver=request.user.username, read=False)
         alerts_count = alerts.count()
 
         flag = []
@@ -427,7 +427,8 @@ def cycle(request, cycle_id):
 
     context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles,
-                'courses':courses}
+                'courses':courses,'notifications' : custom_students.objects.filter(graded=True),
+                'notification_count':notification_count}
     return render(request, 'main/cycle.html', context)
 
 @user_passes_test(admin_test)
@@ -1076,3 +1077,10 @@ def create_curriculum(request):
     Course.objects.create(title=title, description=description, credit_hours=credit_hours)
 
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
+
+def mark_read(request, alert_id):
+    print('method reached')
+    alert = Broadcast.objects.filter(id=alert_id)
+    alert.update(read=True)
+
+    return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))

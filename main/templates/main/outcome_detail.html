@@ -9,7 +9,19 @@
   padding:0 !important;
 }
 
-  .speech-bubble { position: relative; background: rgba(189,149,90, 0.15); border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color:rgba(189,149,90,0.15); border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
+  .speech-bubble {
+     position: relative;
+      background: rgba(189,149,90, 0.15);
+       border-radius: .4em;
+      }
+      .speech-bubble:after {
+        content: '';
+         position: absolute;
+         left: 0; top: 50%; width: 0; height: 0;
+          border: 0.5em solid transparent;
+           border-right-color:rgba(189,149,90,0.15);
+            border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em;
+          }
 
 </style>
 
@@ -623,7 +635,7 @@
     <div class = 'text-center'>
       <h2> or </h2>
 
-    <button class="btn btn-lg btn-primary  ml-2 mt-2" data-toggle="modal" data-target="#exampleModalCenterAddEvaluatorToTest{{measure.id}}">
+    <button class="btn btn-lg btn-primary  ml-2 mt-2  mb-2" data-toggle="modal" data-target="#exampleModalCenterAddEvaluatorToTest{{measure.id}}">
     Assign students to Evaluators
     </button>
 </div>
