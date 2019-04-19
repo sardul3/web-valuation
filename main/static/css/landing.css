@@ -170,3 +170,7 @@ h4{
     background-color: rgb(219,217,214);
     border-radius: .3rem;
 }
+
+#list-home-list{
+  word-wrap: anywhere;
+}
