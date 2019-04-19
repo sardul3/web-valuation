@@ -7,6 +7,9 @@ app_name = 'main'
 urlpatterns = [
     path('eval', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
+    path('broadcast', views.broadcast, name='broadcast'),
+
+
 
 
     path('test_rubric/', views.test_rubric, name = 'test_rubric'),
