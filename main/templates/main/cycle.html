@@ -83,6 +83,19 @@
                                 name = "outcome_title">{{outcome.title}}
                       </textarea>
                     </div>
+                    <div class="form-group">
+                     <label for="exampleFormControlSelect2">Select Courses for the the outcome</label>
+                     <select multiple class="form-control custom-select" id="exampleFormControlSelect2" name="course">
+                       {%for course in courses%}
+                        {%if course in outcome.course.all%}
+                        <option value="{{course.id}}" selected>{{course.title}}</option>
+                        {%else%}
+                        <option value="{{course.id}}">{{course.title}}</option>
+                        {%endif%}
+                       {%endfor%}
+                     </select>
+                   </div>
+
 
                     <div class="modal-footer">
                       <button type="submit" class="btn btn-primary">Save changes</button>
@@ -196,6 +209,15 @@
                     <label for="exampleFormControlTextarea1">Title</label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
                   </div>
+
+                  <div class="form-group">
+                   <label for="exampleFormControlSelect2">Select Courses for the outcome</label>
+                   <select multiple class="form-control" id="exampleFormControlSelect2" name="course">
+                     {%for course in courses%}
+                     <option value="{{course.id}}">{{course.title}}</option>
+                     {%endfor%}
+                   </select>
+                 </div>
 
 
                   <div class="modal-footer">

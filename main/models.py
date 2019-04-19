@@ -51,12 +51,17 @@ class Category(models.Model):
         return self.categoryTitle
 
 
+class Course(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    credit_hours = models.PositiveIntegerField(default=3)
 
 
 class Outcome(models.Model):
     title = models.CharField(max_length=200, default='', null=True)
     status = models.BooleanField(default=True)
     cycle = models.ManyToManyField(Cycle)
+    course = models.ManyToManyField(Course)
 
     def __str__(self):
         return self.title

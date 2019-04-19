@@ -9,6 +9,7 @@ urlpatterns = [
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('broadcast', views.broadcast, name='broadcast'),
 
+    path('create_curriculum', views.create_curriculum, name = 'create_curriculum'),
 
 
 

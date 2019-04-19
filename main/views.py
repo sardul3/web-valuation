@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course
 from django.contrib import messages
 from .forms import RegisterForm
 import csv
@@ -423,9 +423,11 @@ def cycle(request, cycle_id):
     rubrics = Rubric.objects.all()
     cycle = Cycle.objects.get(id=cycle_id)
     prev_cycles = Cycle.objects.filter(isCurrent=False)
+    courses = Course.objects.all()
 
     context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
-                'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles}
+                'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles,
+                'courses':courses}
     return render(request, 'main/cycle.html', context)
 
 @user_passes_test(admin_test)
@@ -577,6 +579,12 @@ def add_learning_outcome(request, cycle_id):
     title = request.POST.get('outcome_title')
     outcome = Outcome(title=title)
     outcome.save()
+
+    course_id = request.POST.getlist('course')
+    for c_id in course_id:
+        found_course = Course.objects.get(id=c_id)
+        outcome.course.add(found_course)
+
     cycle_found = Cycle.objects.get(id=cycle_id)
     outcome.cycle.add(cycle_found)
 
@@ -773,10 +781,15 @@ def add_evaluator(request, outcome_id, measure_id):
 
 def update_outcome(request, outcome_id, cycle_id):
     new_outcome_text = request.POST.get('outcome_title')
+    outcome_course = request.POST.getlist('course')
+    for course in outcome_course:
+        print(course)
+        outcome_found = Outcome.objects.get(id=outcome_id)
+        course_found = Course.objects.get(id=course)
+        outcome_found.course.add(course_found)
     outcome = Outcome.objects.filter(id = outcome_id).update(title = new_outcome_text)
 
     messages.add_message(request, messages.SUCCESS, 'Outcome was edited successfully')
-
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
@@ -1053,5 +1066,13 @@ def broadcast(request):
     message = request.POST.get('message')
     for x in send_to:
         broadcast = Broadcast.objects.create(sender=request.user.username, receiver=x,message=message, sent_at=datetime.today())
+
+    return HttpResponseRedirect(reverse_lazy('main:dashboard'))
+
+def create_curriculum(request):
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    credit_hours = request.POST.get('credit_hours')
+    Course.objects.create(title=title, description=description, credit_hours=credit_hours)
 
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
