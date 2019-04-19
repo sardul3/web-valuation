@@ -951,9 +951,12 @@ def past_assessments(request):
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True)
+    alerts = Broadcast.objects.filter(receiver=request.user.username)
+    alerts_count = alerts.count()
 
 
-    context = {'past':'active', 'evaluations': evaluations, 'scores':scores}
+    context = {'past':'active', 'evaluations': evaluations, 'scores':scores,
+                'alerts':alerts, 'alerts_count':alerts_count}
     return render(request, 'main/past_assessments.html', context)
 
 
