@@ -190,7 +190,7 @@ def evaluatorhome(request):
         evaluations = evaluate_rubric.objects.all()
         measures = Measure.objects.all()
         flags = evaluation_flag.objects.all()
-        alerts = Broadcast.objects.filter(receiver=request.user.username, read=False)
+        alerts = Broadcast.objects.filter(receiver=request.user.email, read=False)
         alerts_count = alerts.count()
 
         flag = []
@@ -1079,7 +1079,6 @@ def create_curriculum(request):
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def mark_read(request, alert_id):
-    print('method reached')
     alert = Broadcast.objects.filter(id=alert_id)
     alert.update(read=True)
 

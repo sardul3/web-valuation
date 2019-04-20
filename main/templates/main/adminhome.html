@@ -58,7 +58,7 @@
               <label for="exampleFormControlSelect2">Select a evaluator</label>
               <select multiple class="form-control" id="exampleFormControlSelect2" name = "evaluator">
                 {%for ev in evaluator%}
-                <option>{{ev.name}}</option>
+                <option value = "{{ev.email}}">{{ev.name}}</option>
                 {%endfor%}
               </select>
             </div>
