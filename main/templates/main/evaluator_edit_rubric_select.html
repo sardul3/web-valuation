@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body_block %}
+<style>
+  td {
+      font-size: 1rem;
+  }
 
+</style>
 
 <div class = "container" id = "main_content">
 
@@ -13,7 +18,7 @@
               </select>
     <br/>
     <h1> {{rubric.title}} </h1>
-    <table class = "table table-bordered table-responsive">
+    <table class = "table table-bordered table-responsive table-hover">
         {% for x in row_num%}
           <tr>
           {% for y in col_num%}

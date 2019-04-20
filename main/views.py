@@ -183,6 +183,7 @@ def evaluatorhome(request):
 
 
         context = {'evaluator':evaluator_list}
+        print(evaluator)
         return render(request, 'main/adminhome.html', context)
     else:
         rubrics = Rubric.objects.all()
@@ -203,13 +204,15 @@ def evaluatorhome(request):
         y = 0
         for me in measure:
             x = me.student.all()
-            y = evaluate_rubric.objects.filter(measure=me).count()
+            y = evaluate_rubric.objects.filter(measure=me, grade_score__isnull=False).count()
             for f in flags:
                 if f.measure == me:
                     flag.append(f.student_name)
 
         student_count = len(x)
+        print(student_count)
         eval_student = y
+        print(eval_student)
         if student_count==0:
             perc=100.0
         else:
@@ -912,10 +915,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
                 student=student_name, measure=measure, evaluated_by = request.user.username)
     evaluated.save()
     eval = Evaluator.objects.filter(email=request.user.email)[0]
-    student_real.graded=True
-    student_real.grade = avg
-    student_real.evaluator = eval
-    student_real.save()
+    # student_real.graded=True
+    # student_real.grade = avg
+    # student_real.evaluator = eval
+    # student_real.save()
     flag = evaluation_flag(student_name=student_name, measure=measure)
     flag.save()
 
@@ -1029,7 +1032,7 @@ def edit_evaluation_student(request,evaluation_id):
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
                'super_cat': super_cat}
 
-    evaluation_found.delete()
+    # evaluation_found.delete()
     return render(request,'main/evaluator_edit_rubric_select.html',context)
 
 
