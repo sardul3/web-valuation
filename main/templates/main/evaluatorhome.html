@@ -30,7 +30,7 @@
     {% endif %}
 
     <div>
-      <h3 class = "d-flex justify-content-between mb-3 "> Measures assigned </h3>
+      <h3 class = "d-flex justify-content-between mb-3 "> Evaluations </h3>
     </div>
 
     <div class="list-group " id="list-tab" role="tablist">
@@ -108,7 +108,7 @@
     {%empty%}
     <div class="jumbotron jumbotron-fluid">
       <div class="container">
-        <h1 class="display-4">No measures Assigned</h1>
+        <h1 class="display-4">No Evaluations Assigned</h1>
         <p class="lead">Please contact the coordinator for more queries</p>
       </div>
 </div>
@@ -117,6 +117,34 @@
 </div>
 
     </div>
+
+    <div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Help</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Evaluator Help</h4>
+        </div>
+        <div class="modal-body">
+          <h5>Perform Evaluation </h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
   </div>
 
 
