@@ -78,12 +78,14 @@ def rubric_data(measure_id):
 
     students = measure.student.all()
     evaluator_count = measure.evaluator.all().count()
-    student_count = measure.student.all().count()
+    # student_count = measure.student.all().count()
+    student_count = custom_students.objects.filter(measure=measure).count()
     evaluated_student_count = custom_students.objects.filter(measure=measure).exclude(grade__isnull = True).count()
 
 
     avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
     number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score).count()
+    above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points).count()
 
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
@@ -112,6 +114,7 @@ def rubric_data(measure_id):
         'student_count':student_count,
         'evaluated_student_count': evaluated_student_count,
         'avg_points': avg_points,
+        'above_avg':above_avg,
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
         'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed
@@ -1032,7 +1035,7 @@ def edit_evaluation_student(request,evaluation_id):
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
                'super_cat': super_cat}
 
-    # evaluation_found.delete()
+    evaluation_found.delete()
     return render(request,'main/evaluator_edit_rubric_select.html',context)
 
 

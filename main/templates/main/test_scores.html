@@ -1,18 +1,20 @@
 {% extends  'base.html' %}
 {%load static%}
 {% block body_block %}
+<style>
+  td{
+    font-size: 1rem;
+  }
+</style>
 
-<div class  = "container-fluid" id = "main_content">
-  <div class = "container" style = "margin-top: 15px;padding:1%;" >
+<div class  = "container-fluid" id = "main_content" style = "margin-top: 15px;padding:1%;">
 
-
-
-    <br/>
-    <table class = "table table-bordered ">
-
+<div class = "row">
+  <div class = "col col-lg-9">
+    <div class = "table-responsive">
+    <table class = "table table-bordered table-hover ">
       <thead>
         <div class = "d-flex justify-content-between" >
-
           <button class = "btn btn-warning mb-3">
             <strong>Measure Objective: </strong>
             <em>
@@ -23,15 +25,14 @@
            average
            {%endif%}
               or higher
-          on {{measure.tool_type}}
          </em>
           </button>
 
           <div class = "d-flex justify-content-center">
           {%if passed%}
-            <div  style = "background-color:green; height:40px; width: 40px; border-radius: 50%; margin-right: 5px;"></div><p> Measure Passed</p>
+            <div  style = "background-color:green; height:30px; width: 30px; border-radius: 50%; margin-right: 5px;"></div><p> Measure Passed</p>
           {%else%}
-            <div style = "background-color:red; height:40px; width: 40px; border-radius: 50%;  margin-right: 5px;"> </div><p>Measure Failed by<em> {{margin|floatformat:"0"}}</em>% </p>
+            <div style = "background-color:red; height:30px; width: 30px; border-radius: 50%;  margin-right: 5px;"> </div><p>Measure Failed by<em> {{margin|floatformat:"0"}}</em>% </p>
           {%endif%}
           </div>
         </div>
@@ -56,11 +57,41 @@
                 <td><div style = "background-color:red; height:20px; width: 20px; border-radius: 50%;"> </div></td>
             {%endif%}
         {%endfor%}
-  </tr>
+        </tr>
 
         </tbody>
         </table>
+        </div>
+      </div>
+    <div class = "col col-lg-3 mt-5">
+      <div class="card bg-light mb-3" style="max-width: 18rem;">
+        <div class="card-header">Stats</div>
+        <div class="card-body">
+          <h5 class="card-title">Total students</h5>
+          <p class="card-text">{{total_students}}</p>
+
+          <h5 class="card-title">Students that Passed</h5>
+          <p class="card-text">{{above_threshold}}</p>
+
+          <h5 class="card-title">Percentage</h5>
+          <p class="card-text">{{percentage|floatformat:1}}% passed the measure</p>
+
+        </div>
+      </div>
+
+      <div class="card bg-light mb-3" style="max-width: 18rem;">
+        <div class="card-header">Stats</div>
+        <div class="card-body">
+          <h5 class="card-title">Class Average</h5>
+          <p class="card-text">{{test_average|floatformat:1}}</p>
+
+          <h5 class="card-title">Students above average</h5>
+          <p class="card-text">{{greater_than_avg}}</p>
+        </div>
+      </div>
+
+    </div>
+    </div>
   </div>
-</div>
 
 {%endblock%}
