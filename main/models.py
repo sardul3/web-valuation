@@ -141,6 +141,7 @@ class custom_students(models.Model):
     evaluator = models.ForeignKey(Evaluator,null=True,on_delete=  models.CASCADE)
     graded = models.BooleanField(null=True,default=False)
     grade = models.FloatField(null=True)
+    type = models.CharField(max_length=200,null=True)
 
 class Broadcast(models.Model):
     sender = models.CharField(max_length=200)

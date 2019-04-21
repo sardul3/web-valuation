@@ -80,7 +80,7 @@ def rubric_data(measure_id):
     evaluator_count = measure.evaluator.all().count()
     # student_count = measure.student.all().count()
     student_count = custom_students.objects.filter(measure=measure).count()
-    evaluated_student_count = custom_students.objects.filter(measure=measure).exclude(grade__isnull = True).count()
+    evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False).count()
 
 
     avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
@@ -186,7 +186,6 @@ def evaluatorhome(request):
 
 
         context = {'evaluator':evaluator_list}
-        print(evaluator)
         return render(request, 'main/adminhome.html', context)
     else:
         rubrics = Rubric.objects.all()
@@ -918,10 +917,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
                 student=student_name, measure=measure, evaluated_by = request.user.username)
     evaluated.save()
     eval = Evaluator.objects.filter(email=request.user.email)[0]
-    # student_real.graded=True
-    # student_real.grade = avg
-    # student_real.evaluator = eval
-    # student_real.save()
+    student_real.graded=True
+    student_real.grade = avg
+    student_real.evaluator = eval
+    student_real.save()
     flag = evaluation_flag(student_name=student_name, measure=measure)
     flag.save()
 
@@ -966,7 +965,6 @@ def view_rubric_data(request, measure_id):
     return render(request, 'main/rubric_scores.html', context)
 
 def past_assessments(request):
-
     evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.username)
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
@@ -1050,7 +1048,7 @@ def assign_evaluator(request, measure_id, outcome_id):
 
     for student in students:
 
-        custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator)
+        custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator, type=measure.tool_type)
         custom_student.save()
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -1064,7 +1062,7 @@ def assign_evaluatorToTest(request, measure_id, outcome_id):
 
     for student in students:
 
-        custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator)
+        custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator, type=measure.tool_type)
         custom_student.save()
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 

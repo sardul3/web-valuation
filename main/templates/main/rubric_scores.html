@@ -52,7 +52,7 @@
            <tr>
               <td> {{st.rubric}} </td>
               <td> {{st.student}} </td>
-              <td> {{st.grade_score}} </td>
+              <td> {{st.grade_score|floatformat:2}} </td>
               <td> {{st.evaluated_by}} </td>
 
               {%if st.student in bin_array%}
@@ -78,7 +78,7 @@
               <p class="card-text">{{evaluated_student_count}}</p>
 
               <h5 class="card-title">Students passed</h5>
-              <p class="card-text">{{number_of_pass_cases}} / {{percent_pass_cases}}% passed the measure</p>
+              <p class="card-text">{{number_of_pass_cases}} / {{percent_pass_cases|floatformat:2}}% passed the measure</p>
 
             </div>
           </div>
