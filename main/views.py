@@ -356,11 +356,13 @@ def add_test_score_evaluator(request,measure_id):
     student_score = custom_students.objects.filter(id=student_id, evaluator=evaluator, measure=measures)
     student_score.update(grade=score, graded=True)
 
-    msg = student_score.evaluator.name + ' evaluated '+ student_score.student_name
-    Notification.objects.create(message=msg, created_at = datetime.today())
 
 
     student = Student.objects.create(name=custom_students.objects.get(id=student_id).student_name)
+
+    msg = evaluator.name + ' evaluated '+ student.name
+    Notification.objects.create(message=msg, created_at = datetime.today())
+
 
     test_score_student = Test_score(student=student, score=score, test=test_name)
     test_score_student.save()
@@ -914,6 +916,18 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
                 student=student_name, measure=measure, evaluated_by = request.user.username)
     evaluated.save()
     eval = Evaluator.objects.filter(email=request.user.email)[0]
+    print(eval)
+
+    overall_assignments = custom_students.objects.filter(evaluator=eval).count()
+    print(overall_assignments)
+    completed_assignments = custom_students.objects.filter(evaluator=eval, graded=True).count()
+    print(completed_assignments)
+    perc_evaluated = (completed_assignments/overall_assignments) * 100.0
+    print(perc_evaluated)
+    Evaluator.objects.filter(email=request.user.email).update(perc_completed  = perc_evaluated)
+    print(eval.perc_completed)
+
+
     student_real.graded=True
     student_real.grade = avg
     student_real.evaluator = eval

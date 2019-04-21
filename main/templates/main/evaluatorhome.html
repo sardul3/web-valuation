@@ -74,7 +74,8 @@
 
           </li>
             {% for student in flag %}
-                {% if student.measure == measure %}
+
+                {% if student.measure == measure and student.evaluator.email == request.user.email%}
                   <li class="d-flex list-group-item justify-content-between" >
                 <div>
                     {{student.student_name}}
