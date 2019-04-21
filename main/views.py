@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course, Notification
 from django.contrib import messages
 from .forms import RegisterForm
 import csv
@@ -14,10 +14,6 @@ from django.utils.timezone import datetime
 from django.db.models import Avg, Count, Min, Sum
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
-
-notifications = custom_students.objects.filter(graded=True)
-notification_count = notifications.count()
-
 
 
 def test_score_data(test_score_test, measure_id):
@@ -137,22 +133,23 @@ def outcomes(request):
     measures = Measure.objects.all()
     cycles = Cycle.objects.all()
 
-    context = {'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active','notifications' : custom_students.objects.filter(graded=True),
-    'notification_count':notification_count}
+    context = {'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active','notification_count' : Notification.objects.filter(read=False).count(),
+    'notifications' : Notification.objects.filter(read=False)
+}
     return render(request, 'main/outcomes.html', context)
 
 def rubrics(request):
     rubrics = Rubric.objects.all()
-    context = {'rubrics':rubrics, 'rubric': 'active','notifications' : custom_students.objects.filter(graded=True),
-    'notification_count':notification_count}
+    context = {'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
+    'notifications' : Notification.objects.filter(read=False)}
     return render(request, 'main/rubrics.html', context)
 
 @user_passes_test(admin_test)
 def cycles(request):
     cycles = Cycle.objects.all()
 
-    context = {'cycles':cycles, 'cycle': 'active','notifications' : custom_students.objects.filter(graded=True),
-    'notification_count':notification_count}
+    context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False).count(),
+    'notifications' : Notification.objects.filter(read=False)}
     return render(request, 'main/cycles.html', context)
 
 
@@ -359,6 +356,10 @@ def add_test_score_evaluator(request,measure_id):
     student_score = custom_students.objects.filter(id=student_id, evaluator=evaluator, measure=measures)
     student_score.update(grade=score, graded=True)
 
+    msg = student_score.evaluator.name + ' evaluated '+ student_score.student_name
+    Notification.objects.create(message=msg, created_at = datetime.today())
+
+
     student = Student.objects.create(name=custom_students.objects.get(id=student_id).student_name)
 
     test_score_student = Test_score(student=student, score=score, test=test_name)
@@ -400,8 +401,8 @@ def dashboard(request):
                 if (eval == eval_more):
                     evaluator_list.append(eval)
     context = {'evaluator': evaluator_list, 'dashboard':'active',
-            'notifications' : custom_students.objects.filter(graded=True),
-            'notification_count':notification_count
+            'notification_count' : Notification.objects.filter(read=False).count(),
+            'notifications' : Notification.objects.filter(read=False)
             }
     return render(request, 'main/adminhome.html', context)
 
@@ -429,8 +430,8 @@ def cycle(request, cycle_id):
 
     context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles,
-                'courses':courses,'notifications' : custom_students.objects.filter(graded=True),
-                'notification_count':notification_count}
+                'courses':courses,'notification_count' : Notification.objects.filter(read=False).count(),
+                'notifications' : Notification.objects.filter(read=False)}
     return render(request, 'main/cycle.html', context)
 
 @user_passes_test(admin_test)
@@ -511,8 +512,8 @@ def outcome_detail(request, outcome_id):
     context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student,
-                'notifications' : custom_students.objects.filter(graded=True),
-                'notification_count':notification_count}
+                'notification_count' : Notification.objects.filter(read=False).count(),
+                'notifications' : Notification.objects.filter(read=False)}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -920,6 +921,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     flag = evaluation_flag(student_name=student_name, measure=measure)
     flag.save()
 
+    msg = student_real.evaluator.name + ' evaluated '+ student_real.student_name
+    Notification.objects.create(message=msg, created_at = datetime.today())
+
+
     messages.add_message(request, messages.SUCCESS, 'Student was evaluated successfully')
 
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
@@ -1046,6 +1051,7 @@ def assign_evaluator(request, measure_id, outcome_id):
 
         custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator, type=measure.tool_type)
         custom_student.save()
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def assign_evaluatorToTest(request, measure_id, outcome_id):
@@ -1083,3 +1089,9 @@ def mark_read(request, alert_id):
     alert.update(read=True)
 
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
+
+def delete_notification(request, notification_id):
+    notification = Notification.objects.filter(id=notification_id)
+    notification.update(read=True)
+
+    return HttpResponseRedirect(reverse_lazy('main:dashboard'))

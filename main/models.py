@@ -149,3 +149,8 @@ class Broadcast(models.Model):
     message = models.CharField(max_length=400)
     sent_at = models.DateTimeField()
     read = models.BooleanField(default=False)
+
+class Notification(models.Model):
+    message = models.CharField(max_length=400)
+    created_at = models.DateTimeField()
+    read = models.BooleanField(default=False)

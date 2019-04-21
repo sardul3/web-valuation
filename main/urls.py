@@ -9,6 +9,8 @@ urlpatterns = [
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('broadcast', views.broadcast, name='broadcast'),
     path('mark_read/<int:alert_id>', views.mark_read, name='mark_read'),
+    path('delete_notification/<int:notification_id>', views.delete_notification, name='delete_notification'),
+
 
 
 

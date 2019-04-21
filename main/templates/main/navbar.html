@@ -142,7 +142,11 @@
                  <div style="height:300px; overflow-y:scroll;">
                    <ul class="list-group">
                      {%for notification in notifications%}
-                       <p class = "text-left list-group-item">{{notification.evaluator.name}} evaluated {{notification.student_name}} </p>
+                       <p class = "text-left list-group-item d-flex justify-content-between">{{notification.message}}
+                         <a href="{%url 'main:delete_notification' notification.id%}">
+                        <i class="fas fa-times"></i>
+                        </a>
+                       </p>
                      {%endfor%}
                    </ul>
 
@@ -213,7 +217,7 @@
         });
 
         $('#notifications').click(function () {
-            return false;       // DO NOTHING WHEN CONTAINER IS CLICKED.
+            return true;       // DO NOTHING WHEN CONTAINER IS CLICKED.
         });
     });
 </script>
