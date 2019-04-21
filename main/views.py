@@ -212,9 +212,7 @@ def evaluatorhome(request):
                     flag.append(f.student_name)
 
         student_count = len(x)
-        print(student_count)
         eval_student = y
-        print(eval_student)
         if student_count==0:
             perc=100.0
         else:
@@ -328,7 +326,6 @@ def evaluator_test_select(request, measure_id):
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
     evaluations = custom_students.objects.filter(evaluator=evaluator, measure=measures)
-    print(evaluations)
 
     context = {'measure':measures, 'test':test, 'evaluations':evaluations, 'measure_id':measure_id}
     return render(request, 'main/evaluator_test_select.html', context)
@@ -789,7 +786,6 @@ def update_outcome(request, outcome_id, cycle_id):
     new_outcome_text = request.POST.get('outcome_title')
     outcome_course = request.POST.getlist('course')
     for course in outcome_course:
-        print(course)
         outcome_found = Outcome.objects.get(id=outcome_id)
         course_found = Course.objects.get(id=course)
         outcome_found.course.add(course_found)
@@ -969,9 +965,9 @@ def past_assessments(request):
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True)
+    print(scores)
     alerts = Broadcast.objects.filter(receiver=request.user.username)
     alerts_count = alerts.count()
-
 
     context = {'past':'active', 'evaluations': evaluations, 'scores':scores,
                 'alerts':alerts, 'alerts_count':alerts_count}
@@ -1033,7 +1029,7 @@ def edit_evaluation_student(request,evaluation_id):
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
                'super_cat': super_cat}
 
-    evaluation_found.delete()
+    # evaluation_found.delete()
     return render(request,'main/evaluator_edit_rubric_select.html',context)
 
 

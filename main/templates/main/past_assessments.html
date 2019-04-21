@@ -15,7 +15,6 @@
     </tr>
   </thead>
   <tbody >
-    {%if evaluations%}
     {%for evaluation in evaluations%}
     <tr>
       <td> {{evaluation.student}}</td>
@@ -29,10 +28,9 @@
     </tr>
 
     {%endfor%}
-    {%endif%}
 
-    {%if scores%}
     {%for score in scores%}
+      {%if score.type == 'Test score'%}
     <tr>
       <td> {{score.student_name}}</td>
       <td>  {{score.measure.measureTitle}}</td>
@@ -43,9 +41,8 @@
         <a href = "{%url 'main:edit_test_score' score.measure.id score.student_name%}" class = "btn btn-warning">Edit</a>
       </td>
     </tr>
-
-    {%endfor%}
     {%endif%}
+    {%endfor%}
   </tbody>
 </table>
 
