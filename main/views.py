@@ -188,6 +188,19 @@ def evaluatorhome(request):
                     if(eval==eval_more):
                         evaluator_list.append(eval)
 
+        for eval in evaluator_list:
+            total=0.0
+            graded=0.0
+            for custom in custom_students.objects.all():
+                if custom.evaluator is not None:
+                    if custom.evaluator.email==eval.email:
+                        total+=1
+                        if custom.graded:
+                            graded+=1
+            if graded==0:
+                eval.perc_completed=0
+            else:
+                eval.perc_completed=(graded/total)*100.0
 
         context = {'evaluator':evaluator_list}
         return render(request, 'main/adminhome.html', context)
