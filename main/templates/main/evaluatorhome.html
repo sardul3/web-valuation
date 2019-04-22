@@ -68,7 +68,6 @@
         <h4 class = "d-flex justify-content-between"> {{measure.measureTitle}}  </h4>
 
         <p> The {{percent|floatformat:0}}% students have already been evaluated</p>
-
         <ul class="list-group mb-2" style = "overflow-y:scroll; height: 40vh;">
           <li class="list-group-item active d-flex justify-content-between">Students
 
@@ -101,6 +100,60 @@
             <form action = "{%url 'main:evaluator_test_select' measure.id%}" class = "text-center">
               <input type = "submit" class = "btn btn-primary" value = "Add test scores">  </input>
             </form>
+
+            <!-- <form action = "{%url 'main:upload_test_score_evaluator' measure.id%}" class = "text-center">
+              <p> or </p>
+              <input type = "submit" class = "btn btn-primary" value = "Upload Scores">  </input>
+            </form> -->
+            <div class = 'text-center'>
+              <h2> or </h2>
+
+            <button type="button" class="btn btn-primary btn-lg ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
+                Upload Test Score
+            </button>
+          </div>
+          <div class="modal fade" id="exampleModalCenterAddTestScore{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add test score</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action = "{%url 'main:upload_test_score_evaluator' measure.id%}"method="post" enctype="multipart/form-data">
+                  {%csrf_token%}
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Test Title</label>
+                    <input type="textarea" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="title of the test"
+                    name="test_title"
+                    {%if measure.test_score%}
+                      value = "{{measure.test_score.test}}"
+                    {%endif%}
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Full Marks</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="max obtainable points"
+                    name="max_points">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Upload Scores</label>
+                    <small id="emailHelp" class="form-text text-muted">instructions go here </small>
+                  </div>
+
+                    <input type="file" name="csv_file" />
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                  </form>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+
             {%endif%}
 
   </div>
@@ -159,5 +212,6 @@
 </div>
 
 </div>
+
 
 {%endblock%}

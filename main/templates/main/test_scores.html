@@ -48,11 +48,11 @@
 
         {%for st in test_score%}
          <tr>
-            <td> {{st.test}} </td>
-            <td> {{st.student}} </td>
-            <td> {{st.score}} </td>
+            <td> {{st.measure.test_score}} </td>
+            <td> {{st.student_name}} </td>
+            <td> {{st.grade}} </td>
 
-            {%if st.score >= measure.cutoff_score%}
+            {%if st.grade >= measure.cutoff_score%}
               <td> <div style = "background-color:green; height:20px; width: 20px; border-radius: 50%;"></div> </td>
             {%else%}
                 <td><div style = "background-color:red; height:20px; width: 20px; border-radius: 50%;"> </div></td>

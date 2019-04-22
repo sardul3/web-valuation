@@ -11,6 +11,7 @@ urlpatterns = [
     path('mark_read/<int:alert_id>', views.mark_read, name='mark_read'),
     path('delete_notification/<int:notification_id>', views.delete_notification, name='delete_notification'),
 
+    path('upload_test_score_evaluator/<int:measure_id>', views.upload_test_score_evaluator, name = 'upload_test_score_evaluator'),
 
 
 

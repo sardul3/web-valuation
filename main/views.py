@@ -18,10 +18,14 @@ from django.contrib.auth.decorators import user_passes_test
 
 def test_score_data(test_score_test, measure_id):
     measure = Measure.objects.get(id=measure_id)
-    test_score = Test_score.objects.filter(test=test_score_test)
-    total_students = test_score.count()
-    test_average = test_score.aggregate(Avg('score'))['score__avg']
-    greater_than_avg = test_score.filter(score__gte = test_average).count()
+    # test_score = Test_score.objects.filter(test=test_score_test)
+    test_score = custom_students.objects.filter(measure=measure, graded=True)
+    total_students = custom_students.objects.filter(measure=measure).count()
+    # total_students = test_score.count()
+    # test_average = test_score.aggregate(Avg('score'))['score__avg']
+    test_average = test_score.aggregate(Avg('grade'))['grade__avg']
+    # greater_than_avg = test_score.filter(score__gte = test_average).count()
+    greater_than_avg = test_score.filter(grade__gte=test_average).count()
     passed = False
     margin = 0.0
     data = {}
@@ -31,16 +35,16 @@ def test_score_data(test_score_test, measure_id):
     bin_array = []
     for student_score in test_score:
         if(measure.cutoff_type == 'Percentage'):
-            if(student_score.score>=measure.cutoff_score):
-                bin_array.append(student_score.student.name)
+            if(student_score.grade>=measure.cutoff_score):
+                bin_array.append(student_score.student_name)
 
         elif(measure.cutoff_type == 'Average'):
-            if(student_score.score>=measure.cutoff_percentage):
-                bin_array.append(student_score.student.name)
+            if(student_score.grade>=measure.cutoff_percentage):
+                bin_array.append(student_score.student_name)
 
 
     if(measure.cutoff_type == 'Percentage'):
-            above_threshold = test_score.filter(score__gte = measure.cutoff_score).count()
+            above_threshold = test_score.filter(grade__gte = measure.cutoff_score).count()
             percentage = above_threshold / total_students * 100
             if(percentage>=measure.cutoff_percentage):
                 passed = True
@@ -364,8 +368,7 @@ def add_test_score_evaluator(request,measure_id):
     Notification.objects.create(message=msg, created_at = datetime.today())
 
 
-    test_score_student = Test_score(student=student, score=score, test=test_name)
-    test_score_student.save()
+    test_score_student = Test_score.objects.create(student=student, score=score, test=test_name)
     Measure.objects.filter(id=measure_id).update(test_score=test_score_student)
 
     return HttpResponseRedirect(reverse_lazy('main:evaluator_test_select',kwargs={'measure_id':measure_id}))
@@ -524,6 +527,7 @@ def upload(request, measure_id, outcome_id):
         test_name = request.POST.get('test_title')
         max_points = request.POST.get('max_points')
 
+
         total_points = 0
 
         csvfile = request.FILES['csv_file']
@@ -536,6 +540,7 @@ def upload(request, measure_id, outcome_id):
             student = Student.objects.create(name=column[0])
             student_score = Test_score(student=student, test=test_name, score=int(column[1]))
             student_score.save()
+            custom_students.objects.create(measure=Measure.objects.get(id=measure_id), student_name = column[0], grade=int(column[1]), graded=True )
             measure.update(test_score=student_score)
 
         number_of_students = Test_score.objects.filter(test=test_name).count()
@@ -805,53 +810,9 @@ def delete_outcome(request, outcome_id, cycle_id):
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
 def view_test_score(request, test_score_test, measure_id):
-    #
-    # measure = Measure.objects.get(id=measure_id)
-    # test_score = Test_score.objects.filter(test=test_score_test)
-    # total_students = test_score.count()
-    # test_average = test_score.aggregate(Avg('score'))['score__avg']
-    # above_threshold = test_score.filter(score__gte = 75).count()
-    # percentage = above_threshold / total_students * 100
-    # greater_than_avg = test_score.filter(score__gte = test_average).count()
-    # passed = False
-    # margin = 0.0
-    #
-    # bin_array = []
-    # for student_score in test_score:
-    #     if(measure.cutoff_type == 'Percentage'):
-    #         if(student_score.score>=measure.cutoff_score):
-    #             bin_array.append(student_score.student.name)
-    #
-    #     elif(measure.cutoff_type == 'Average'):
-    #         if(student_score.score>=measure.cutoff_percentage):
-    #             bin_array.append(student_score.student.name)
-    #
-    #
-    # if(measure.cutoff_type == 'Percentage'):
-    #         above_threshold = test_score.filter(score__gte = measure.cutoff_score).count()
-    #         percentage = above_threshold / total_students * 100
-    #         if(percentage>=measure.cutoff_percentage):
-    #             passed = True
-    #         else:
-    #             margin = measure.cutoff_percentage - percentage
-    # elif(measure.cutoff_type == 'Average'):
-    #         test_average = test_score.aggregate(Avg('score'))['score__avg']
-    #         above_threshold = test_score.filter(score__gte = test_average).count()
-    #         percentage = above_threshold / total_students * 100
-    #         if(percentage>=measure.cutoff_percentage):
-    #             passed = True
-    #             Measure.objects.filter(id=measure_id).update(status='passing')
-    #
-    #         else:
-    #             margin = measure.cutoff_percentage - percentage
-    #
-    #
-    # context = {'test_score': test_score, 'total_students':total_students,
-    #             'test_average': test_average, 'above_threshold': above_threshold,
-    #             'percentage':percentage, 'greater_than_avg': greater_than_avg,
-    #             'measure':measure, 'passed':passed, 'bin_array': bin_array,
-    #              'count': range(len(bin_array)), 'margin':margin}
+
     context = test_score_data(test_score_test, measure_id)
+
     return render(request, 'main/test_scores.html', context)
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
@@ -1107,3 +1068,34 @@ def delete_notification(request, notification_id):
     notification.update(read=True)
 
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
+
+def upload_test_score_evaluator(request, measure_id):
+
+    if request.method=='POST' and request.FILES:
+        measure = Measure.objects.filter(id=measure_id)
+        evaluator = Evaluator.objects.get(email=request.user.email)
+        students = custom_students.objects.filter(measure__in = measure, evaluator = evaluator)
+
+        test_name = request.POST.get('test_title')
+        max_points = request.POST.get('max_points')
+        total_points = 0
+
+        csvfile = request.FILES['csv_file']
+        datset = csvfile.read().decode("UTF-8")
+        io_string = io.StringIO(datset)
+
+        for column in csv.reader(io_string, delimiter=",", quotechar="|"):
+            total_points += int(column[1])
+            student = Student.objects.create(name=column[0])
+            for st in students:
+                if st.student_name == student.name:
+                    student_score = Test_score(student=student, test=test_name, score=int(column[1]))
+                    student_score.save()
+                    measure.update(test_score=student_score)
+                    cust_st = custom_students.objects.filter(measure__in = measure, student_name=st.student_name, evaluator=evaluator)
+                    cust_st.update(graded=True, grade=int(column[1]))
+
+        number_of_students = Test_score.objects.filter(test=test_name).count()
+        average = total_points / number_of_students
+
+    return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
