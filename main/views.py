@@ -235,6 +235,23 @@ def evaluatorhome(request):
             for evaluator in stu.measure.evaluator.all():
                 if(evaluator.email==email_address):
                     cust_student_list.append(stu)
+        for mea in measure:
+            total=0.0
+            graded =0
+            for cu in cust_student_list:
+                if cu.measure == mea and cu.evaluator.email==request.user.email:
+                    total+=1
+                    if cu.graded:
+                        #print(cu.student_name)
+                        graded+=1
+
+            #print("Graded",graded)
+            #print("Total",total)
+            if graded==0:
+                mea.evaluationPercent=0.0
+            else:
+                mea.evaluationPercent = (graded/total)*100.0
+
 
 
         context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
