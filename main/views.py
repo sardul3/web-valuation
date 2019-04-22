@@ -935,9 +935,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     print(completed_assignments)
     perc_evaluated = (completed_assignments/overall_assignments) * 100.0
     print(perc_evaluated)
-    Evaluator.objects.filter(email=request.user.email).update(perc_completed  = perc_evaluated)
-    print(eval.perc_completed)
-
+    eval.perc_completed = perc_evaluated
 
     student_real.graded=True
     student_real.grade = avg
