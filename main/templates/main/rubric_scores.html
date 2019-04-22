@@ -42,6 +42,7 @@
              <td> Rubric </td>
              <td> Student </td>
              <td> Score </td>
+             <td> Breakdown </td>
              <td> Evaluated by </td>
              <td> Status </td>
           </tr>
@@ -54,6 +55,19 @@
               <td> {{st.measure.rubric}} </td>
               <td> {{st.student_name}} </td>
               <td> {{st.grade|floatformat:2}} </td>
+              <td>
+                <table>
+                  <tr>
+              {%for cat in ev_cats%}
+                {%if cat.student.id == st.id%}
+                 {{cat.header}}
+               <td>{{cat.score}} </td>
+                {%endif%}
+              {%endfor%}
+                </tr>
+                </table>
+              </td>
+
               <td> {{st.evaluator.name}} </td>
 
               {%if st.student_name in bin_array%}

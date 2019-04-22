@@ -96,6 +96,7 @@ def rubric_data(measure_id):
 
     # evaluated_list = evaluate_rubric.objects.filter(measure = measure, rubric=measure.rubric)
     evaluated_list = custom_students.objects.filter(measure=measure, graded=True)
+    ev_cats = category_score.objects.filter(student__in = evaluated_list)
 
     bin_array = []
     for student_score in evaluated_list:
@@ -118,7 +119,8 @@ def rubric_data(measure_id):
         # 'above_avg':above_avg,
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
-        'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed
+        'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed,
+        'ev_cats':ev_cats
     }
 
 
