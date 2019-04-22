@@ -30,7 +30,7 @@
     {% endif %}
 
     <div>
-      <h3 class = "d-flex justify-content-between mb-3 "> Evaluations </h3>
+      <h4 class = "d-flex justify-content-between mb-3 ">Evaluations to Complete </h4>
     </div>
 
     <div class="list-group " id="list-tab" role="tablist">
@@ -111,7 +111,7 @@
 
     <div class="container">
   <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Help</button>
+  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Help</button>
 
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
@@ -124,7 +124,27 @@
           <h4 class="modal-title">Evaluator Help</h4>
         </div>
         <div class="modal-body">
-          <h5>Perform Evaluation </h5>
+          <h5>To Start Evaluation</h5>
+          <ol>
+            <li>Select an evaluation from the list of evaluations to complete
+            <ul><li>The list of students requiring an evaluation will be displayed</li> </ul></li>
+            <li>Select 'Start Evaluations' to get started!</li>
+          </ol>
+          <hr/>
+          <h5>To Perform Rubric Evaluation</h5>
+          <ol>
+            <li>Select student's name from the dropdown box at the top</li>
+            <li>Select the score for each criteria from the dropdoen boxes</li>
+            <li>Select 'Evaluate' once all of the score fields have been completed</li>
+          </ol>
+          <hr/>
+          <h5> To Edit A Previous Rubric</h5>
+          <ol>
+            <li>Select 'Past Assesments' from the dashboard menu</li>
+            <li>Select 'Edit' by the rubric needing to be edited</li>
+            <li>Perform edits</li>
+            <li>Select not sure yet</li>
+          </ol>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
