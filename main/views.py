@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course, Notification
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course, Notification, category_score
 from django.contrib import messages
 from .forms import RegisterForm
 import csv
@@ -870,6 +870,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
     maximum_rows = rub.max_col
     cat_index = range(1, maximum_rows)
+    header = range(1,rub.max_col)
     if rub.isWeighted:
         cat_index = range(1,maximum_rows-1)
     """if not rub.isWeighted:
@@ -882,9 +883,17 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
             if cat.index_y in cat_index and cat.index_x == 0:
                 super_cat.append(cat.categoryTitle)
 
+    super_header=[]
+    for cat in categories:
+        if cat.rubric==rub:
+            if cat.index_x in header and cat.index_y==0:
+                super_header.append(cat.categoryTitle)
+
+    print("This is superheader",super_header)
     mysc = request.POST.getlist('cat_field')
     for x in range(rubric_row-1):
         score = mysc[x]
+        custom_cat = category_score(student=student_real,header=super_header[x],score=mysc[x])
         if score.isdigit():
             myscore = int(score)
         else:
@@ -910,10 +919,12 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
         scores.append(myscore)
         total += float(myscore)
         count = count +1
+        custom_cat.save()
 
     avg = total/count
     evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
                 student=student_name, measure=measure, evaluated_by = request.user.username)
+
     evaluated.save()
     eval = Evaluator.objects.filter(email=request.user.email)[0]
     print(eval)
@@ -993,11 +1004,27 @@ def past_assessments(request):
     return render(request, 'main/past_assessments.html', context)
 
 
+def view_score(request,evaluation_id):
+    evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
+    measure = evaluation_found.measure
+    email_eval = Evaluator.objects.filter(name=evaluation_found.evaluated_by)[0]
+    mystudent = 0
+    for stu in custom_students.objects.all():
+
+        if (stu.measure == measure and stu.student_name == evaluation_found.student and stu.evaluator == email_eval):
+            mystudent = stu
+            mystudent.graded = False
+    current_cat = category_score.objects.filter(student=mystudent)
+    context = {'cats':current_cat}
+    return render(request,'main/view_score.html',context)
+
+
+
 def edit_evaluation_student(request,evaluation_id):
     evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
     measure = evaluation_found.measure
     measure_id = measure.id
-    email_eval = Evaluator.objects.get(name=evaluation_found.evaluated_by)
+    email_eval = Evaluator.objects.filter(name=evaluation_found.evaluated_by)[0]
     mystudent=0
     for stu in custom_students.objects.all():
 
