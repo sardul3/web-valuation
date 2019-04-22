@@ -142,6 +142,7 @@ class custom_students(models.Model):
     graded = models.BooleanField(null=True,default=False)
     grade = models.FloatField(null=True)
     type = models.CharField(max_length=200,null=True)
+    current = models.BooleanField(default=True, null=True)
 
 class category_score(models.Model):
     student = models.ForeignKey(custom_students,null=True,on_delete=models.CASCADE)
