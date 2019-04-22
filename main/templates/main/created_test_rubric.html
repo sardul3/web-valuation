@@ -55,7 +55,12 @@ textarea{
 				</div>
 		  		{%else%}
 				<div class = "form-group">
-					<td> <input class="form-control" id="exampleFormControlTextarea1" name = "{{row}}{{col}}"></td>
+					{% if row == 0 and col == 0 or col == col_ind %}
+					<td> <input class="form-control" id="exampleFormControlTextarea1" name = "{{row}}{{col}}" placeholder="Categories"></td>
+					{%else%}
+					<td> <input class="form-control" id="exampleFormControlTextarea1" name = "{{row}}{{col}}" placeholder="{{col}}"></td>
+					{% endif %}
+
 				</div>
 		  {%endif%}
 				{%else%}
