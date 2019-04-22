@@ -252,11 +252,12 @@ def evaluatorhome(request):
             total=0.0
             graded =0
             for cu in cust_student_list:
-                if cu.measure == mea and cu.evaluator.email==request.user.email:
-                    total+=1
-                    if cu.graded:
-                        #print(cu.student_name)
-                        graded+=1
+                if cu is not None:
+                    if cu.measure == mea and cu.evaluator.email==request.user.email:
+                        total+=1
+                        if cu.graded:
+                            #print(cu.student_name)
+                            graded+=1
 
             #print("Graded",graded)
             #print("Total",total)
@@ -711,13 +712,24 @@ def test_rubric(request):
         colminus = cols
         isWeighted = True
         isAscending =True
+        col_index = 0
         if(weight=="no"):
             isWeighted=False
         if isWeighted:
             cols+=1
         if ascending=="descending":
             isAscending = False
-        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':range(cols),'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus,'isAsc':isAscending})
+        if isAscending:
+            cols_ = range(0,cols)
+        else:
+            if isWeighted:
+                cols_ = range(cols-1,-1,-1)
+                colminus=0
+                col_index = cols-1
+            else:
+                col_index = cols
+                cols_ = range(cols,0,-1)
+        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':cols_,'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus,'isAsc':isAscending,'col_ind':col_index})
     return render(request, 'main/test_rubric.html')
 
 
