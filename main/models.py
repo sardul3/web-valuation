@@ -143,6 +143,11 @@ class custom_students(models.Model):
     grade = models.FloatField(null=True)
     type = models.CharField(max_length=200,null=True)
 
+class category_score(models.Model):
+    student = models.ForeignKey(custom_students,null=True,on_delete=models.CASCADE)
+    header = models.CharField(null=True,max_length=400)
+    score = models.CharField(null=True,max_length=200)
+
 class Broadcast(models.Model):
     sender = models.CharField(max_length=200)
     receiver = models.CharField(max_length=200)

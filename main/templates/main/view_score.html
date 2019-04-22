@@ -1,0 +1,21 @@
+{% extends  'main/evaluatorbase.html' %}
+{% load static %}
+{% block body_block %}
+<table class="table">
+    <thead class=" card-header">
+    <tr>
+      <th scope="col">Category</th>
+      <th scope="col">Score</th>
+
+    </tr>
+  </thead>
+    <tbody>
+{% for cat in cats%}
+<tr>
+    <td>{{cat.header}}</td>
+    <td>{{cat.score}}</td>
+</tr>
+{% endfor %}
+    </tbody>
+</table>
+{%endblock%}
