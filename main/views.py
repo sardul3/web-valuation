@@ -19,8 +19,8 @@ from django.contrib.auth.decorators import user_passes_test
 def test_score_data(test_score_test, measure_id):
     measure = Measure.objects.get(id=measure_id)
     # test_score = Test_score.objects.filter(test=test_score_test)
-    test_score = custom_students.objects.filter(measure=measure, graded=True)
-    total_students = custom_students.objects.filter(measure=measure).count()
+    test_score = custom_students.objects.filter(measure=measure, graded=True, current=True)
+    total_students = custom_students.objects.filter(measure=measure, current=True).count()
     # total_students = test_score.count()
     # test_average = test_score.aggregate(Avg('score'))['score__avg']
     test_average = test_score.aggregate(Avg('grade'))['grade__avg']
@@ -79,13 +79,13 @@ def rubric_data(measure_id):
     students = measure.student.all()
     evaluator_count = measure.evaluator.all().count()
     # student_count = measure.student.all().count()
-    student_count = custom_students.objects.filter(measure=measure).count()
-    evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False).count()
+    student_count = custom_students.objects.filter(measure=measure, current=True).count()
+    evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
 
 
     avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
-    number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score).count()
-    # above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points).count()
+    number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
+    above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points, current=True).count()
 
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
@@ -95,7 +95,7 @@ def rubric_data(measure_id):
 
 
     # evaluated_list = evaluate_rubric.objects.filter(measure = measure, rubric=measure.rubric)
-    evaluated_list = custom_students.objects.filter(measure=measure, graded=True)
+    evaluated_list = custom_students.objects.filter(measure=measure, graded=True, current=True)
     ev_cats = category_score.objects.filter(student__in = evaluated_list)
 
     bin_array = []
@@ -116,7 +116,7 @@ def rubric_data(measure_id):
         'student_count':student_count,
         'evaluated_student_count': evaluated_student_count,
         'avg_points': avg_points,
-        # 'above_avg':above_avg,
+        'above_avg':above_avg,
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
         'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed,
@@ -442,6 +442,7 @@ def dashboard(request):
             for eval_more in mymea.evaluator.all():
                 if (eval == eval_more):
                     evaluator_list.append(eval)
+
     context = {'evaluator': evaluator_list, 'dashboard':'active',
             'notification_count' : Notification.objects.filter(read=False).count(),
             'notifications' : Notification.objects.filter(read=False)
@@ -971,6 +972,8 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 def remove_rubric_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
     measure.update(rubric=None, statusPercent=0.0)
+    custom_students.objects.filter(measure__in=measure, graded=True).update(current=False)
+
 
     messages.add_message(request, messages.SUCCESS, 'Removed rubric association')
 
@@ -979,6 +982,7 @@ def remove_rubric_association(request, measure_id, outcome_id):
 def remove_test_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
     measure.update(test_score=None, statusPercent=0.0)
+    custom_students.objects.filter(measure__in=measure, graded=True).update(current=False)
 
     messages.add_message(request, messages.SUCCESS, 'Removed test association')
 

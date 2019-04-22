@@ -60,8 +60,8 @@
                   <tr>
               {%for cat in ev_cats%}
                 {%if cat.student.id == st.id%}
-                 {{cat.header}}
-               <td>{{cat.score}} </td>
+                 <td class = "text-center"> {{cat.header}} <br/>
+              {{cat.score}} </td>
                 {%endif%}
               {%endfor%}
                 </tr>
