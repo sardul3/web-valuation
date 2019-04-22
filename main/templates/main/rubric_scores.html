@@ -49,13 +49,14 @@
         <tbody>
 
           {%for st in evaluated_list%}
-           <tr>
-              <td> {{st.rubric}} </td>
-              <td> {{st.student}} </td>
-              <td> {{st.grade_score|floatformat:2}} </td>
-              <td> {{st.evaluated_by}} </td>
 
-              {%if st.student in bin_array%}
+           <tr>
+              <td> {{st.measure.rubric}} </td>
+              <td> {{st.student_name}} </td>
+              <td> {{st.grade|floatformat:2}} </td>
+              <td> {{st.evaluator.name}} </td>
+
+              {%if st.student_name in bin_array%}
                 <td> <div style = "background-color:green; height:20px; width: 20px; border-radius: 50%;"></div> </td>
               {%else%}
                   <td><div style = "background-color:red; height:20px; width: 20px; border-radius: 50%;"> </div></td>

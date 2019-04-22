@@ -20,7 +20,7 @@
       <td> {{evaluation.student}}</td>
       <td>  {{evaluation.measure.measureTitle}}</td>
       <td class = "justify-content-between">
-      {{evaluation.grade_score}}
+      {{evaluation.grade_score|floatformat:2}}
       </td>
       <td>
         <a href = "{%url 'main:edit_evaluation_student' evaluation.id%}" class = "btn btn-warning">Edit</a>

@@ -72,9 +72,9 @@ def test_score_data(test_score_test, measure_id):
 def rubric_data(measure_id):
     measure = Measure.objects.get(id=measure_id)
 
-    evaluator_count = 0;
-    student_count = 0;
-    evaluated_student_count = 0;
+    evaluator_count = 0
+    student_count = 0
+    evaluated_student_count = 0
 
     students = measure.student.all()
     evaluator_count = measure.evaluator.all().count()
@@ -85,7 +85,7 @@ def rubric_data(measure_id):
 
     avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
     number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score).count()
-    above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points).count()
+    # above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points).count()
 
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
@@ -94,13 +94,14 @@ def rubric_data(measure_id):
 
 
 
-    evaluated_list = evaluate_rubric.objects.filter(measure = measure)
+    # evaluated_list = evaluate_rubric.objects.filter(measure = measure, rubric=measure.rubric)
+    evaluated_list = custom_students.objects.filter(measure=measure, graded=True)
 
     bin_array = []
     for student_score in evaluated_list:
         if(measure.cutoff_type == 'Percentage'):
-            if(student_score.grade_score>=measure.cutoff_score):
-                bin_array.append(student_score.student)
+            if(student_score.grade>=measure.cutoff_score):
+                bin_array.append(student_score.student_name)
 
     passed = False
     if(measure.cutoff_type == 'Percentage'):
@@ -114,7 +115,7 @@ def rubric_data(measure_id):
         'student_count':student_count,
         'evaluated_student_count': evaluated_student_count,
         'avg_points': avg_points,
-        'above_avg':above_avg,
+        # 'above_avg':above_avg,
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
         'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed
@@ -313,10 +314,13 @@ def evaluator_rubric_select(request, measure_id):
         if cat.rubric==rubric:
             if cat.index_y in cat_index and cat.index_x==0:
                 super_cat.append(cat.categoryTitle)
+    alerts = Broadcast.objects.filter(receiver=request.user.email, read=False)
+    alerts_count = alerts.count()
 
 
     context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
-                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':final_cust,'super_cat':super_cat}
+                ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':final_cust,'super_cat':super_cat,
+                'alerts':alerts, 'alerts_count':alerts_count}
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 
@@ -919,7 +923,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
 def remove_rubric_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
-    measure.update(rubric=None)
+    measure.update(rubric=None, statusPercent=0.0)
 
     messages.add_message(request, messages.SUCCESS, 'Removed rubric association')
 
@@ -927,7 +931,7 @@ def remove_rubric_association(request, measure_id, outcome_id):
 
 def remove_test_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
-    measure.update(test_score=None)
+    measure.update(test_score=None, statusPercent=0.0)
 
     messages.add_message(request, messages.SUCCESS, 'Removed test association')
 
@@ -958,7 +962,7 @@ def past_assessments(request):
     evaluator = Evaluator.objects.filter(email=email)[0]
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True)
     print(scores)
-    alerts = Broadcast.objects.filter(receiver=request.user.username)
+    alerts = Broadcast.objects.filter(receiver=request.user.email, read=False)
     alerts_count = alerts.count()
 
     context = {'past':'active', 'evaluations': evaluations, 'scores':scores,
