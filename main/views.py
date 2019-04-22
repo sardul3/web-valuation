@@ -562,6 +562,10 @@ def add_test_score(request,measure_id, outcome_id):
     score = request.POST.get('score')
     student_score = Test_score(student=student, test=test_name, score=score)
     student_score.save()
+
+    cust_stu  = custom_students(student_name=student_name,measure=Measure.objects.get(id=measure_id), grade=score, graded=True)
+    cust_stu.save()
+
     measure.update(test_score=student_score)
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
@@ -735,8 +739,7 @@ def add_individual_student(request, outcome_id, measure_id):
 
     measure = Measure.objects.get(id=measure_id)
     measure.student.add(student)
-    # cust_stu  = custom_students(student_name=student_name,measure=measure)
-    # cust_stu.save()
+
     messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
