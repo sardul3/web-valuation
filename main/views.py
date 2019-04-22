@@ -252,11 +252,11 @@ def evaluatorhome(request):
             total=0.0
             graded =0
             for cu in cust_student_list:
-                if cu.measure == mea and cu.evaluator.email==request.user.email:
-                    total+=1
-                    if cu.graded:
-                        #print(cu.student_name)
-                        graded+=1
+                    if cu.measure == mea and cu.evaluator.email==request.user.email:
+                        total+=1
+                        if cu.graded:
+                            #print(cu.student_name)
+                            graded+=1
 
             #print("Graded",graded)
             #print("Total",total)
