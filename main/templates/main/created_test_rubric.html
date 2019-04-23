@@ -77,7 +77,40 @@ textarea{
 		<input type = "hidden" value = "{{isWeighted}}" name = "isWeighted">
 		<input type = "hidden" value = "{{isAsc}}" name = "isAscending">
       <button class = "btn btn-primary btn=lg" type = "submit"> Add Rubric </button>
+			<br>
+				<br>
+				 <div class="container">
+		   <!-- Trigger the modal with a button -->
+		   <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal">Help</button>
 
+		   <!-- Modal -->
+		   <div class="modal fade" id="myModal" role="dialog">
+		     <div class="modal-dialog">
+
+		       <!-- Modal content-->
+		       <div class="modal-content">
+		         <div class="modal-header">
+		           <button type="button" class="close" data-dismiss="modal">&times;</button>
+		           <h4 class="modal-title">Admin Help</h4>
+		         </div>
+		         <div class="modal-body">
+		           <h5>Create Rubric Instructions</h5>
+		           <ol>
+								 <li>Fill in the first row, first column with the label for the criteria column <ul><li>ie. Criteria</li></ul></li>
+								 <li>Fill out the rest of the first row with the grading value labels <ul><li>ie. 1, 2, 3, 4</li><li> poor, average, mastery</li><li>The order depends on whether you chose ascending or descending during initiating the creation</li></ul></li>
+								 <li>Fill out the first column with the grading criteria</li>
+								 <li>Fill out the remaining rows of the rubric with the grading descriptions associated with the rows criteria and the value associated with that column</li>
+		           </ol>
+		         </div>
+		         <div class="modal-footer">
+		           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		         </div>
+		       </div>
+
+		     </div>
+		   </div>
+
+</div>
     </form>
 </div>
 </div>
