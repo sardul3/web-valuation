@@ -971,7 +971,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
     avg = total/count
     evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
-                student=student_name, measure=measure, evaluated_by = request.user.username)
+                student=student_name, measure=measure, evaluated_by = request.user.email)
 
     evaluated.save()
     eval = Evaluator.objects.filter(email=request.user.email)[0]
@@ -1230,3 +1230,6 @@ def generate_outcome_report(request, outcome_id):
     'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id,
     'count':measures.count()+1}
     return render(request, 'main/outcome_report.html', context)
+
+def admin_instructions(request):
+    return render(request, 'main/admin_instructions.html')

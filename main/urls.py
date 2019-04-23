@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('generate_outcome_report/<int:outcome_id>', views.generate_outcome_report, name = 'generate_outcome_report'),
 
+     path('admin_instructions', views.admin_instructions, name = 'admin_instructions'),
 
 
 
