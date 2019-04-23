@@ -2,10 +2,6 @@
 {%load static%}
 {%block body_block%}
 
-
-
-
-
 <style>
 .accordion {
   background-color: #eee;
@@ -87,7 +83,7 @@
                 </p>
             </div>
         </div>
-      <button class="accordion">Add Outcome(s) to Cycle</button>
+      <button class="accordion">Add Outcome to Cycle</button>
       <div class="panel">
         <p>
           <ul>
@@ -172,6 +168,7 @@
           <li>The <b>'+'</b> should have been selected triggering a popup menu</li>
           <li>Fill out the <i>Title</i> field with the outcome title</li>
           <li>Fill out the <i>Description</i> field with the outcome description</li>
+          <li>Select the courses, if any, that the outcome will be associated with</li>
           <li>Select <b>'Add'</b></li>
         </ol>
       </p>
@@ -275,7 +272,67 @@
         </ol>
      </p>
     </div>
+    <br>
+    <br>
+    <h4>Broadcast Message</h4>
+    <button class="accordion">What is a Broadcast Message</button>
+    <div class="panel">
+      <p>
+        <ul>
+        <li>A message that is sent from the admin to an evaluator</li>
+        <li>Broadcasts can be sent to notify evaluators of schedule change with their evaluation, evaluation urgencies, if an evaluation has been cancelled, etc</li>
+          </ul>
+     </p>
+    </div>
+    <button class="accordion">How to Send a Broadcast Message</button>
+    <div class="panel">
+      <p>
+        <ol>
+          <li>Find the 'Broadcast Message' widget on the admin dashboard</li>
+          <li>Select the evaluator to message from the list of evaluator names</li>
+          <li>Type the message in the message box</li>
+          <li>Select <b>'Send'</b></li>
 
+        </ol>
+     </p>
+    </div>
+    <br>
+    <br>
+    <h4>Curriculum Mapping</h4>
+    <button class="accordion">What is Curriculum Mapping</button>
+    <div class="panel">
+      <p>
+
+        Curriculum mapping enables an admin to track the classes an outcome is associated with. Mapping an outcome to classes allows the admin
+        to determine whether specific classes are/aren't satisfying their requirements
+     </p>
+    </div>
+    <button class="accordion">How to Enable Curriculum Mapping</button>
+    <div class="panel">
+      <p>
+        <h6 style="font-weight:bold;">Create a Curriculum</h6>
+        <ol>
+        <li>Find the 'Create Curriculum' widget on the admin dashboard</li>
+        <li>Fill in the Course Title</li>
+        <li>Fill in the course description</li>
+        <li>Fill in the number of credit hours</li>
+        <li>Select <b>'Create'</b></li>
+        </ol>
+        <h6 style="font-weight:bold;">Add Curriculum to Outcomes</h6>
+        <ul>
+          <li>If the outcome is already created:
+        <ol>
+          <li>Access the outcome</li>
+          <li>Select <b>'Edit'</b></li>
+          <li>Select the courses to map to an outcome</li>
+        </ol>  </li>
+        <li>If the outcome has not been created:
+          <ol>
+            <li>Create the outcome</li>
+            <li>During creation, select the classes the outcome will be mapped to</li>
+            </ol>
+     </p>
+    </div>
 
 
 </div>
