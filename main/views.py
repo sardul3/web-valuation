@@ -910,9 +910,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     myvals = category_score.objects.filter(student=student_real)
     for vals in myvals:
         vals.delete()
-    for x in range(rubric_row-1):
+    for x in range(0,rub.max_row-1):
+        print(mysc[x])
         score = mysc[x]
-        custom_cat = category_score(student=student_real,header=super_header[x],score=mysc[x])
+        custom_cat = category_score(student=student_real, header=super_header[x], score=mysc[x])
         if score.isdigit():
             myscore = int(score)
         else:
