@@ -87,8 +87,6 @@ def rubric_data(measure_id):
 
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
-        print(rubric_average)
-        print(above_rubric_average)
 
     else:
         percent_pass_cases=100
