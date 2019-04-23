@@ -23,8 +23,8 @@ def test_score_data(test_score_test, measure_id):
     total_students = custom_students.objects.filter(measure=measure, current=True).count()
     # total_students = test_score.count()
     # test_average = test_score.aggregate(Avg('score'))['score__avg']
-    test_average = test_score.aggregate(Avg('grade'))['grade__avg']
-    greater_than_avg = test_score.filter(score__gte = test_average).count()
+    # test_average = test_score.aggregate(Avg('grade'))['grade__avg']
+    # greater_than_avg = test_score.filter(score__gte = test_average).count()
     # greater_than_avg = test_score.filter(grade__gte=test_average).count()
     passed = False
     margin = 0.0
@@ -63,7 +63,7 @@ def test_score_data(test_score_test, measure_id):
 
     data = dict(test_score= test_score, total_students = total_students,
                         test_average= test_average, above_threshold= above_threshold,
-                        percentage=percentage,greater_than_avg = greater_than_avg,
+                        percentage=percentage,
                         measure=measure, passed=passed, bin_array=bin_array,
                          count=range(len(bin_array)), margin= margin)
 
