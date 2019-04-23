@@ -12,7 +12,11 @@
   .speech-bubble { position: relative; background: rgba(189,149,90, 0.15); border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color:rgba(189,149,90,0.15); border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
 
 </style>
-
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $('[data-toggle="popover"]').popover();
+	});
+</script>
 
 
 
@@ -71,6 +75,29 @@
                <div class="modal-footer">
                  <button type="submit" class="btn btn-primary">Add</button>
                </div>
+
+               <div class="text-right">
+           		<div class="dropdown">
+           	     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Help
+           	     <span class="caret"></span></button>
+           	     <ul class="dropdown-menu">
+           	       <li class="dropdown-header" data-toggle="popover" title="Cutoff-Percent" data-placement="right" data-content="The cutoff-percent is the percent of students that must meet the cutoff score" data-trigger="hover" ><a href="#">Cutoff-percent</a></li>
+                   <div class="dropdown-divider"></div>
+           				 <li class="dropdown-header" data-toggle="popover" title="Cutoff Type" data-placement="right" data-content="Will the students be expected to achieve an average score, score in a minimum percentile, or score a minimum percent" data-trigger="hover" ><a href="#">Cutoff Type</a></li>
+           				 <center><li class="dropdown-header" data-toggle="popover" title="Percentage Example" data-placement="right" data-content="Students will answer correctly 60% or more of questions" data-trigger="hover" ><a href="#">Percentage</a></li></center>
+                   <center><li class="dropdown-header" data-toggle="popover" title="Average Example" data-placement="right" data-content="Students will have an average rubric score of 3 of greater" data-trigger="hover" ><a href="#">Average</a></li></center>
+                   <center><li class="dropdown-header" data-toggle="popover" title="Percentile Example" data-placement="right" data-content="Students will score at or above the 50th percentile" data-trigger="hover" ><a href="#">Percentile</a></li></center>
+                   <div class="dropdown-divider"></div>
+           				 <li class="dropdown-header" data-toggle="popover" title="Cutoff-Score" data-placement="right" data-content="The score students are expected to meet in order for the measure to pass" data-trigger="hover" ><a href="#">Cutoff-Score</a></li>
+                   <div class="dropdown-divider"></div>
+           				 <li class="dropdown-header" data-toggle="popover" title="Tool Type" data-placement="right" data-content="The type of tool that will be used to prove the measure" data-trigger="hover" ><a href="#">Tool Type</a></li>
+                   <center><li class="dropdown-header" data-toggle="popover" title="Rubric" data-placement="right" data-content="Select rubric if a rubric will be used to prove the measure" data-trigger="hover" ><a href="#">Rubric</a></li></center>
+                   <center><li class="dropdown-header" data-toggle="popover" title="Test Score" data-placement="right" data-content="Select test score if a test score, class grade, standardized test grade, etc will be used to prove the measure" data-trigger="hover" ><a href="#">Test Score</a></li></center>
+
+
+           	     </ul>
+           	   </div>
+           		 </div>
              </form>
            </div>
 
