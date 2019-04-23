@@ -14,6 +14,7 @@ urlpatterns = [
     path('rubric_render/<int:rubric_id>', views.rubric_render, name = 'rubric_render'),
 
     path('edit_rubric/<int:rubric_id>', views.edit_rubric, name = 'edit_rubric'),
+    path('admin_instructions', views.admin_instructions, name = 'admin_instructions'),
 
 
     path('evaluate_students/', views.evaluate_students, name = 'evaluate_students'),

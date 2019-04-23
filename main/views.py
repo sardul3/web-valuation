@@ -973,3 +973,6 @@ def assign_evaluatorToTest(request, measure_id, outcome_id):
         custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator)
         custom_student.save()
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+def admin_instructions(request):
+    return render(request, 'main/admin_instructions.html')
