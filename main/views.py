@@ -24,7 +24,7 @@ def test_score_data(test_score_test, measure_id):
     # total_students = test_score.count()
     # test_average = test_score.aggregate(Avg('score'))['score__avg']
     test_average = test_score.aggregate(Avg('grade'))['grade__avg']
-    # greater_than_avg = test_score.filter(score__gte = test_average).count()
+    greater_than_avg = test_score.filter(score__gte = test_average).count()
     # greater_than_avg = test_score.filter(grade__gte=test_average).count()
     passed = False
     margin = 0.0
@@ -63,7 +63,7 @@ def test_score_data(test_score_test, measure_id):
 
     data = dict(test_score= test_score, total_students = total_students,
                         test_average= test_average, above_threshold= above_threshold,
-                        percentage=percentage,
+                        percentage=percentage,greater_than_avg = greater_than_avg,
                         measure=measure, passed=passed, bin_array=bin_array,
                          count=range(len(bin_array)), margin= margin)
 
@@ -85,7 +85,7 @@ def rubric_data(measure_id):
 
     avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
     number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
-    # above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points, current=True).count()
+    above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points, current=True).count()
 
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
@@ -116,7 +116,7 @@ def rubric_data(measure_id):
         'student_count':student_count,
         'evaluated_student_count': evaluated_student_count,
         'avg_points': avg_points,
-        # 'above_avg':above_avg,
+        'above_avg':above_avg,
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
         'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed,
@@ -141,11 +141,12 @@ def outcomes(request):
     cycles = Cycle.objects.all()
     data = dict()
     for measure in measures:
-        if measure.tool_type == 'Rubric':
-            data.update({measure.id: rubric_data(measure.id)})
-        elif measure.tool_type == 'Test score':
-            data.update({measure.id: test_score_data(measure.test_score, measure.id)})
-    print(data)
+        evaluations = evaluate_rubric.objects.filter(measure=measure).count()
+        if(evaluations>0):
+            if measure.tool_type == 'Rubric':
+                data.update({measure.id: rubric_data(measure.id)})
+            elif measure.tool_type == 'Test score':
+                data.update({measure.id: test_score_data(measure.test_score, measure.id)})
 
     context = {'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active','notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at' ), 'data':data
