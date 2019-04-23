@@ -212,7 +212,7 @@ def evaluatorhome(request):
             else:
                 eval.perc_completed=(graded/total)*100.0
 
-        context = {'evaluator':evaluator_list}
+        context = {'evaluator':evaluator_list, 'cycles':cyc}
         return render(request, 'main/adminhome.html', context)
     else:
         rubrics = Rubric.objects.all()
