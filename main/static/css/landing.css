@@ -196,6 +196,12 @@ h4{
     background-color: aliceblue;
 }
 
+.rubric_form_control{
+  width: auto !important;
+  padding: 0 !important;
+
+}
+
 .modal-header {
     border-bottom: 2px solid #800029;
 }

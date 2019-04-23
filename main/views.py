@@ -21,16 +21,13 @@ def test_score_data(test_score_test, measure_id):
     # test_score = Test_score.objects.filter(test=test_score_test)
     test_score = custom_students.objects.filter(measure=measure, graded=True, current=True)
     total_students = custom_students.objects.filter(measure=measure, current=True).count()
-    # total_students = test_score.count()
-    # test_average = test_score.aggregate(Avg('score'))['score__avg']
-    test_average = test_score.aggregate(Avg('grade'))['grade__avg']
-    # greater_than_avg = test_score.filter(score__gte = test_average).count()
-    greater_than_avg = test_score.filter(grade__gte=test_average).count()
+
     passed = False
     margin = 0.0
     data = {}
     above_threshold = None
     percentage = None
+    test_average = 0
 
     bin_array = []
     for student_score in test_score:
@@ -46,6 +43,9 @@ def test_score_data(test_score_test, measure_id):
     if(measure.cutoff_type == 'Percentage'):
             above_threshold = test_score.filter(grade__gte = measure.cutoff_score).count()
             percentage = above_threshold / total_students * 100
+            test_average = test_score.aggregate(Avg('grade'))['grade__avg']
+            above_test_average = custom_students.objects.filter(measure=measure, current=True, graded = True, grade__gte = test_average).count()
+
             if(percentage>=measure.cutoff_percentage):
                 passed = True
 
@@ -63,7 +63,7 @@ def test_score_data(test_score_test, measure_id):
 
     data = dict(test_score= test_score, total_students = total_students,
                         test_average= test_average, above_threshold= above_threshold,
-                        percentage=percentage, greater_than_avg = greater_than_avg,
+                        percentage=percentage, above_test_average = above_test_average,
                         measure=measure, passed=passed, bin_array=bin_array,
                          count=range(len(bin_array)), margin= margin)
 
@@ -75,6 +75,8 @@ def rubric_data(measure_id):
     evaluator_count = 0
     student_count = 0
     evaluated_student_count = 0
+    rubric_average = 0
+    above_rubric_average = 0
 
     students = measure.student.all()
     evaluator_count = measure.evaluator.all().count()
@@ -83,12 +85,15 @@ def rubric_data(measure_id):
     evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
 
 
-    avg_points = evaluate_rubric.objects.filter(measure=measure).aggregate(Avg('grade_score'))['grade_score__avg']
     number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
-    above_avg = custom_students.objects.filter(measure=measure,grade__gte = avg_points, current=True).count()
 
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
+        rubric_average = custom_students.objects.filter(type='Rubric', graded=True, measure=measure, current=True).aggregate(Avg('grade'))['grade__avg']
+        above_rubric_average = custom_students.objects.filter(type='Rubric', current=True, graded=True, measure=measure, grade__gte=rubric_average).count()
+        print(rubric_average)
+        print(above_rubric_average)
+
     else:
         percent_pass_cases=100
 
@@ -106,6 +111,7 @@ def rubric_data(measure_id):
 
     passed = False
     if(measure.cutoff_type == 'Percentage'):
+
             if(percent_pass_cases>=measure.cutoff_percentage):
                 passed = True
                 Measure.objects.filter(id=measure_id).update(status='passing')
@@ -115,12 +121,12 @@ def rubric_data(measure_id):
         'evaluator_count':evaluator_count,
         'student_count':student_count,
         'evaluated_student_count': evaluated_student_count,
-        'avg_points': avg_points,
-        'above_avg':above_avg,
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
         'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed,
-        'ev_cats':ev_cats
+        'ev_cats':ev_cats,
+        'rubric_average':rubric_average,
+        'above_rubric_average':above_rubric_average
     }
 
 
@@ -1207,5 +1213,6 @@ def generate_outcome_report(request, outcome_id):
         data.update({ measure.id: [evaluated_student_count, number_of_pass_cases, measure.measureTitle, measure.statusPercent, measure.status]})
         print(data)
     context = {'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
-    'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id}
+    'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id,
+    'count':measures.count()+1}
     return render(request, 'main/outcome_report.html', context)
