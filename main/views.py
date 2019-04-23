@@ -153,7 +153,8 @@ def outcomes(request):
 
 def rubrics(request):
     rubrics = Rubric.objects.all()
-    context = {'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
+
+    context = {'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
     return render(request, 'main/rubrics.html', context)
 
@@ -427,6 +428,18 @@ def dashboard(request):
     #
     # context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
     #             'cycles': cycles, 'notifications':notifications, 'measures':measures}
+    outcomes = Outcome.objects.all()
+    measures = Measure.objects.all()
+    cycles = Cycle.objects.all()
+    data = dict()
+    for measure in measures:
+        evaluations = evaluate_rubric.objects.filter(measure=measure).count()
+        if(evaluations>0):
+            if measure.tool_type == 'Rubric':
+                data.update({measure.id: rubric_data(measure.id)})
+            elif measure.tool_type == 'Test score':
+                data.update({measure.id: test_score_data(measure.test_score, measure.id)})
+
     cyc = Cycle.objects.all()
     mycyc = 0
     for cycles in cyc:
@@ -452,7 +465,7 @@ def dashboard(request):
                 if (eval == eval_more):
                     evaluator_list.append(eval)
 
-    context = {'evaluator': evaluator_list, 'dashboard':'active',
+    context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
             'notification_count' : Notification.objects.filter(read=False).count(),
             'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc
             }
@@ -480,7 +493,7 @@ def cycle(request, cycle_id):
     prev_cycles = Cycle.objects.filter(isCurrent=False)
     courses = Course.objects.all()
 
-    context = {'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
+    context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles,
                 'courses':courses,'notification_count' : Notification.objects.filter(read=False).count(),
                 'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
@@ -561,7 +574,7 @@ def outcome_detail(request, outcome_id):
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
 
 
-    context = {'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+    context = {'evaluator': Evaluator.objects.all(),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student,
                 'notification_count' : Notification.objects.filter(read=False).count(),
@@ -1210,4 +1223,5 @@ def generate_outcome_report(request, outcome_id):
     return render(request, 'main/outcome_report.html', context)
 
 def admin_instructions(request):
-    return render(request, 'main/admin_instructions.html')
+    return render(request, 'main/admin_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})

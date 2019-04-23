@@ -117,17 +117,17 @@
       <li class="nav-item {{dashboard}}" >
         <a class="nav-link" href="{%url 'main:dashboard'%}" >Dashboard</a>
       </li>
-      <li class="nav-item {{outcome}}" >
+
+      
+      <!-- <li class="nav-item {{outcome}}" >
         <a class="nav-link" href="{%url 'main:outcomes'%}">Outcomes</a>
-      </li>
-<!--
-      <li class="nav-item {{cycle}}" >
-        <a class="nav-link" href="{%url 'main:cycles'%}">Cycles</a>
       </li> -->
 
       <li class="nav-item {{rubric}}" >
         <a class="nav-link" href="{%url 'main:rubrics'%}">Rubrics</a>
       </li>
+
+
 
       <li class="nav-item {{evaluatorhome}}">
   <a class = "nav-link" href="{%url 'main:homepage'%}">Act as Evaluator</a>
@@ -140,7 +140,7 @@
 
              <!--A CIRCLE LIKE BUTTON TO DISPLAY NOTIFICATION DROPDOWN.-->
              <a id="noti_Button" >
-               <span style="font-size: 2em; color: #7a2831;">
+               <span style="font-size: 2rem; color: #7a2831;">
 
                <i class="fas fa-bell"></i>
                </span>
@@ -164,6 +164,19 @@
              </div>
          </li>
 
+
+
+         <li class="nav-item {{msg}}" >
+         <a id="noti_Button" data-toggle="modal" data-target="#exampleModalCenter" >
+           <span style="font-size: 2rem; color: #7a2831;">
+              <i class="fas fa-envelope-open-text"></i>
+            </span>
+         </a>
+       </li>
+
+
+
+
          <li class="nav-item {{help}}" >
            <a id="noti_Button" class = "nav-link" href="{% url 'main:admin_instructions'%}">
              <span style="font-size: 2rem; color: #7a2831;">
@@ -174,9 +187,9 @@
 
 
 
-<li class="nav-item {{logout}}">
-  <a class = "nav-link" href="{%url 'main:logout'%}">Log Out</a>
-</li>
+        <li class="nav-item {{logout}}">
+          <a class = "nav-link" href="{%url 'main:logout'%}">Log Out</a>
+        </li>
 
 
 
@@ -194,6 +207,41 @@
 </div>
 
 
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+ <span aria-hidden="true">&times;</span>
+</button>
+<div class="modal-body">
+  <div class = "card border-dark mb-3">
+    <h3 class = "card-header title text-center"> Send a broadcast </h3>
+    <div class="container p-2">
+      <form action = "{%url 'main:broadcast'%}" method = 'POST'>
+        {%csrf_token%}
+      <div class="form-group">
+        <label for="exampleFormControlSelect2">Select a evaluator</label>
+        <select multiple class="form-control" id="exampleFormControlSelect2" name = "evaluator">
+          {%for ev in evaluator%}
+          <option value = "{{ev.email}}">{{ev.name}}</option>
+          {%endfor%}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Message</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
+      </div>
+      <div class = "text-center">
+        <button type="submit" class="btn btn-primary btn-lg">Send</button>
+      </div>
+    </form>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
 
 
 <script>

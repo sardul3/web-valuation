@@ -8,7 +8,6 @@
 
       <div class = "col col-lg-2 col-md-12 col-sm-12 col-xs-12 col-12">
         <div class="card border-dark mb-3">
-
             <div class="card-header text-center"><h5>{{cycle.semester}} {{cycle.year}}</h5></div>
             <div class="card-body text-dark text-center">
               <h5 class="card-title">Started at</h5>
@@ -34,6 +33,33 @@
 
             </div>
           </div>
+
+
+          <div class = "card border-dark mb-3">
+            <h3 class = "card-header title text-center"> Create a curriculum </h3>
+            <div class="container p-2">
+              <form action = "{%url 'main:create_curriculum'%}" method = 'POST'>
+                {%csrf_token%}
+              <div class="form-group">
+                <label for="exampleFormControlSelect2">Course Title</label>
+                <input class="form-control" type="text" name="title"></input>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Description</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Credit hours</label>
+                <input class="form-control" type="number" name="credit_hours"></input>
+              </div>
+
+              <div class = "text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Create</button>
+              </div>
+            </form>
+            </div>
+          </div>
+
       </div>
 
 
