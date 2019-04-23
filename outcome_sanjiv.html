@@ -1,0 +1,151 @@
+{% extends  'main/adminbase.html' %}
+{%load static%}
+{% block body_block%}
+
+<style>
+  @media (max-width: 576px) {
+  .outcome_title{
+    font-size: 0.80rem;
+  }
+  }
+</style>
+
+    <div class = "container-fluid">
+      <div class = "container" id = "main_content">
+        <div class = "col col-lg-12 col-md-12 col-sm-12">
+                  <div  class = "card border-dark mb-3 justify-content-center" >
+                    <h3 class = "card-header title">
+                    <div class = "d-flex justify-content-between">
+                      <span>Outcomes</span>
+                    </div>
+                    </h3>
+
+        <ul id = "over" class="list-group" style="overflow-y:scroll; height: 50vh">
+    {%for outcome in outcomes%}
+        <div class="accordion" id="accordionExample">
+          {%for cycle in outcome.cycle.all%}
+            {%if cycle.isCurrent%}
+
+
+
+
+
+          <div class="card" >
+            <div class="card-contents" id="headingOne" data-toggle="collapse" data-target="#collapseOne{{outcome.id}}" aria-expanded="true" aria-controls="collapseOne">
+              <h2 class="mb-0 d-flex justify-content-between" >
+                <span class="btn text-left"  style="text-decoration:none;">
+                  <h5 class = "outcome_title">  {{outcome.title}} </h5>
+                </span>
+                <i class="fas fa-chevron-down mr-4 justify-items-center" style="color:#7a2831"></i>
+
+              </h2>
+            </div>
+
+            <div id="collapseOne{{outcome.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div class="card-body justify-content-between">
+                <ul class="list-group ">
+                  {%for measure in measures%}
+                    {%if measure.outcome == outcome%}
+                    <div class = "row ">
+                      <div class = "col col-lg-12 d-flex justify-content-between">
+                          <button class = "btn btn-sm btn-warning mb-2 " data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}">
+                          {{measure.cutoff_percentage}} % of the students need to get
+                          {%if measure.cutoff_score%}
+                           {{measure.cutoff_score}}
+                           {%else%}
+                           average
+                           {%endif%}
+                              or higher
+                          on {{measure.tool_type}}:
+                          {%if measure.tool_type == "Rubric"%}
+                            <strong>{{measure.rubric}}</strong>
+                          {%elif measure.tool_type == "Test score"%}
+                            <strong>{{measure.test_score}}</strong>
+                          {%endif%}
+                          </button>
+
+                          <div class="modal fade" id="exampleModalCenter{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">Detailed Stats</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="card bg-light mb-3">
+                                    <div class="card-header">{{measure}}</div>
+                                    <div class="card-body">
+                                      <h5 class="card-title">Tool type: {{measure.tool_type}}</h5>
+                                      <p class="card-text">
+
+                                          {%for k, v in data.items %}
+
+                                            {%if v.measure.id == measure.id%}
+
+                                            Total evaluators: {{v.evaluator_count}} <br>
+                                            Total students evaluated: {{v.evaluated_student_count}} <br>
+                                            Average Points: {{v.avg_points|floatformat:2}} <br>
+                                            Percentage passed: {{v.percent_pass_cases|floatformat:2}}% <br>
+                                            Status: {% if v.passed%} passed {%else%} failed {%endif%}
+                                            <div class = "progress " style="background:#9aa1a7;">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="40"
+                                            aria-valuemin="0" aria-valuemax="100" style="width:{{measure.statusPercent}}%;
+                                                          {%if measure.status == 'passing'%}
+                                                            background:green;
+                                                          {%elif measure.status == 'failing'%}
+                                                            background:red;
+                                                          {%endif%}
+                                                        ">
+                                            Satisfied
+                                            by {{measure.statusPercent|floatformat:0}}%
+                                            </div>
+                                    </div>
+
+
+                                            {%endif%}
+                                          {%endfor%}
+
+                                      </p>
+                                    </div>
+                                  </div>
+
+
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+
+
+                          <span>
+                          {%if measure.statusPercent > 0.0%}
+                          {{measure.statusPercent|floatformat:2}}% {{measure.status}}
+                          {%else%}
+                            <span>  not started </span>
+                          {%endif%}
+                         </span>
+                      </div>
+
+                    </div>
+                    {%endif%}
+                  {%endfor%}
+                </ul>
+              </div>
+            </div>
+    </div>
+          {%endif%}
+          {%endfor%}
+        </div>
+
+  {%endfor%}
+</div>
+</div>
+</div>
+</div>
+
+
+{%endblock%}
