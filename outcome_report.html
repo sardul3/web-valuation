@@ -1,0 +1,48 @@
+{% extends  'base.html' %}
+{%load static%}
+{% block body_block %}
+<style media="screen">
+  th{
+    text-align:center;
+    vertical-align: middle;
+  }
+  @media print{
+    ;
+  }
+</style>
+
+<div class="container-fluid">
+
+
+<h2 ><center>Summary Report</center></h2>
+<div class="table-responsive">
+<table class="table table-bordered table-hover table-sm">
+  <tr>
+    <th class="align-middle">Outcome</th>
+    <th class="align-middle">Measure</th>
+    <th class="align-middle">Number of Evaluations</th>
+    <th class="align-middle">Number meeting Criteria</th>
+    <th class="align-middle">Percentage Meeting Criteria</th>
+    <th class="align-middle">Results</th>
+  </b>
+  </tr>
+
+  <tr>
+      <th class="align-middle" rowspan="{{count}}">{{outcome}}</th>
+  </tr>
+{%for k,m in data.items%}
+
+  <tr>
+      <td>{{m.2}}</td>
+      <td >{{m.0}} </td>
+      <td >{{m.1}} </td>
+      <td>{{m.3}} </td>
+      <td>{{m.4}}</td>
+  </tr>
+{%endfor%}
+
+</table>
+</div>
+</div>
+
+{% endblock %}
