@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{%block body_block %}
+<style>
+  #main_content{
+    border: 3px solid black;
+    margin-top: 1%;
+    padding: 2%;
+  }
+  @media (max-width: 576px) {
+
+    #main_content{
+      width: 15rem;
+      margin-top: 10px;
+      padding: 2%;
+    }
+  }
+</style>
+
+<div class = "container login" id = "main_content" class = "container card border-primary bg-light mb-3 form-row" style="width: 30rem; z-index=1;">
+    <form method="POST">
+        {% csrf_token %}
+        <p class = "text-center">
+          <img src = "{% static 'assets/images/app_logo.png' %}" class="img-fluid" alt="Responsive image" id = "logo" style="height:50%; width:50%;" />
+        </p>
+        {{form|crispy}}
+        <div class = "col-auto col-lg-12 login_opts">
+            <button type="submit" class = "btn btn-primary btn-block btn-lg ">Sign up</button>
+        </div>
+    </form>
+
+    <div>
+        Already have account? <a href="/">Sign In</a>
+    </div>
+</div>
+{% endblock %}

@@ -4,9 +4,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course, Notification, category_score
+from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course, Notification, category_score,CoOrdinator
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import RegisterForm, CoOrdinatorRegisterForm
 import csv
 import codecs
 import io
@@ -126,7 +126,7 @@ def rubric_data(measure_id):
 
 
 def admin_test(user):
-    return user.is_superuser
+    return user.is_staff
 
 
 def homepage(request):
@@ -168,7 +168,7 @@ def cycles(request):
 
 @login_required
 def evaluatorhome(request):
-    if request.user.is_superuser:
+    if request.user.is_staff:
         cyc = Cycle.objects.all()
         mycyc = 0
         for cycles in cyc:
@@ -635,6 +635,28 @@ def register(request):
     else:
         form = RegisterForm()
         return render(request, 'main/register.html', {'form': form})
+
+
+def registerCo(request):
+    if request.method == "POST":
+        form = CoOrdinatorRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            dept = form.cleaned_data.get('department')
+            co = CoOrdinator(name=username,email=email,department=dept)
+            co.save()
+            messages.success(request, 'Account created')
+
+            return redirect('/')
+        else:
+            messages.add_message(request, messages.SUCCESS, 'Please check your credentials')
+            return render(request, 'main/registerCo.html', {'form': form})
+
+    else:
+        form = CoOrdinatorRegisterForm()
+        return render(request, 'main/registerCo.html', {'form': form})
 
 
 def add_learning_outcome(request, cycle_id):

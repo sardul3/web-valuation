@@ -1,12 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import  User
 
+
+class CoOrdinator(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.CharField(max_length=200)
+    department = models.CharField(max_length=200)
+
 class Evaluator(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=200)
     invited_by = models.CharField(max_length=200, default="Admin")
     perc_completed = models.FloatField(null=True,blank=True,default=0.0)
-
+    coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 
@@ -24,7 +30,7 @@ class Cycle(models.Model):
     startDate = models.DateField(default=None)
     endDate = models.DateField(default=None, null=True)
     isCurrent = models.BooleanField(default=True)
-
+    coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
     def __str_(self):
         return self.year
 
@@ -36,6 +42,7 @@ class Rubric(models.Model):
     created_by = models.CharField(max_length=200)
     assigned_to = models.ManyToManyField(Evaluator)
     ascending = models.BooleanField(null=True, default=True)
+    coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -62,6 +69,7 @@ class Outcome(models.Model):
     status = models.BooleanField(default=True)
     cycle = models.ManyToManyField(Cycle)
     course = models.ManyToManyField(Course)
+    coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -114,6 +122,7 @@ class Measure(models.Model):
     test_score = models.ForeignKey(Test_score, null=True, blank = True, on_delete = models.CASCADE)
     student = models.ManyToManyField(Student)
     evaluator = models.ManyToManyField(Evaluator)
+    coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.measureTitle
