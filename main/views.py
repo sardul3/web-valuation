@@ -76,11 +76,9 @@ def rubric_data(measure_id):
     student_count = 0
     evaluated_student_count = 0
     rubric_average = 0
-    above_rubric_average = 0
 
     students = measure.student.all()
     evaluator_count = measure.evaluator.all().count()
-    # student_count = measure.student.all().count()
     student_count = custom_students.objects.filter(measure=measure, current=True).count()
     evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
 
@@ -89,8 +87,6 @@ def rubric_data(measure_id):
 
     if evaluated_student_count>0:
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
-        rubric_average = custom_students.objects.filter(type='Rubric', graded=True, measure=measure, current=True).aggregate(Avg('grade'))['grade__avg']
-        above_rubric_average = custom_students.objects.filter(type='Rubric', current=True, graded=True, measure=measure, grade__gte=rubric_average).count()
         print(rubric_average)
         print(above_rubric_average)
 
@@ -124,9 +120,7 @@ def rubric_data(measure_id):
         'number_of_pass_cases': number_of_pass_cases,
         'percent_pass_cases': percent_pass_cases,
         'evaluated_list':evaluated_list, 'bin_array':bin_array, 'measure':measure, 'passed':passed,
-        'ev_cats':ev_cats,
-        'rubric_average':rubric_average,
-        'above_rubric_average':above_rubric_average
+        'ev_cats':ev_cats
     }
 
 
