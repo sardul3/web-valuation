@@ -1196,8 +1196,8 @@ def generate_outcome_report(request, outcome_id):
     for measure in measures:
         evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
         number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
-        data.update({measure.id: [evaluated_student_count, number_of_pass_cases]})
-        print(data[measure.id][0])
+        data.update({ measure.id: [evaluated_student_count, number_of_pass_cases, measure.measureTitle, measure.statusPercent, measure.status]})
+        print(data)
     context = {'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
-    'number_of_pass_cases':number_of_pass_cases, 'data':data}
+    'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id}
     return render(request, 'main/outcome_report.html', context)

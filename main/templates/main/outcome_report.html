@@ -26,14 +26,13 @@ table, th, td {
   <tr>
       <th rowspan="5">{{outcome}}</th>
   </tr>
-
-{%for m in measures%}
+{%for k,m in data.items%}
   <tr>
-    <td>{{m.measureTitle}}</td>
-      <td >{{data.m.id.0}} </td>
-      <td >{{number_of_pass_cases}} </td>
-      <td>{{m.statusPercent}} </td>
-      <td>{{m.status}}</td>
+    <td>{{m.2}}</td>
+      <td >{{m.0}} </td>
+      <td >{{m.1}} </td>
+      <td>{{m.3}} </td>
+      <td>{{m.4}}</td>
   </tr>
 {%endfor%}
 </table>
