@@ -56,7 +56,7 @@
               <td> {{st.student_name}} </td>
               <td> {{st.grade|floatformat:2}} </td>
               <td>
-                <table>
+                <table style="width:100%;">
                   <tr>
               {%for cat in ev_cats%}
                 {%if cat.student.id == st.id%}

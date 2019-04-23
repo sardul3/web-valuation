@@ -12,9 +12,79 @@
 <div class = "container-fluid">
   <div class = "container" id = "main_content">
 
+    <div class = "row">
+       <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+         <div class = "card border-dark mb-3">
+           <h3 class = "card-header title text-center"> Start a new cycle </h3>
 
+           <form action = "{% url 'main:newCycle' %}" method = "POST" >
+             {% csrf_token%}
+             <div class="row mt-4 ml-2 mr-2">
+               <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12">
+                  <div class="form-group">
+                    <input type="text" name = "year" class="form-control" placeholder="Year" required>
+                  </div>
+               </div>
+               <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12">
+                 <div class="form-group">
+                   <input type="text" name = "semester" class="form-control" placeholder="Semester" required>
+                 </div>
+               </div>
+             </div>
+
+
+             <div class = "row p-1">
+               <div class = "col col-12 ml-0.5">
+             <div class="form-group">
+               <button type = "submit" class = "btn btn-primary btn-lg btn-block">Start</button>
+             </div>
+             </div>
+           </div>
+           </form>
+
+           </div>
+           </div>
+
+      <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+       <div class = "card border-dark mb-3" >
+         <h3 class = "card-header title text-center"> Previous Cycles </h3>
+         <ul class="list-group" style="overflow-y:scroll; height: 18vh">
+           {%for cycle in cycles%}
+             {%if cycle.isCurrent == False %}
+             <li class="list-group-item d-flex justify-content-between align-items-center">
+               {{cycle.semester}}: {{cycle.year}}
+             <a href = "{% url 'main:cycle' cycle.id %}">
+               <button class = "btn btn-primary"> Visit </button>
+             </a>
+             </li>
+             {%endif%}
+           {%endfor%}
+         </ul>
+       </div>
+     </div>
+
+     <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+       <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
+         <h3 class = "card-header title text-center">Running Cycles </h3>
+         <ul class="list-group" style="overflow-y:scroll; height: 18vh">
+           {%for cycle in cycles%}
+             {%if cycle.isCurrent %}
+             <li class="list-group-item d-flex justify-content-between align-items-center">
+               {{cycle.semester}}: {{cycle.year}}
+             <a href = "{% url 'main:cycle' cycle.id %}">
+               <button class = "btn btn-primary"> Visit </button>
+             </a>
+             </li>
+             {%endif%}
+           {%endfor%}
+         </ul>
+       </div>
+     </div>
+
+</div>
+<hr/>
 <div class = "row">
-    <div class = "col col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12">
+    <div class = "col col-lg-4 col-md-6 col-sm-12 col-xs-12 col-12">
 
        <div class = "card border-dark mb-3">
          <h3 class = "card-header title text-center"> Evaluator Progress </h3>
@@ -42,7 +112,7 @@
 
 
 
-     <div class = "col col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12">
+     <div class = "col col-lg-4 col-md-6 col-sm-12 col-xs-12 col-12">
 
         <div class = "card border-dark mb-3">
           <h3 class = "card-header title text-center"> Send a broadcast </h3>
@@ -68,42 +138,41 @@
           </div>
         </div>
       </div>
-</div>
 
+      <div class = "col col-lg-4 col-sm-12 col-xs-12 col-12">
+        <div class = "card border-dark mb-3">
+          <h3 class = "card-header title text-center"> Create a curriculum </h3>
+          <div class="container p-2">
+            <form action = "{%url 'main:create_curriculum'%}" method = 'POST'>
+              {%csrf_token%}
+            <div class="form-group">
+              <label for="exampleFormControlSelect2">Course Title</label>
+              <input class="form-control" type="text" name="title"></input>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Description</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Credit hours</label>
+              <input class="form-control" type="number" name="credit_hours"></input>
+            </div>
 
-
-<div class = "row">
-  <div class = "col col-lg-4 col-sm-12 col-xs-12 col-12">
-    <div class = "card border-dark mb-3">
-      <h3 class = "card-header title text-center"> Create a curriculum </h3>
-      <div class="container p-2">
-        <form action = "{%url 'main:create_curriculum'%}" method = 'POST'>
-          {%csrf_token%}
-        <div class="form-group">
-          <label for="exampleFormControlSelect2">Course Title</label>
-          <input class="form-control" type="text" name="title"></input>
-
+            <div class = "text-center">
+              <button type="submit" class="btn btn-primary btn-lg">Create</button>
+            </div>
+          </form>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1">Description</label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1">Credit hours</label>
-          <input class="form-control" type="number" name="credit_hours"></input>
-        </div>
-
-        <div class = "text-center">
-          <button type="submit" class="btn btn-primary btn-lg">Create</button>
-        </div>
-      </form>
       </div>
-    </div>
-  </div>
 
 
 
 </div>
+
+
+
+
 
 
 

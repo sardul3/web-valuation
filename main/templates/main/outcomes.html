@@ -17,9 +17,6 @@
                     <h3 class = "card-header title">
                     <div class = "d-flex justify-content-between">
                       <span>Outcomes</span>
-                      <button type="button" class="btn btn-primary btn-lg mt-1" data-toggle="modal" data-target="#exampleModalCenter">
-                       <i class="fas fa-plus"></i>
-                      </button>
                     </div>
                     </h3>
 
@@ -31,34 +28,6 @@
 
 
 
-          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Learning Outcome Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form action = "{%url 'main:add_learning_outcome' cycle.id%}" method="POST">
-                      {%csrf_token%}
-                      <input type="hidden" id="url" name = "url" value={{request.path}}>
-                      <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Title</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
-                      </div>
-
-
-                      <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Add</button>
-                      </div>
-                    </form>
-                  </div>
-              </div>
-            </div>
-          </div>
-
 
 
           <div class="card" >
@@ -67,7 +36,7 @@
                 <span class="btn text-left"  style="text-decoration:none;">
                   <h5 class = "outcome_title">  {{outcome.title}} </h5>
                 </span>
-                <i class="fas fa-chevron-down mr-2 justify-items-center"></i>
+                <i class="fas fa-chevron-down mr-4 justify-items-center" style="color:#7a2831"></i>
 
               </h2>
             </div>
@@ -79,7 +48,7 @@
                     {%if measure.outcome == outcome%}
                     <div class = "row ">
                       <div class = "col col-lg-12 d-flex justify-content-between">
-                          <a class = "btn btn-sm btn-warning mb-2 ">
+                          <button class = "btn btn-sm btn-warning mb-2 " data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}">
                           {{measure.cutoff_percentage}} % of the students need to get
                           {%if measure.cutoff_score%}
                            {{measure.cutoff_score}}
@@ -93,7 +62,51 @@
                           {%elif measure.tool_type == "Test score"%}
                             <strong>{{measure.test_score}}</strong>
                           {%endif%}
-                          </a>
+                          </button>
+
+                          <div class="modal fade" id="exampleModalCenter{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">Detailed Stats</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="card bg-light mb-3">
+                                    <div class="card-header">{{measure}}</div>
+                                    <div class="card-body">
+                                      <h5 class="card-title">Tool type: {{measure.tool_type}}</h5>
+                                      <p class="card-text">
+
+                                          {%for k, v in data.items %}
+
+                                            {%if v.measure.id == measure.id%}
+
+                                            Total evaluators: {{v.evaluator_count}} <br>
+                                            Total students evaluated: {{v.evaluated_student_count}} <br>
+                                            Average Points: {{v.avg_points|floatformat:2}} <br>
+                                            Percentage passed: {{v.percent_pass_cases|floatformat:2}}% <br>
+                                            Status: {% if v.passed%} passed {%else%} failed {%endif%}
+
+
+                                            {%endif%}
+                                          {%endfor%}
+
+                                      </p>
+                                    </div>
+                                  </div>
+
+
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+
 
                           <span>
                           {%if measure.statusPercent > 0.0%}
