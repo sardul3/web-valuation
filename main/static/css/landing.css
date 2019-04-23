@@ -181,4 +181,31 @@ h4{
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: #BD955A;
+  color: #eff2f6;
+}
+
+.table-bordered td, .table-bordered th {
+
+    border: 2px solid #800029;
+    text-align: center;
+
+}
+
+.form-control {
+    color: #495057;
+    background-color: aliceblue;
+}
+
+.modal-header {
+    border-bottom: 2px solid #800029;
+}
+
+.modal-content {
+    border: 2px solid #BD955A;
+}
+
+@media (max-width: 576px) {
+    .h1, h1 {
+font-size: 1.5rem !important;
+}
 }
