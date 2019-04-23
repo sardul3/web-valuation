@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 3px solid black;
+   border-collapse: collapse;
+}
+</style>
+</head>
+<body>
+
+<h2><center>{{outcome}}</center></h2>
+
+<table style="width:100%">
+  <tr>
+    <b><th>Outcome</th>
+    <th>Measure</th>
+    <th>Number of Evaluations</th>
+    <th>Number meeting Criteria</th>
+    <th>Percentage Meeting Criteria</th>
+    <th>Results</th>
+    <th>User of Results/Actions Taken</th>
+  </b>
+  </tr>
+  <tr>
+      <th rowspan="5">{{outcome}}</th>
+  </tr>
+
+{%for m in measures%}
+  <tr>
+    <td>{{m.measureTitle}}</td>
+      <td >{{data.m.id.0}} </td>
+      <td >{{number_of_pass_cases}} </td>
+      <td>{{m.statusPercent}} </td>
+      <td>{{m.status}}</td>
+  </tr>
+{%endfor%}
+</table>
+
+</body>
+</html>

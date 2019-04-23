@@ -13,6 +13,9 @@ urlpatterns = [
 
     path('upload_test_score_evaluator/<int:measure_id>', views.upload_test_score_evaluator, name = 'upload_test_score_evaluator'),
 
+    path('generate_outcome_report/<int:outcome_id>', views.generate_outcome_report, name = 'generate_outcome_report'),
+
+
 
 
     path('create_curriculum', views.create_curriculum, name = 'create_curriculum'),

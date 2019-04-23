@@ -181,13 +181,15 @@ def evaluatorhome(request):
                 if(me.outcome==o):
                     measure_list.append(me)
         eval_a = Evaluator.objects.all()
-        evaluator_list = []
+        evaluator_list=[]
+        evaluator_li = set()
         for eval in eval_a:
             for mymea in measure_list:
                 for eval_more in mymea.evaluator.all():
                     if(eval==eval_more):
-                        evaluator_list.append(eval)
-
+                        evaluator_li.add(eval)
+        for ev in evaluator_li:
+            evaluator_list.append(ev)
         for eval in evaluator_list:
             total=0.0
             graded=0.0
@@ -251,7 +253,9 @@ def evaluatorhome(request):
         for mea in measure:
             total=0.0
             graded =0
+
             for cu in cust_student_list:
+                if cu.evaluator is not None:
                     if cu.measure == mea and cu.evaluator.email==request.user.email:
                         total+=1
                         if cu.graded:
@@ -1183,3 +1187,16 @@ def upload_test_score_evaluator(request, measure_id):
         average = total_points / number_of_students
 
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
+
+def generate_outcome_report(request, outcome_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    measures = Measure.objects.filter(outcome=outcome)
+    data = dict()
+    for measure in measures:
+        evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
+        number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
+        data.update({measure.id: [evaluated_student_count, number_of_pass_cases]})
+        print(data[measure.id][0])
+    context = {'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
+    'number_of_pass_cases':number_of_pass_cases, 'data':data}
+    return render(request, 'main/outcome_report.html', context)
