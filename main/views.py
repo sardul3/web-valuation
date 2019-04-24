@@ -201,6 +201,7 @@ def evaluatorhome(request):
                     measure_list.append(me)
         eval_a = Evaluator.objects.all()
         evaluator_list = []
+        courses = Course.objects.all()
         for eval in eval_a:
             for mymea in measure_list:
                 for eval_more in mymea.evaluator.all():
@@ -210,7 +211,7 @@ def evaluatorhome(request):
         context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
                    'notification_count': Notification.objects.filter(read=False).count(),
-                   'notifications': Notification.objects.filter(read=False).order_by('-created_at'), 'cycles': cyc
+                   'notifications': Notification.objects.filter(read=False).order_by('-created_at'), 'cycles': cyc,'mycyc':mycyc,'courses':courses
                    }
         return render(request, 'main/adminhome.html', context)
     else:
@@ -458,6 +459,7 @@ def dashboard(request):
             if (me.outcome == o):
                 measure_list.append(me)
     eval_a = Evaluator.objects.all()
+    courses = Course.objects.all()
     evaluator_list = []
     for eval in eval_a:
         for mymea in measure_list:
@@ -467,7 +469,7 @@ def dashboard(request):
 
     context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
             'notification_count' : Notification.objects.filter(read=False).count(),
-            'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc
+            'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses
             }
     return render(request, 'main/adminhome.html', context)
 
