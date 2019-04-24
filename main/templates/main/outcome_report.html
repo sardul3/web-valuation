@@ -15,6 +15,9 @@
 
 
 <h2 ><center>Outcome Report</center></h2>
+{% if mymeasure is None %}
+    <h1> Nothing to display: Add measures </h1>
+    {% else %}
 <div class="table-responsive">
 <table class="table table-bordered table-hover table-sm">
   <tr>
@@ -42,6 +45,7 @@
 {%endfor%}
 
 </table>
+    {% endif %}
 </div>
 </div>
 

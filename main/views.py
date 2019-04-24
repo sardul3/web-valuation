@@ -1234,14 +1234,21 @@ def generate_outcome_report(request, outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome=outcome)
     data = dict()
+    evaluated_student_count = 0
+    number_of_pass_cases = 0
+    measure = None
     for measure in measures:
         evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
         number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
         data.update({ measure.id: [evaluated_student_count, number_of_pass_cases, measure.measureTitle, measure.statusPercent, measure.status]})
         print(data)
-    context = {'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
-    'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id,
-    'count':measures.count()+1}
+    if measure is None:
+        context = {'outcome': outcome, 'measures': measures, 'evaluated_student_count': evaluated_student_count,
+                   'number_of_pass_cases': number_of_pass_cases,'mymeasure':measure}
+    else:
+        context = {'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
+                   'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id,
+                   'count':measures.count()+1,'mymeasure':measure}
     return render(request, 'main/outcome_report.html', context)
 
 def admin_instructions(request):
