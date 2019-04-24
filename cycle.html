@@ -1,0 +1,247 @@
+{% extends  'main/adminbase.html' %}
+{% load static %}
+{% block body_block %}
+
+<div class = "container-fluid" id = "main_content">
+
+  <div class = "row d-flex justify-content-center  ">
+
+      <div class = "col col-lg-2 col-md-12 col-sm-12 col-xs-12 col-12">
+        <div class="card border-dark mb-3">
+
+            <div class="card-header text-center"><h5>{{cycle.semester}} {{cycle.year}}</h5></div>
+            <div class="card-body text-dark text-center">
+              <h5 class="card-title">Started at</h5>
+              <p class="card-text">{{cycle.startDate}}</p>
+              <hr>
+              {%if cycle.isCurrent == False%}
+                <h5 class="card-title">Ended at</h5>
+                <p class="card-text">{{cycle.endDate}}</p>
+                <hr>
+              {%endif%}
+              <h5 class="card-title">Created by</h5>
+              <p class="card-text">{{user.username}}</p>
+              <hr>
+              {%if cycle.isCurrent%}
+              <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger mb-3">
+                End Cycle
+              </a>
+
+              <a href = "{% url 'main:generate_cycle_report' cycle_id%}"class = "btn btn-lg btn-primary mb-3">
+                Generate Cycle Report
+              </a>
+
+              {%else%}
+              <a href = "{%url 'main:reactivate_cycle' cycle_id%}"class = "btn btn-lg btn-success btn-lg">
+                Reactivate
+              </a>
+              {%endif%}
+
+            </div>
+          </div>
+      </div>
+
+
+    <div class = "col col-lg-10 col-md-12 col-sm-12 col-xs-12 col-12 ">
+      <div class = "card border-dark">
+    <h1 class="d-flex justify-content-between card-header">  Learning outcomes
+    {%if cycle.isCurrent%}
+          <button type="button" class="btn btn-primary btn-lg mt-1" data-toggle="modal" data-target="#exampleModalCenter">
+           <i class="fas fa-plus"></i>
+          </button>
+    {%endif%}
+    </h1>
+
+      <div class="list-group list-group-flush">
+      {%for outcome in outcomes%}
+      <div class = "d-flex justify-content-center">
+      <div class="d-flex w-100 justify-content-between">
+          <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
+              <h5 class="mb-1 p-1">{{outcome.title}}</h5>
+          </a>
+      </div>
+
+        <div class="btn-group align-items-center">
+          <a  href = "" class = "btn btn-lg "  data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
+            <span style="font-size: 2em; color: #bd955a;">
+              <i class="far fa-edit"></i>
+          </span>
+          </a>
+
+          <a  href = "{%url 'main:generate_outcome_report' outcome.id%}" class = "btn btn-lg ">
+            <span style="font-size: 1em; color: #bd955a;">
+              <i> Generate Report</i>
+          </span>
+          </a>
+
+
+          <div class="modal fade" id="exampleModalCenterEditOutcome{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Edit Outcome</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+                <div class="modal-body">
+                  <form action="{%url 'main:update_outcome' outcome.id cycle_id%}" method="POST">
+                    {%csrf_token%}
+                    <input type="hidden" id="url" name = "url" value={{request.path}}>
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Outcome Title</label>
+                      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                name = "outcome_title">{{outcome.title}}
+                      </textarea>
+                    </div>
+                    <div class="form-group">
+                     <label for="exampleFormControlSelect2">Select Courses for the the outcome</label>
+                     <select multiple class="form-control custom-select" id="exampleFormControlSelect2" name="course">
+                       {%for course in courses%}
+                        {%if course in outcome.course.all%}
+                        <option value="{{course.id}}" selected>{{course.title}}</option>
+                        {%else%}
+                        <option value="{{course.id}}">{{course.title}}</option>
+                        {%endif%}
+                       {%endfor%}
+                     </select>
+                   </div>
+
+
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a  href = "#" class = "btn btn-lg" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
+            <span style="font-size: 2em; color: #7a2831;">
+              <i class="far fa-trash-alt"></i>
+          </span>
+          </a>
+
+          <div class="modal fade" id="exampleModalCenterDeleteOutcome{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Delete Outcome</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+                <div class="modal-body">
+                  <form action="{%url 'main:delete_outcome' outcome.id cycle_id%}" method="POST">
+                    {%csrf_token%}
+                    <input type="hidden" id="url" name = "url" value={{request.path}}>
+                    <h3> Are you sure? </h3>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Delete</button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+      </div>
+
+      </div>
+
+
+      {%empty%}
+      <div class="jumbotron jumbotron-fluid" style="background-color:#f7f7f7;">
+        <div class="container text-center ">
+          <h1 class="display-4">No outcomes yet</h1>
+          <p class="lead">Click the <strong style="font-size: 2rem;"> + </strong> icon above to add outcomes</p>
+          <hr>
+          <p> or </p>
+          <a class = "btn btn-lg btn-dark" href="" data-toggle="modal" data-target="#exampleModalCenterMigrateCycle"> Migrate</a>
+        </div>
+      </div>
+
+  {%endfor%}
+  </div>
+  </div>
+</div>
+
+      <div class="modal fade" id="exampleModalCenterMigrateCycle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Migrate Cycle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action = "{%url 'main:migrate_cycle' cycle_id%}" method="POST">
+                      {%csrf_token%}
+                      <input type="hidden" id="url" name = "url" value={{request.path}}>
+
+                      <div class="form-group">
+                       <label for="exampleFormControlSelect1">Select from the cycles</label>
+                       <select class="form-control" id="exampleFormControlSelect1" name = "cycle_migrate">
+                         {%for cycle in prev_cycles%}
+                         <option value = "{{cycle.id}}">{{cycle.semester}} {{cycle.year}}</option>
+                        {%endfor%}
+                       </select>
+                     </div>
+
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Migrate</button>
+                      </div>
+                    </form>
+                  </div>
+
+              </div>
+            </div>
+
+      </div>
+
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Learning Outcome Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action = "{%url 'main:add_learning_outcome' cycle_id%}" method="POST">
+                  {%csrf_token%}
+                  <input type="hidden" id="url" name = "url" value={{request.path}}>
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Title</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                   <label for="exampleFormControlSelect2">Select Courses for the outcome</label>
+                   <select multiple class="form-control" id="exampleFormControlSelect2" name="course">
+                     {%for course in courses%}
+                     <option value="{{course.id}}">{{course.title}}</option>
+                     {%endfor%}
+                   </select>
+                 </div>
+
+
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+          </div>
+        </div>
+      </div>
+</div>
+</div>
+
+
+{%endblock%}

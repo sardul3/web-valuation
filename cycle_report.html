@@ -1,0 +1,62 @@
+{% extends  'base.html' %}
+{%load static%}
+{% block body_block %}
+<style media="screen">
+  th{
+    text-align:center;
+    vertical-align: middle;
+  }
+  .card-header{
+    background: skyblue !important;
+  }
+  h2{
+    margin-top: 10px;
+  }
+
+</style>
+
+<div class="container">
+
+
+<h2 class="card-header"><center>2013-2015 Computer Science Assessment Cycle- Summary Of Results</center></h2>
+<div class="table-responsive">
+<table class="table table-bordered table-hover table-sm">
+  <tr>
+    <th class="align-middle">Outcome</th>
+    <th class="align-middle">Measure</th>
+    <th class="align-middle">Number of Evaluations</th>
+    <th class="align-middle">Number meeting Criteria</th>
+    <th class="align-middle">Percentage Meeting Criteria</th>
+    <th class="align-middle">Results</th>
+    <th class="align-middle">Use of Results/Actions Taken</th>
+  </tr>
+{%for outcome in outcomes%}
+<tr>
+<td rowspan="{{count}}">{{outcome}}</td>
+</tr>
+{%for k,m in data.items%}
+  <tr>
+      <td>{{m.2}}</td>
+      <td >{{m.0}} </td>
+      <td >{{m.1}} </td>
+      <td>{{m.3}} </td>
+      <td>{{m.4}}</td>
+  </tr>
+
+{%endfor%}
+
+{%endfor%}
+
+
+{%for outcome in outcomes%}
+  {%for measure in measures%}
+  {%if measure.outcome == outcome%}
+    {{measure}}
+  {%endif%}
+{%endfor%}
+{%endfor%}
+</table>
+</div>
+</div>
+
+{% endblock %}
