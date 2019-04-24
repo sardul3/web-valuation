@@ -170,48 +170,48 @@ def cycles(request):
 @login_required
 def evaluatorhome(request):
     if request.user.is_staff:
+        outcomes = Outcome.objects.all()
+        measures = Measure.objects.all()
+        cycles = Cycle.objects.all()
+        data = dict()
+        for measure in measures:
+            evaluations = evaluate_rubric.objects.filter(measure=measure).count()
+            if (evaluations > 0):
+                if measure.tool_type == 'Rubric':
+                    data.update({measure.id: rubric_data(measure.id)})
+                elif measure.tool_type == 'Test score':
+                    data.update({measure.id: test_score_data(measure.test_score, measure.id)})
+
         cyc = Cycle.objects.all()
         mycyc = 0
         for cycles in cyc:
-            if(cycles.isCurrent):
+            if (cycles.isCurrent):
                 mycyc = cycles
         outcome_a = Outcome.objects.all()
         outcome_list = []
         for oc in outcome_a:
             for v in oc.cycle.all():
-                if(v == mycyc):
+                if (v == mycyc):
                     outcome_list.append(oc)
         measure_a = Measure.objects.all()
         measure_list = []
         for me in measure_a:
             for o in outcome_list:
-                if(me.outcome==o):
+                if (me.outcome == o):
                     measure_list.append(me)
         eval_a = Evaluator.objects.all()
-        evaluator_list=[]
-        evaluator_li = set()
+        evaluator_list = []
         for eval in eval_a:
             for mymea in measure_list:
                 for eval_more in mymea.evaluator.all():
-                    if(eval==eval_more):
-                        evaluator_li.add(eval)
-        for ev in evaluator_li:
-            evaluator_list.append(ev)
-        for eval in evaluator_list:
-            total=0.0
-            graded=0.0
-            for custom in custom_students.objects.all():
-                if custom.evaluator is not None:
-                    if custom.evaluator.email==eval.email:
-                        total+=1
-                        if custom.graded:
-                            graded+=1
-            if graded==0:
-                eval.perc_completed=0
-            else:
-                eval.perc_completed=(graded/total)*100.0
+                    if (eval == eval_more):
+                        evaluator_list.append(eval)
 
-        context = {'evaluator':evaluator_list, 'cycles':cyc}
+        context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
+                   'data': data,
+                   'notification_count': Notification.objects.filter(read=False).count(),
+                   'notifications': Notification.objects.filter(read=False).order_by('-created_at'), 'cycles': cyc
+                   }
         return render(request, 'main/adminhome.html', context)
     else:
         rubrics = Rubric.objects.all()
