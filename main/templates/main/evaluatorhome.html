@@ -6,9 +6,7 @@
     padding: 0.7%;
     align:center;
   }
-  #main_content{
-  margin-top:2%;
-  }
+
   .measure_section{
     padding: 3%;
   }
@@ -16,10 +14,10 @@
 </style>
 
 <div class = "container-fluid">
-<div class = "container" id = "main_content">
+<div  id = "main_content">
 
   <div class="row d-flex align-items-center">
-  <div class="col-4 ">
+  <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 col-12 ">
     {% if user.is_authenticated %}
       <ol class = 'breadcrumb'>
         <h4 class = "breadcrumb-item"> Hi {{ user.username }}</h4>
@@ -55,7 +53,7 @@
   </div>
 
 
-  <div class="col-8" >
+  <div class="col col-lg-9 col-md-12 col-sm-12 col-xs-12 col-12" >
 
     <div class="tab-content speech-bubble" id="nav-tabContent">
       {%for measure in measures%}
@@ -197,9 +195,11 @@
     </div>
   </div>
 
+
 </div>
 
   </div>
+
 
 
 </div>

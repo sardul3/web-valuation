@@ -1055,7 +1055,7 @@ def view_rubric_data(request, measure_id):
     return render(request, 'main/rubric_scores.html', context)
 
 def past_assessments(request):
-    evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.username)
+    evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email)
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True)
@@ -1088,7 +1088,7 @@ def edit_evaluation_student(request,evaluation_id):
     evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
     measure = evaluation_found.measure
     measure_id = measure.id
-    email_eval = Evaluator.objects.filter(name=evaluation_found.evaluated_by)[0]
+    email_eval = Evaluator.objects.filter(email=evaluation_found.evaluated_by)[0]
     mystudent=0
     for stu in custom_students.objects.all():
 
@@ -1097,6 +1097,11 @@ def edit_evaluation_student(request,evaluation_id):
             mystudent=stu
             mystudent.graded=False
 
+    cat_score = category_score.objects.filter(student=mystudent)
+    data = []
+    for c_s in cat_score:
+        data.append({c_s.header: c_s.score})
+    print(data)
     measures = measure
     students = measures.student.all()
     rubric = measures.rubric
@@ -1135,7 +1140,7 @@ def edit_evaluation_student(request,evaluation_id):
 
 
     context = {'measures': measures, 'mystudent':mystudent, 'measure_id': measure_id, 'rubric': rubric,
-               'categories': categories
+               'categories': categories, 'data':data
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
                'super_cat': super_cat}
 
