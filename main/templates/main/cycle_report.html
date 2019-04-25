@@ -37,23 +37,22 @@ margin-bottom: 10px;
     <th class="align-middle">Use of Results/Actions Taken</th>
   </tr>
 {%for outcome in outcomes%}
-<tr>
-<td rowspan="{{count}}">{{outcome}}</td>
-</tr>
+
+
 {%for d in data%}
   {%if d.7 == outcome.id%}
-  <tr>
+<tr>
+      <td rowspan="{{data.d.6}}"> {{d.2}} </td>
       <td>{{d.3}}</td>
       <td >{{d.0}} </td>
       <td >{{d.1}} </td>
       <td>{{d.4|floatformat:2}} </td>
       <td>{{d.5}}</td>
 </tr>
+
   {%endif%}
 {%endfor%}
-
 {%endfor%}
-
 
 </table>
 </div>
