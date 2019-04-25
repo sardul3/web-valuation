@@ -1,11 +1,16 @@
 {% extends  'main/evaluatorbase.html' %}
 {% load static %}
 {% block body_block %}
+<style>
+  .card-header {
+      background-color: #800029;
+      color: rgb(252, 248, 242);
+  }
+</style>
 
-
-<div class = "container">
-<table class="table">
-  <thead class=" card-header">
+<div class = "container" style="overflow-y:scroll; height: 80vh;">
+<table class="table" >
+  <thead class="sticky-top card-header">
     <tr>
       <th scope="col">Student</th>
       <th scope="col">Measure Title</th>
@@ -14,7 +19,7 @@
 
     </tr>
   </thead>
-  <tbody >
+  <tbody>
     {%for evaluation in evaluations%}
     <tr>
       <td> {{evaluation.student}}</td>
