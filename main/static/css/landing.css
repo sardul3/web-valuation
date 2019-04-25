@@ -95,6 +95,7 @@ td{
 }
 .card-header{
   background-color: rgb(219,217,214)
+  z-index:0;
 }
 
 

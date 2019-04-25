@@ -8,9 +8,11 @@
   }
 </style>
 
-<div class = "container" style="overflow-y:scroll; height: 80vh;">
+<div class = "container">
+  <div class = "row">
+  <div class = "col col-lg-10 col-md-10 col-sm-12 col-xs-12 col-12"  style="overflow-y:scroll; height: 80vh;">
 <table class="table" >
-  <thead class="sticky-top card-header">
+  <thead class="card-header">
     <tr>
       <th scope="col">Student</th>
       <th scope="col">Measure Title</th>
@@ -21,7 +23,7 @@
   </thead>
   <tbody>
     {%for evaluation in evaluations%}
-    <tr>
+    <tr style="background-color: ivory;">
       <td> {{evaluation.student}}</td>
       <td>  {{evaluation.measure.measureTitle}}</td>
       <td class = "justify-content-between">
@@ -39,7 +41,7 @@
 
     {%for score in scores%}
       {%if score.type == 'Test score'%}
-    <tr>
+    <tr style="background-color: rgba(219,217,214,0.5)">
       <td> {{score.student_name}}</td>
       <td>  {{score.measure.measureTitle}}</td>
       <td class = "justify-content-between">
@@ -53,6 +55,23 @@
     {%endfor%}
   </tbody>
 </table>
+</div>
 
+
+<div class = "col col-lg-2 col-md-2 col-sm-12 col-xs-12 col-12 ">
+  <div class="card border-dark mb-3 " style="max-width: 18rem; ">
+  <div class="card-header"><h4>Legend</h4></div>
+  <div class="card-body text-dark" style="background-color: aliceblue;">
+    <h5 class="card-title" style="height:15px; width:15px; background-color: #edecea; border: 2px solid black;">
+    </h5>
+    <p class="card-text">Test scores</p>
+    <h5 class="card-title" style="height:15px; width:15px;background-color: #fffff0; border: 2px solid black;">
+    </h5>
+    <p class="card-text">Rubric scores</p>
+
+  </div>
+</div>
+</div>
+</div>
 </div>
 {%endblock%}
