@@ -25,6 +25,11 @@
               <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger mb-3">
                 End Cycle
               </a>
+                <a  href = "{%url 'main:generate_cycle_report' cycle_id%}" class = "btn btn-lg btn-success ">
+                 View Report
+               </a>
+
+
               {%else%}
               <a href = "{%url 'main:reactivate_cycle' cycle_id%}"class = "btn btn-lg btn-success btn-lg">
                 Reactivate

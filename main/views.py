@@ -1256,3 +1256,22 @@ def generate_outcome_report(request, outcome_id):
 def admin_instructions(request):
     return render(request, 'main/admin_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})
+
+def generate_cycle_report(request, cycle_id):
+    cycle = Cycle.objects.get(id=cycle_id)
+    outcomes = Outcome.objects.filter(cycle=cycle)
+    data = dict()
+    me = []
+    count = 0;
+
+    for outcome in outcomes:
+        measures = Measure.objects.filter(outcome=outcome)
+        for measure in measures:
+            evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
+            number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
+            count = count + 1
+            me.append([evaluated_student_count, number_of_pass_cases,  outcome.title, measure.measureTitle,  measure.statusPercent, measure.status, count, outcome.id])
+    print(me)
+    context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
+    'count':count, 'data':me}
+    return render(request, 'main/cycle_report.html', context)
