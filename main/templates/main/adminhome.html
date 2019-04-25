@@ -198,6 +198,19 @@
 
                                              {%endif%}
                                            {%endfor%}
+                                           <div class = "progress " style="background:#9aa1a7;">
+                                                            <div class="progress-bar" role="progressbar" aria-valuenow="40"
+                                                            aria-valuemin="0" aria-valuemax="100" style="width:{{measure.statusPercent}}%;
+                                                                          {%if measure.status == 'passing'%}
+                                                                            background:green;
+                                                                          {%elif measure.status == 'failing'%}
+                                                                            background:red;
+                                                                          {%endif%}
+                                                                        ">
+                                                            Satisfied
+                                                            by {{measure.statusPercent|floatformat:0}}%
+                                                            </div></div>
+
 
                                        </p>
                                      </div>
