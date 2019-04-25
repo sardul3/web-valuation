@@ -23,7 +23,7 @@
   </thead>
   <tbody>
     {%for evaluation in evaluations%}
-    <tr style="background-color: ivory;">
+    <tr style="background-color: #e5e8ff;">
       <td> {{evaluation.student}}</td>
       <td>  {{evaluation.measure.measureTitle}}</td>
       <td class = "justify-content-between">
@@ -41,7 +41,7 @@
 
     {%for score in scores%}
       {%if score.type == 'Test score'%}
-    <tr style="background-color: rgba(219,217,214,0.5)">
+    <tr style="background-color: #edd7d2">
       <td> {{score.student_name}}</td>
       <td>  {{score.measure.measureTitle}}</td>
       <td class = "justify-content-between">
@@ -61,11 +61,11 @@
 <div class = "col col-lg-2 col-md-2 col-sm-12 col-xs-12 col-12 ">
   <div class="card border-dark mb-3 " style="max-width: 18rem; ">
   <div class="card-header"><h4>Legend</h4></div>
-  <div class="card-body text-dark" style="background-color: aliceblue;">
-    <h5 class="card-title" style="height:15px; width:15px; background-color: #e2ed8d; border: 2px solid black;">
+  <div class="card-body text-dark" style="background-color: #e7ff91;">
+    <h5 class="card-title" style="height:15px; width:15px; background-color: #edd7d2; border: 2px solid black;">
     </h5>
     <p class="card-text">Test scores</p>
-    <h5 class="card-title" style="height:15px; width:15px;background-color: #ffd1ac; border: 2px solid black;">
+    <h5 class="card-title" style="height:15px; width:15px;background-color: #e5e8ff; border: 2px solid black;">
     </h5>
     <p class="card-text">Rubric scores</p>
 

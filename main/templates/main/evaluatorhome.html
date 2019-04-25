@@ -231,5 +231,18 @@
 </div>
 
 </div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('a[data-toggle = "list"]').on('show.bs.tab',function(e){
+      localStorage.setItem('activeTab',
+      $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    console.log(activeTab);
+    if(activeTab){
+      $('#list-tab a[href="' + activeTab + '"]').tab('show');
+    }
+  });
+</script>
 
 {%endblock%}
