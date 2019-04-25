@@ -64,8 +64,7 @@
           {%else%}
                 <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
           {%endif%}
-        <span class = "d-flex justify-content-between"> <h4>{{measure.measureTitle}}</h4>
-
+        <span class = "d-flex justify-content-between">  <h4 class = "mb-2">{{measure.measureTitle}}</h4>
 
         <div id="bar{{measure.id}}" class = "mb-2">
           <div>
@@ -83,7 +82,7 @@
 
 
         <ul class="list-group mb-2" style = "overflow-y:scroll; height: 40vh;">
-          <li class="list-group-item active d-flex justify-content-between">Students
+          <li class="list-group-item sticky-top active d-flex justify-content-between"> <h4>Students</h4>
 
           </li>
             {% for student in flag %}
@@ -94,9 +93,13 @@
                     {{student.student_name}}
                     </div>
                     {% if student.graded %}
-                      <em> Already Evaluated </em>
+                    <span style="font-size:1.5rem; color: #7a2831;">
+                      <i class="fas fa-check-circle"></i>
+                    </span>
                     {%else%}
-                      <em> Not yet evaluated </em>
+                    <span style="font-size:1.5rem; color: #7a2831;">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </span>
                     {%endif%}
 
                   </li>

@@ -1058,6 +1058,9 @@ def past_assessments(request):
     evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email)
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
+    if evaluator == None:
+        messages.add_message(request, messages.SUCCESS, 'No past assessments')
+
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True)
     print(scores)
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
