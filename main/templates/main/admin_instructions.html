@@ -1,8 +1,18 @@
+<!--
+admin_instructions.html displays the admin instructions page. This page provides step-by-step
+instructions for how to accomplish the actions this application is suppose to perfom. Visual
+aids are provided for actions that require more steps or the actions are vital to the proper
+performance of the application. Bootstrap acordions and modals are the main components for
+presenting and organizing the information on this page.
+ -->
+
 {% extends  'main/adminbase.html' %}
 {%load static%}
 {%block body_block%}
 
 <style>
+
+/*Customizes the instruction header buttons that trigger information dropdowns*/
 .accordion {
   background-color: #eee;
   color: #444;
@@ -16,12 +26,13 @@
   transition: 0.4s;
 }
 
+/*Customization for when the instructin header is hovered over or clicked on*/
 .active, .accordion:hover {
   background-color: maroon;
   color: white;
 }
 
-
+/*Customizes the containers that the instruction data are in*/
 .panel {
   padding: 0 18px;
   display: none;
@@ -29,12 +40,18 @@
   overflow: hidden;
 }
 </style>
+
 <div class = "container-fluid">
   <div class = "container" id = "main_content">
-
       <h1 class="text-center">Admin Instructions</h1>
       <br>
+      <!--Start Cycle instruction section-->
+      <!----------------------------------->
+
       <h4>Cycles</h4>
+
+      <!--Start Accordion-->
+
         <button class="accordion">What is a Cycle</button>
         <div class="panel">
           <p>
@@ -46,6 +63,9 @@
             </ul>
           </p>
         </div>
+
+        <!--Start Accordion-->
+
         <button class="accordion">Create Cycle</button>
         <div class="panel">
           <p>
@@ -55,6 +75,9 @@
               <li>In the <i>semester</i> field input the semester the cycle will start</li>
               <li>Select <b>'Start'</b></li>
             </ol>
+
+            <!--Help modal-->
+
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">View Example</button>
             <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
               <div class="modal-dialog">
@@ -62,6 +85,10 @@
                   <div class="modal-body">
                     <h5>Complete the input fields and select <b>'Start'</b></h5>
                     <img src = "{% static 'assets/images/create_cycle.png' %}" class="img-fluid">
+                    <br>
+
+                    <!--Modal footer-->
+
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
@@ -71,8 +98,16 @@
             </div>
           </p>
         </div>
+
+        <!--Start Accordion-->
+
         <button class="accordion">Running Cycles</button>
         <div class="panel">
+
+          <!--Start Nested Accordion-->
+
+          <!--Start nested item 1-->
+
             <button class="accordion">What is a Running Cycle</button>
             <div class="panel">
               <p>
@@ -82,6 +117,9 @@
                 </ul>
               </p>
             </div>
+
+            <!--Start nested item 2-->
+
             <button class="accordion">Add Data to Running Cycle</button>
             <div class="panel">
               <p>
@@ -99,21 +137,30 @@
                 </p>
             </div>
         </div>
+
+        <!--Start Accordion-->
+
       <button class="accordion">Add Outcome to Cycle</button>
       <div class="panel">
         <p>
-          <ul>
-            <li>If the does not have any outcomes
+          <h5>If the cycle does not have any outcomes</h5>
           <ol>
             <li>Find <b>'Running Cycles'</b> on admin dashboard</li>
             <li>Select <b>'Visit'</b> by the desired cycle</li>
             <li>Add the outcomes<br><ol><li>To create new outcomes individually: Select the <b>'+'</b> to add/create outcomes</li>
+              <ul><li>Check out 'Create Outcome' in the Outcome section of the Admin Instructions</li></ul>
             <li>To add all of the outcomes from a previous cycle: Select <b>'Migrate'</b><ul><li>The migrated outcomes contain the rubrics and measures associated with them in the previous cycle </li>
             <li>It will not contain the students, evaluators, scores from the previous cycle</li>
             <li>Migrating outcomes from a previous cycle prevents the admin from having to create new outcomes everytime a cycle is started</li>
             <li>Once migrated, undesired outcomes can be deleted and new ones can be added; this does not affect the cycle the outcomes were migrated from</li></ul></li></ol></li>
-          </ol></li>
+          </ol>
+          <h5>If the cycle already has outcomes</h5>
+          <ul>
+            <li>Same steps as previously stated for when cycles do not have outcome, without the option to migrate outcomes from a previous cycle</li>
           </ul>
+
+          <!--Help modal-->
+
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">View Example</button>
           <div id="myModal1" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog">
@@ -135,6 +182,10 @@
                   <img src = "{% static 'assets/images/ao2c_4.png' %}" class="img-fluid"><br><br>
                   <h6>3. Select <b>'Migrate'</b> to finalize migration</h6>
                   <img src = "{% static 'assets/images/ao2c_5.png' %}" class="img-fluid">
+                  <br>
+
+                  <!--Modal footer-->
+
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
@@ -144,8 +195,16 @@
           </div>
         </p>
       </div>
+
+      <!--Start Accordion-->
+
       <button class="accordion">Previous Cycles</button>
       <div class="panel">
+
+        <!--Start nested Accordion-->
+
+        <!--Start nested item 1-->
+
       <button class="accordion">Access Previous Cycle</button>
       <div class="panel">
         <p>
@@ -156,6 +215,9 @@
             </ol>
         </p>
       </div>
+
+      <!--Start nested item 2-->
+
       <button class="accordion">Reactivate Previous Cycle</button>
       <div class="panel">
         <p>
@@ -167,6 +229,9 @@
           </p>
       </div>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">End Cycle</button>
     <div class="panel">
       <p>
@@ -179,7 +244,14 @@
     </div>
     <br>
     <br>
+
+    <!--Start Outcomes instruction section-->
+    <!-------------------------------------->
+
     <h4>Outcomes</h4>
+
+    <!--Start Accordion-->
+
     <button class="accordion">What is an Outcome</button>
     <div class="panel">
       <p>
@@ -190,7 +262,10 @@
         </ul>
       </p>
     </div>
-    <button class="accordion">Create an Outcome</button>
+
+    <!--Start Accordion-->
+
+    <button class="accordion">Create Outcome</button>
     <div class="panel">
       <p>
         <h6 style='font-weight:bold;'>The creation of an outcome can occur in various ways:</h6>
@@ -213,6 +288,9 @@
           <li>Select the courses, if any, that the outcome will be associated with</li>
           <li>Select <b>'Add'</b></li>
         </ol>
+
+        <!--Help modal-->
+
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">View Example</button>
         <div id="myModal2" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog">
@@ -223,6 +301,10 @@
                 <hr/>
                 <h5>Complete the input fields and select <b>'Save Changes'</b></h5>
                 <img src = "{% static 'assets/images/out1.png' %}" class="img-fluid">
+                <br>
+
+                <!--Modal footer-->
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -232,6 +314,9 @@
         </div>
       </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">Access Outcome</button>
     <div class="panel">
       <p>
@@ -242,6 +327,9 @@
         </ol>
         </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">View Outcome Status</button>
     <div class="panel">
       <p>
@@ -255,7 +343,14 @@
 
     <br>
     <br>
+
+    <!--Start Measures instruction section-->
+    <!-------------------------------------->
+
     <h4>Measures</h4>
+
+    <!--Start Accordion-->
+
     <button class="accordion">What is a Measure</button>
     <div class="panel">
       <p>
@@ -271,6 +366,9 @@
         </ul>
       </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">Create Measure</button>
     <div class="panel">
       <p>
@@ -296,6 +394,9 @@
           <li>Test scores can be input individually or in batched by uploading a .csv in the correct format</li></ul>
           <li>Select <b>'Add'</b> to complete creation</li>
         </ol>
+
+        <!--Help modal-->
+
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal3">View Example</button>
         <div id="myModal3" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog">
@@ -309,6 +410,10 @@
                 <hr/>
                 <h5>Complete the input fields and select <b>'Add'</b></h5>
                 <img src = "{% static 'assets/images/createM.png' %}" class="img-fluid">
+                <br>
+
+                <!--Modal footer-->
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -318,6 +423,9 @@
         </div>
       </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">Access Measure</button>
     <div class="panel">
       <p>
@@ -329,6 +437,9 @@
         </ol>
      </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">View Measure Status</button>
     <div class="panel">
       <p>
@@ -339,6 +450,9 @@
         </ol>
      </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">Add Evaluator to Measure</button>
     <div class="panel">
       <p>
@@ -355,7 +469,14 @@
     </div>
     <br>
     <br>
+
+    <!--Start Rubrics instruction section-->
+    <!------------------------------------->
+
     <h4>Rubrics</h4>
+
+    <!--Start Accordion-->
+
     <button class="accordion">Create Rubric</button>
     <div class="panel">
       <p>
@@ -375,8 +496,10 @@
           <ul><li>Select Ascending: If the rubric values will be labled worst to best (ie. Poor-Excellent, 1-5)</li>
           <li>Select Descending: If the rubric will be scored best to worst (ie. Excellent-Poor, 5-1)</li></ul>
           <li>Select <b>'Create'</b></li>
-        </ol
-        <hr/>
+        </ol>
+
+        <!--Help modal-->
+
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal4">View Example</button>
         <div id="myModal4" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog">
@@ -390,6 +513,10 @@
                 <hr/>
                 <h5>Complete the input fields and select <b>'Create'</b></h5>
                 <img src = "{% static 'assets/images/createR.png' %}" class="img-fluid">
+                <br>
+
+                <!--Modal footer-->
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -398,6 +525,9 @@
           </div>
         </div>
      </p>
+
+     <!--Start Accordion-->
+
     </div><button class="accordion">Fill Out Rubric</button>
     <div class="panel">
       <p>
@@ -407,6 +537,9 @@
           <li>Fill out the remaining cells of the rubric with the grading descriptions associated with the row criteria of the cell and the value associated with the column of the cell</li>
           <li>Select <b>'Add Rubric'</b></li>
         </ol>
+
+        <!--Help modal-->
+
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal5">View Example</button>
         <div id="myModal5" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog">
@@ -420,6 +553,10 @@
                 <hr/>
                 <h5>Select <b>'Add Rubric'</b> when done</h5>
                 <img src = "{% static 'assets/images/addR.png' %}" class="img-fluid">
+                <br>
+
+                <!--Modal footer-->
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -430,7 +567,14 @@
     </div>
     <br>
     <br>
+
+    <!--Start Broadcast instruction section-->
+    <!--------------------------------------->
+
     <h4>Broadcast Message</h4>
+
+    <!--Start Accordion-->
+
     <button class="accordion">What is a Broadcast Message</button>
     <div class="panel">
       <p>
@@ -440,6 +584,9 @@
       </ul>
      </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">How to Send a Broadcast Message</button>
     <div class="panel">
       <p>
@@ -449,6 +596,9 @@
           <li>Type the message in the message box</li>
           <li>Select <b>'Send'</b></li>
         </ol>
+
+        <!--Help modal-->
+
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal6">View Example</button>
         <div id="myModal6" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog">
@@ -466,6 +616,9 @@
                 <h5>Select <b>'Send'</b></h5>
                 <img src = "{% static 'assets/images/sendB.png' %}" class="img-fluid"><br>
                 <br>
+
+                <!--Modal footer-->
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -477,14 +630,24 @@
     </div>
     <br>
     <br>
+
+    <!--Start Curriculum Mapping Section-->
+    <!------------------------------------>
+
     <h4>Curriculum Mapping</h4>
+
+    <!--Start Accordion-->
+
     <button class="accordion">What is Curriculum Mapping</button>
     <div class="panel">
-      <p>
+      <p><br>
         Curriculum mapping enables an admin to track the classes an outcome is associated with. Mapping an outcome to classes allows the admin
         to determine whether specific classes are/aren't satisfying their requirements
      </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">Create Curriculum</button>
     <div class="panel">
       <p>
@@ -496,6 +659,9 @@
         <li>Fill in the number of credit hours</li>
         <li>Select <b>'Create'</b></li>
         </ol>
+
+        <!--Help modal-->
+
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal6">View Example</button>
         <div id="myModal6" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog">
@@ -513,6 +679,9 @@
                 <h5>Select <b>'Send'</b></h5>
                 <img src = "{% static 'assets/images/sendB.png' %}" class="img-fluid"><br>
                 <br>
+
+                <!--Modal footer-->
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -522,9 +691,13 @@
         </div>
      </p>
     </div>
+
+    <!--Start Accordion-->
+
     <button class="accordion">Add Curriculum to Outcome</button>
         <div class="panel">
           <p>
+            <b><h5>The curriculum must be created before it can be mapped to an outcome</h5></b>
             <h5>If the outcome is already created:</h5>
             <ol>
               <li>Access the outcome</li>
@@ -538,15 +711,14 @@
                 </ol>
          </p>
         </div>
-
-
 </div>
 </div>
-
-
 
 
 <script type="text/javascript">
+
+  /*The javascript required to display/hide the information panels*/
+  
   var acc = document.getElementsByClassName("accordion");
   var i;
 

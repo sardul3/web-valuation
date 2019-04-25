@@ -1,16 +1,32 @@
+<!--cycle.html presents the main cycle page for a selected cycle. This
+page displays the information for the currently selected cycle,
+the option the create a curriculum, and the learning outcomes associated with
+the cycle. New outcomes and curriculums can be created. Outcomes from Previous
+cycles can be added to a new cycle.
+-->
+
 {% extends  'main/adminbase.html' %}
 {% load static %}
 {% block body_block %}
 
 <div class = "container-fluid" id = "main_content">
-
   <div class = "row d-flex justify-content-center  ">
+
+    <!--Cycle information section-->
+    <!-------------------------------->
+
+    <!--Grid for the cycle info card-->
 
       <div class = "col col-lg-2 col-md-12 col-sm-12 col-xs-12 col-12">
         <div class="card border-dark mb-3">
 
+          <!--Display semester and year cycle was created-->
+
             <div class="card-header text-center"><h5>{{cycle.semester}} {{cycle.year}}</h5></div>
             <div class="card-body text-dark text-center">
+
+              <!--Display semester and year cycle was started-->
+
               <h5 class="card-title">Started at</h5>
               <p class="card-text">{{cycle.startDate}}</p>
               <hr>
@@ -19,9 +35,15 @@
                 <p class="card-text">{{cycle.endDate}}</p>
                 <hr>
               {%endif%}
+
+              <!--Display the cycle creator-->
+
               <h5 class="card-title">Created by</h5>
               <p class="card-text">{{user.username}}</p>
               <hr>
+
+              <!--Provide option to end cycle if it is running, or reactivate if the cycle isn'r running-->
+
               {%if cycle.isCurrent%}
               <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger mb-3">
                 End Cycle
@@ -31,11 +53,14 @@
                 Reactivate
               </a>
               {%endif%}
-
             </div>
           </div>
       </div>
 
+    <!--Learning outcomes section-->
+    <!----------------------------->
+
+    <!--Grid for outcomes card-->
 
     <div class = "col col-lg-10 col-md-12 col-sm-12 col-xs-12 col-12 ">
       <div class = "card border-dark">
@@ -48,6 +73,9 @@
     </h1>
 
       <div class="list-group list-group-flush">
+
+        <!--List the outcomes for the cycle-->
+
       {%for outcome in outcomes%}
       <div class = "d-flex justify-content-center">
       <div class="d-flex w-100 justify-content-between">
@@ -56,12 +84,16 @@
           </a>
       </div>
 
+      <!--Button to edit outcome-->
+
         <div class="btn-group align-items-center">
           <a  href = "" class = "btn btn-lg "  data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: #bd955a;">
               <i class="far fa-edit"></i>
           </span>
           </a>
+
+          <!--Modal to diplay the contents for editing an outcome-->
 
           <div class="modal fade" id="exampleModalCenterEditOutcome{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -93,11 +125,15 @@
             </div>
           </div>
 
+          <!--Button to delete outcome-->
+
           <a  href = "#" class = "btn btn-lg" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: #7a2831;">
               <i class="far fa-trash-alt"></i>
           </span>
           </a>
+
+          <!--Modal to confirm outcome deletion-->
 
           <div class="modal fade" id="exampleModalCenterDeleteOutcome{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -119,15 +155,17 @@
                     </div>
                   </form>
                 </div>
-
               </div>
             </div>
           </div>
-
+      </div>
       </div>
 
-      </div>
+      <!--Cycle has no outcomes section-->
+      <!--------------------------------->
 
+      <!--Display jumbotron stating no outcomes with the option to migrate
+      outcomes from a previous cycle or add new outcomes-->
 
       {%empty%}
       <div class="jumbotron jumbotron-fluid" style="background-color:#f7f7f7;">
@@ -144,6 +182,8 @@
   </div>
   </div>
 </div>
+
+    <!--Migrate cycles modal-->
 
       <div class="modal fade" id="exampleModalCenterMigrateCycle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
@@ -167,17 +207,16 @@
                         {%endfor%}
                        </select>
                      </div>
-
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Migrate</button>
                       </div>
                     </form>
                   </div>
-
               </div>
             </div>
-
       </div>
+
+      <!--Create individual outcomes modal-->
 
       <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -196,8 +235,6 @@
                     <label for="exampleFormControlTextarea1">Title</label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
                   </div>
-
-
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save changes</button>
                   </div>

@@ -1,18 +1,26 @@
-
+<!-- outcome_detail.html presents the details for a selected outcome. On this
+page, a measure can be created, deleted, or edited, evaluators can be created and
+assigned evaluations, students can be added individually or by .csv file, and <thead>
+status of an outcome's measures can be viewed.
+-->
 {% extends  'main/adminbase.html' %}
 {% load static %}
 {% block body_block %}
 <style>
 
-
+/*Customize button*/
 .button_main{
   padding:0 !important;
 }
 
+/*Customize speech bubble containing selected measure details*/
   .speech-bubble { position: relative; background: rgba(189,149,90, 0.15); border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color:rgba(189,149,90,0.15); border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
 
 </style>
+
 <script type="text/javascript">
+
+  /*Javascript to enable popover*/
 	$(document).ready(function(){
 	    $('[data-toggle="popover"]').popover();
 	});
@@ -23,6 +31,10 @@
 <div class = "container-fluid" >
   <!-- <div class = "container" id = "main_content" > -->
 
+  <!--Add Measure Section-->
+  <!----------------------->
+
+    <!--Modal to display content to add measure -->
 
      <div class="modal fade" id="exampleModalCenterNewMeasure{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
        <div class="modal-dialog modal-dialog-centered" role="document">
@@ -39,17 +51,23 @@
                {%csrf_token%}
                <input type="hidden" id="url" name = "url" value={{request.path}}>
 
+               <!--Input measure title-->
+
                <div class="form-group">
                  <label for="exampleFormControlTextarea1">Measure Title</label>
                  <input type="text" class="form-control" id="exampleInputPassword1"
                         placeholder="Measure title" name = "measure_title">
                </div>
 
+               <!--Input measure cutoff percent -->
+
                <div class="form-group">
                  <label for="exampleFormControlTextarea1">Cutoff-percent</label>
                  <input type="number" class="form-control" id="exampleInputPassword1"
                         placeholder="cutoff percentage" name = "cutoff_percent">
                </div>
+
+               <!--Select measure cutoff type-->
 
                <label for="exampleFormControlTextarea1">Select Cutoff type</label>
                  <select class="custom-select" name="cutoff_selection">
@@ -58,11 +76,15 @@
                  <option value ="Average">Average</option>
                  </select>
 
+                 <!--Input measure cutoff score-->
+
                  <div class="form-group">
                    <label for="exampleFormControlTextarea1">Cutoff-Score</label>
                    <input type="number" class="form-control" id="exampleInputPassword1"
                           placeholder="cutoff score" name = "cutoff_score">
                  </div>
+
+                 <!--Select the type of tool a measure will use-->
 
              <label for="exampleFormControlTextarea1">Select Tool Type</label>
                <select class="custom-select" name="tool_selection">
@@ -71,10 +93,13 @@
                <option value ="Test score">Test score</option>
                </select>
 
+               <!--buttons to submit measure creation form and cancel-->
 
                <div class="modal-footer">
                  <button type="submit" class="btn btn-primary">Add</button>
                </div>
+
+               <!--Measure creation help dropdown box-->
 
                <div class="text-right">
            		<div class="dropdown">
@@ -93,26 +118,24 @@
            				 <li class="dropdown-header" data-toggle="popover" title="Tool Type" data-placement="right" data-content="The type of tool that will be used to prove the measure" data-trigger="hover" ><a href="#">Tool Type</a></li>
                    <center><li class="dropdown-header" data-toggle="popover" title="Rubric" data-placement="right" data-content="Select rubric if a rubric will be used to prove the measure" data-trigger="hover" ><a href="#">Rubric</a></li></center>
                    <center><li class="dropdown-header" data-toggle="popover" title="Test Score" data-placement="right" data-content="Select test score if a test score, class grade, standardized test grade, etc will be used to prove the measure" data-trigger="hover" ><a href="#">Test Score</a></li></center>
-
-
            	     </ul>
            	   </div>
            		 </div>
              </form>
            </div>
-
          </div>
        </div>
      </div>
 
-
-
+     <!--Outcome Details Section-->
+     <!--------------------------->
 
   <div class="row d-flex align-items-center">
   <div class="col col-lg-2 md-6 sm-12 xs-12 mb-1">
 
-    <div class="list-group" id="list-tab" role="tablist">
+    <!--List all measures associated with the outcome -->
 
+    <div class="list-group" id="list-tab" role="tablist">
 
       {%for measure in measures%}
         {%if measure.outcome == outcome%}
@@ -130,6 +153,10 @@
 
     </div>
   </div>
+
+  <!--Selected Measure Detail/Action Section -->
+  <!------------------------------------------->
+
   <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" >
 
     <h4 class = "d-flex justify-content-between mb-3 align-items-center "> {{outcome.title}}
@@ -149,11 +176,16 @@
           {%endif%}
         <h1 class = "d-flex justify-content-between pl-3"> {{measure.measureTitle}}
           <div class = "mr-3">
+
+            <!--Toggle selected measure -->
+
           <button  class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
             <span style="font-size: 2em; color: #bd955a;">
               <i class="far fa-edit"></i>
           </span>
           </button>
+
+          <!--Delete Measure button-->
 
           <button class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenterDeleteMeasure{{measure.id}}" data-measure-id = "{{measure.id}}">
             <span style="font-size: 2em; color:#7a2831;">
@@ -161,6 +193,8 @@
           </span>
           </button>
           </div>
+
+          <!--Edit measure modal-->
 
                 <div class="modal fade" id="exampleModalCenter{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -231,6 +265,7 @@
                   </div>
           </div>
 
+                <!--Delete measure modal -->
 
 
                   <div class="modal fade" id="exampleModalCenterDeleteMeasure{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -261,6 +296,8 @@
 
         <div class = "col col-lg-6  ml-2 mb-2 ">
 
+          <!--Measure status bar-->
+
         <button class = "btn btn-warning ">
         {{measure.cutoff_percentage}} % of the students need to get
         {%if measure.cutoff_score%}
@@ -273,8 +310,7 @@
         </button>
 </div>
 
-
-
+  <!--Modal to add students to measure individually or with a .csv file-->
 
   <div class="modal fade" id="exampleModalCenterStudentUpload{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -313,7 +349,7 @@
 
 
 
-
+  <!--Progress bar details for if measure is a rubric -->
 
 {%if measure.tool_type == 'Rubric'%}
     {%if measure.rubric %}
@@ -338,6 +374,8 @@
 
 
 <div class = "row">
+
+  <!--View the status of measure's individual tool -->
 
 <div class = "col col-lg-4 md-12 sm-12 xs-12">
     <div class="card bg-light ml-2 mb-3">
@@ -371,6 +409,8 @@
     </div>
   </div>
 
+  <!--Display status for a tool associated with the selected measure -->
+
       <div class="modal fade" id="exampleModalLongExpandStudentList{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -400,14 +440,12 @@
 
               </tbody>
           </table>
-
           </div>
-
         </div>
       </div>
     </div>
 
-
+    <!--Display list of evaluators associated with a measure -->
 
         <div class = "col col-lg-4 md-12 sm-12 xs-12">
           <ul class="list-group">
@@ -430,6 +468,8 @@
           </ul>
         <hr />
 
+        <!--Assign students to evaluators-->
+
 {%if measure.evaluator.exists%}
   {%if measure.student.exists%}
           <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModalCenterAddEvaluator{{measure.id}}">
@@ -441,7 +481,7 @@
 
           <hr/>
 
-
+          <!--Modal to add an evaluator-->
 
           <div class="modal fade" id="exampleModalCenterAddEv{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -469,10 +509,7 @@
             </div>
           </div>
 
-
-
-
-
+          <!-- Modal to assign students to an evaluator-->
 
           <div class="modal fade" id="exampleModalCenterAddEvaluator{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -504,34 +541,25 @@
                            </select>
                          </div>
 
-
                       <button type = "submit" class = "btn btn-primary"> Assign </button>
                     </form>
-
                     </div>
-
-
                 </div>
               </div>
             </div>
-
-
-
-
-
-
-
-
-
 
           <div class = "col col-lg-4 md-12 sm-12 xs-12">
           <ul class="list-group" style="overflow-y:scroll; height: 40vh">
             <li class="list-group-item d-flex justify-content-between card-header sticky-top align-items-center"> <h4>Students</h4>
 
+              <!--Button to trigger add students-->
+
           <div class = "d-flex justify-content-between">
             <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
               <i class="fas fa-plus"></i>
             </button>
+
+            <!--Button to expand student list-->
 
             <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
               <i class="fas fa-expand-arrows-alt"></i>
@@ -539,6 +567,9 @@
           </div>
 
             </li>
+
+            <!--List of students that have been added -->
+
               {% for student in measure.student.all %}
                     <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
                       <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
@@ -570,6 +601,8 @@
       </button>
     {%endif%}
 {%endif%}
+
+<!--Progress bar details for tool type of test score-->
 
 {%if measure.tool_type == 'Test score'%}
 
@@ -617,6 +650,8 @@
           </div>
         </div>
 
+        <!--Button to assign students to evaluators ~ triggers modal to assign students to evaluators -->
+
         <button class="btn btn-lg btn-primary btn-block ml-2 mt-2" data-toggle="modal" data-target="#exampleModalCenterAddEvaluatorToTest{{measure.id}}">
         Assign students to Evaluators
         </button>
@@ -625,9 +660,15 @@
 
     <div class = "col col-lg-4 col-md-6 col-sm-12 col-12">
       <div class = 'text-center'>
+
+        <!--Button to upload test scores ~ triggers upload test scores modal  -->
+
       <button type="button" class="btn btn-primary btn-lg ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
           Upload Test Score
       </button>
+
+      <!--Add individual scores form-->
+
       <h2> or </h2>
     </div>
     <h3 class = 'text-center'> Add individual scores </h3>
@@ -656,10 +697,14 @@
 <ul class="list-group" style="overflow-y:scroll; height: 40vh">
   <li class="list-group-item d-flex justify-content-between card-header sticky-top align-items-center"> <h4>Students</h4>
 
+    <!--Button to trigger add student modal -->
+
 <div class = "d-flex justify-content-between">
   <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
     <i class="fas fa-plus"></i>
   </button>
+
+  <!--Button to increase size of student list-->
 
   <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
     <i class="fas fa-expand-arrows-alt"></i>
@@ -691,17 +736,11 @@
     {%endfor%}
 </ul>
 
-
-
 </div>
-
-
-
 </div>
-
-
   {%endif%}
 
+      <!--Modal to create new rubrics or add existing rubrics to measure -->
 
       <div class="modal fade" id="exampleModalCenterAddRubric{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -724,7 +763,6 @@
                   </select>
                 </div>
 
-
                 <div class="modal-footer">
                   <a href = "{%url 'main:test_rubric'%}"> create a new one </a>
                   <button type="submit" class="btn btn-primary">Add Rubric</button>
@@ -734,6 +772,8 @@
           </div>
         </div>
       </div>
+
+      <!--Modal to add students to be evaluated  by an evaluator-->
 
       <div class="modal fade" id="exampleModalCenterAddEvaluatorToTest{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -776,7 +816,7 @@
           </div>
         </div>
 
-
+        <!--Modal to add test scores individually or upload .csv file-->
 
       <div class="modal fade" id="exampleModalCenterAddTestScore{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -826,6 +866,7 @@
   </div>
       {%endif%}
 
+      <!--Display if there are no measures associated with an outcome -->
 
     {%empty%}
     <div class="jumbotron jumbotron-fluid">

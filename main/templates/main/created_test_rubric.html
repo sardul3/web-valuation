@@ -1,3 +1,11 @@
+<!--
+created_test_rubric.html presents a rubric template for the admin to fill out criteria and
+point descriptions for the evaluator to reference during evaluations. The rows and columns
+in the rubric template are determined by the admin's input during rubric creation. The rubric
+can be weighted and the point values can be displayed in ascending or descending order; This
+is also determined by the admin during rubric creation.
+-->
+
 {%load static%}
 
 <!DOCTYPE html>
@@ -15,22 +23,22 @@
 	<script type="text/javascript" src = "{%static 'js/script.js'%}"></script>
 
 <style>
+/*Customize text aree where admin inputs rubric data*/
 textarea{
 	font-size: 1rem;
 	height: 200%;
 }
+
+/*Customize main content*/
 #main_content{
 	border: 3px solid black;
 	padding: 2%;
 	margin-top: 4%;
 }
-
-
 </style>
 </head>
 
 <body>
-
   <div class = "container-fluid" >
 		<div class = "container" id = "main_content">
     <form action = "{% url 'main:created_test_rubric'%}" method = "POST">
@@ -75,10 +83,11 @@ textarea{
 			<br>
 			<br>
 			 <div class="container">
-	   <!-- Trigger the modal with a button -->
+
+	   <!-- Button to Trigger Help Modal-->
 	   <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#myModal">Help</button>
 
-	   <!-- Modal -->
+	   <!-- Help Modal Start -->
 	   <div class="modal fade" id="myModal" role="dialog">
 	     <div class="modal-dialog">
 
@@ -97,19 +106,18 @@ textarea{
 							 <li>Fill out the remaining rows of the rubric with the grading descriptions associated with the rows criteria and the value associated with that column</li>
 	           </ol>
 	         </div>
+
+					 <!--Modal Footer-->
 	         <div class="modal-footer">
 	           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	         </div>
 	       </div>
-
 	     </div>
 	   </div>
-
 	 </div>
-    </form>
+ </form>
 </div>
 </div>
-
 </body>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
