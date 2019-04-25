@@ -32,15 +32,12 @@
         font-size: 12px;
         font-weight: normal;
         padding: 1px 4px;
-        margin: -2px 0 0 5px;
+        margin: -2px 0 0 15px;
         border-radius: 2px;
         -moz-border-radius: 2px;
         -webkit-border-radius: 2px;
         z-index: 1;
 
-    }
-    #noti_Counter .fixed-width{
-        width: 35px;
     }
     /* THE NOTIFICAIONS WINDOW. THIS REMAINS HIDDEN WHEN THE PAGE LOADS. */
     #notifications {
@@ -114,7 +111,7 @@
       </li>
 
       <li id="noti_Container">
-                   <div id="noti_Counter" class="fixed-width">
+                   <div id="noti_Counter">
                    {{alerts_count}}
                  </div>   <!--SHOW NOTIFICATIONS COUNT.-->
 
@@ -159,7 +156,7 @@
 
 
 <li class="nav-item {{logout}}">
-  <a class = "nav-link" href="{%url 'main:logout'%}"> Log Out</a>
+  <a class = "nav-link" href="{%url 'main:logout'%}">Log Out</a>
 </li>
 
 
