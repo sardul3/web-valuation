@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52c1edcd-a7e6-4937-8966-5b750b856102" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/evaluator_navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/evaluator_navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/evaluatorbase.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/evaluatorbase.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/past_assessments.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/past_assessments.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/main/cycle_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/cycle_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,8 +51,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/templates/main/evaluator_navbar.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="161" column="53" selection-start-line="161" selection-start-column="53" selection-end-line="161" selection-end-column="53" />
+            <state relative-caret-position="476">
+              <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#a#0;n#li#2;n#ul#0;n#div#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -263,12 +260,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1552362033788</updated>
-      <workItem from="1556231322136" duration="2031000" />
+      <workItem from="1556231322136" duration="2528000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2031000" />
+    <option name="totallyTimeSpent" value="2528000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="-22" width="1386" height="788" extended-state="0" />
@@ -628,8 +625,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/templates/main/evaluator_navbar.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="161" column="53" selection-start-line="161" selection-start-column="53" selection-end-line="161" selection-end-column="53" />
+        <state relative-caret-position="476">
+          <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
           <folding>
             <element signature="n#style#0;n#span#0;n#a#0;n#li#2;n#ul#0;n#div#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
           </folding>
