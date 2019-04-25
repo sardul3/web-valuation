@@ -21,6 +21,7 @@
   color: white;
 }
 
+
 .panel {
   padding: 0 18px;
   display: none;
@@ -38,22 +39,36 @@
         <div class="panel">
           <p>
             <ul>
-              <li>Cycles represent the container for a unit of evaluation data recorded during a specified period of time.</li>
+              <li>Cycles represent the container for a unit of evaluation data recorded during a specified period of time</li>
               <ul><li>For example, a cycle that was started in Spring 2016 and ended in Fall 2018 contains all of the data (rubric templates, rubric scores, outcomes, measures, evaluators, etc) that was
-                recorded/created during the time the cycle was running.</li></ul>
-              <li>Cycle reports can be generated to enable the interpretation of data trends, outliers that may be the cause of lower average scores, and other statistics that could be the cause of a programs performance</li>
+                recorded/created during the time the cycle was running</li></ul>
+              <li>Cycle reports can be generated to enable the interpretation of data trends, outliers that may be the cause of lower average scores, and other statistics that could be the cause of a programs satifactory/unsatisfactory performance</li>
             </ul>
           </p>
         </div>
-        <button class="accordion">Create a Cycle</button>
+        <button class="accordion">Create Cycle</button>
         <div class="panel">
           <p>
             <ol>
-              <li>Select 'Create New Cycle' on the user dashboard</li>
+              <li>Find 'Start New Cycle' on the user dashboard</li>
               <li>In the <i>year</i> field input the year the cycle will start</li>
               <li>In the <i>semester</i> field input the semester the cycle will start</li>
-              <li>Select 'Start'</li>
+              <li>Select <b>'Start'</b></li>
             </ol>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">View Example</button>
+            <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+              <div class="modal-dialog">
+                <div class="modal-content text-center">
+                  <div class="modal-body">
+                    <h5>Complete the input fields and select <b>'Start'</b></h5>
+                    <img src = "{% static 'assets/images/create_cycle.png' %}" class="img-fluid">
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </p>
         </div>
         <button class="accordion">Running Cycles</button>
@@ -62,8 +77,8 @@
             <div class="panel">
               <p>
                 <ul>
-                  <li>A Running cycle is a cycle that data is currently being recorded within.</li>
-                  <li>There can be more than one running cycles at a time.</li>
+                  <li>A running cycle is a cycle that data is currently being recorded within</li>
+                  <li>There can be more than one running cycles at a time</li>
                 </ul>
               </p>
             </div>
@@ -71,14 +86,15 @@
             <div class="panel">
               <p>
                 <ul>
-                  <li>If there is one running cycle, all actions performed on the dashboard, rubric, and outcome tabs will be done within that cycle. It does not have to be selected.</li>
+                  <li>If there is one running cycle, all actions performed on the dashboard, rubric, and outcome tabs will be done within that cycle. It does not have to be selected</li>
                   <li>If there are multiple running cycles, follow the instrustions:
                 <ol>
                   <li>Select <b>'Visit'</b> by the desired running cycle</li>
-                  <li>A page for the cycle will be presented. The outcomes and their data associated with that cycle will be viewable.</li>
+                  <li>A page for the cycle will be presented. The outcomes and their data associated with that cycle will be viewable</li>
+                  <li>Visit the admin istruction sections 'Create Outcomes', 'Create Measures',  and 'Create Rubrics' to learn how to create data to add to a running cycle</li>
                   </ol>
                   </li>
-                  <li>The cycle that was worked in most recently during the last session will be the cycle that the data displayed on the dashboard and the actions performed in the rubric and outcome tabs in the next session will be associated with. Unless another running cycle is selected during the next session.</li>
+                  <li>The cycle that was worked in most recently during the last session will be the cycle that the data displayed on the dashboard and the actions performed in the rubric and outcome tabs in the next session will be associated with. Unless another running cycle is selected during the next session</li>
                   </ul>
                 </p>
             </div>
@@ -98,6 +114,34 @@
             <li>Once migrated, undesired outcomes can be deleted and new ones can be added; this does not affect the cycle the outcomes were migrated from</li></ul></li></ol></li>
           </ol></li>
           </ul>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">View Example</button>
+          <div id="myModal1" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content text-center">
+                <div class="modal-body">
+                  <h4>Find Running Cycles on dashboard, and select <b>'Visit'</b> by the correct cycle</h4>
+                  <img src = "{% static 'assets/images/ao2c_1.png' %}" class="img-fluid">
+                  <hr/>
+                  <h4>Choose how to add outcomes</h4>
+                  <h5>Select '+' to create and add new outcomes</h5>
+                    <h6>1. Select <b>'+</b>'</h6>
+                  <img src = "{% static 'assets/images/ao2c_2.png' %}" class="img-fluid"><br><br>
+                  <h6>Visit 'Create an Outcome' in the Outcomes section</h6>
+                  <hr/>
+                  <h5>Select <b>'Migrate'</b> to migrate outcomes from a previous cycle</h5>
+                  <h6>1. Select <b>Migrate</b></h6>
+                  <img src = "{% static 'assets/images/ao2c_3.png' %}" class="img-fluid"><br><br>
+                  <h6>2. Select the cycle to migrate from</h6>
+                  <img src = "{% static 'assets/images/ao2c_4.png' %}" class="img-fluid"><br><br>
+                  <h6>3. Select <b>'Migrate'</b> to finalize migration</h6>
+                  <img src = "{% static 'assets/images/ao2c_5.png' %}" class="img-fluid">
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </p>
       </div>
       <button class="accordion">Previous Cycles</button>
@@ -107,7 +151,7 @@
         <p>
           <ol>
             <li>Find 'Previous Cycles' on the user dashboard</li>
-            <li>Select 'Visit' by the desired cycle</li>
+            <li>Select <b>'Visit'</b> by the desired cycle</li>
             <li>The start & end dates, creator, and outcomes associated with the cycle are displayed<ul><li>Previous outcomes can be viewed by selecting them</li></ul></li>
             </ol>
         </p>
@@ -117,9 +161,9 @@
         <p>
           <ol>
               <li>Find 'Previous Cycles' on the user dashboard</li>
-              <li>Select 'Visit' by the desired cycle</li>
-              <li>Select 'Reactivate' to reactivate the cycle</li>
-            </ol></li>
+              <li>Select <b>'Visit'</b> by the desired cycle</li>
+              <li>Select <b>'Reactivate'</b> to reactivate the cycle</li>
+            </ol>
           </p>
       </div>
     </div>
@@ -128,21 +172,19 @@
       <p>
         <ol>
             <li>Find 'Running Cycles' on the user dashboard</li>
-            <li>Select 'Visit' by the desired cycle</li>
-            <li>Select 'End Cycle' to end the cycle</li>
-          </ol></li>
+            <li>Select <b>'Visit'</b> by the desired cycle</li>
+            <li>Select <b>'End Cycle'</b> to end the cycle</li>
+          </ol>
         </p>
     </div>
-
     <br>
     <br>
     <h4>Outcomes</h4>
-
     <button class="accordion">What is an Outcome</button>
     <div class="panel">
       <p>
         <ul>
-          <li>An outcome is the description for a specific criterion that a program must meet.</li>
+          <li>An outcome is the description for a specific criterion that a program must meet</li>
           <ul><li>Example: Students can communicate effectivley</li></ul>
           <li>An outcome is associated with various measures, which use tools (rubrics, test scores) to provide the physical evidence of a program's success</li>
         </ul>
@@ -171,6 +213,23 @@
           <li>Select the courses, if any, that the outcome will be associated with</li>
           <li>Select <b>'Add'</b></li>
         </ol>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">View Example</button>
+        <div id="myModal2" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content text-center">
+              <div class="modal-body">
+                <h5>Access the correct cycle, and select <b>'+'</b></h5>
+                <img src = "{% static 'assets/images/ao2c_2.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Complete the input fields and select <b>'Save Changes'</b></h5>
+                <img src = "{% static 'assets/images/out1.png' %}" class="img-fluid">
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </p>
     </div>
     <button class="accordion">Access Outcome</button>
@@ -204,7 +263,7 @@
           <li>A mechanism used to link a tool to an outcome in order to achieve proving the success/failure of an outcome</li>
           <li>A statement of conditions that a specific type of tool will meet</li>
           <li>Example: At least 75% of students will receive an average rubric score of 3 of greater when
-              evaluated using the oral communication rubric. </li>
+              evaluated using the oral communication rubric</li>
               <ul>
                 <li>The measure sets a standard that a specific tool will meet</li>
                 <li>The measure passes if the standard is met, which will contribute to the success of the outcome</li>
@@ -217,6 +276,7 @@
       <p>
         <ol>
           <li>Access the outcome the measure will be associated with</li>
+          <li>The outcome a measure will be associated with must be created before the measure</li>
           <ul><li>Check out <b>'Access Outcome'</b> under the Outcome heading</li></ul>
           <li>Select <b>'+'</b> to add a measure</li>
           <li>Fill out the <i>Measure Title</i> field with the measure title</li>
@@ -236,6 +296,26 @@
           <li>Test scores can be input individually or in batched by uploading a .csv in the correct format</li></ul>
           <li>Select <b>'Add'</b> to complete creation</li>
         </ol>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal3">View Example</button>
+        <div id="myModal3" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content text-center">
+              <div class="modal-body">
+                <h5>Access the correct cycle, and select the outcome the measure will be added to</h5>
+                <img src = "{% static 'assets/images/outList.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Select <b>'+'</b> by the outcome name</h5>
+                <img src = "{% static 'assets/images/addM.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Complete the input fields and select <b>'Add'</b></h5>
+                <img src = "{% static 'assets/images/createM.png' %}" class="img-fluid">
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </p>
     </div>
     <button class="accordion">Access Measure</button>
@@ -264,7 +344,8 @@
       <p>
         <ol>
           <li>Access the measure the evaluator will be added to</li>
-          <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>          <li>Select the desired outcome</li>
+          <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>
+          <li>Select the desired outcome</li>
           <li>Select the <b>'+'</b> next to the 'Evaluators' heading</li>
           <li>Fill in the evaluator's name in the <i>name</i> field </li>
           <li>Fill in the evaluator's email in the <i>Enter email</i> field</li>
@@ -275,7 +356,7 @@
     <br>
     <br>
     <h4>Rubrics</h4>
-    <button class="accordion">How to Create a Rubric</button>
+    <button class="accordion">Create Rubric</button>
     <div class="panel">
       <p>
         <ol>
@@ -288,14 +369,64 @@
           <ul><li>The number of columns should include a column for the critera list, and a column for each grading value</li>
           <li>Example: rubric scale is 1-5, 1 + 5 = 6 columns. If using words such as poor, average, mastery, advanced; 4 words + 1 = 5</li></ul>
           <li>Select Yes or No for weighted rubric</li>
-          <ul><li>Select Yes: If the criterion will not be graded equally. The weights for each criterion will be applied during rubric creation.</li>
+          <ul><li>Select Yes: If the criterion will not be graded equally. The weights for each criterion will be applied during rubric creation</li>
           <li>Select No: If the criterion will be graded equally</li></ul>
           <li>Select whether the order will be ascending/descending</li>
           <ul><li>Select Ascending: If the rubric values will be labled worst to best (ie. Poor-Excellent, 1-5)</li>
           <li>Select Descending: If the rubric will be scored best to worst (ie. Excellent-Poor, 5-1)</li></ul>
           <li>Select <b>'Create'</b></li>
-        </ol>
+        </ol
+        <hr/>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal4">View Example</button>
+        <div id="myModal4" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content text-center">
+              <div class="modal-body">
+                <h5>Select <b>'Rubrics'</b> on the navigation bar</h5>
+                <img src = "{% static 'assets/images/rub_navBar.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Select <b>'+'</b> by 'Rubrics'</h5>
+                <img src = "{% static 'assets/images/rList.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Complete the input fields and select <b>'Create'</b></h5>
+                <img src = "{% static 'assets/images/createR.png' %}" class="img-fluid">
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
      </p>
+    </div><button class="accordion">Fill Out Rubric</button>
+    <div class="panel">
+      <p>
+        <ol>
+          <h5>Proceed with the following steps after creating a rubric</h5>
+          <li>Fill out the first column with the grading categories</li>
+          <li>Fill out the remaining cells of the rubric with the grading descriptions associated with the row criteria of the cell and the value associated with the column of the cell</li>
+          <li>Select <b>'Add Rubric'</b></li>
+        </ol>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal5">View Example</button>
+        <div id="myModal5" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content text-center">
+              <div class="modal-body">
+                <h5>Fill out the first column with the grading categories</h5>
+                <img src = "{% static 'assets/images/criteriaL.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Fill out the remaining cells of the rubric</h5>
+                <img src = "{% static 'assets/images/fillOutR.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Select <b>'Add Rubric'</b> when done</h5>
+                <img src = "{% static 'assets/images/addR.png' %}" class="img-fluid">
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
     <br>
     <br>
@@ -306,18 +437,42 @@
         <ul>
         <li>A message that is sent from the admin to an evaluator</li>
         <li>Broadcasts can be sent to notify evaluators of schedule change with their evaluation, evaluation urgencies, if an evaluation has been cancelled, etc</li>
-          </ul>
+      </ul>
      </p>
     </div>
     <button class="accordion">How to Send a Broadcast Message</button>
     <div class="panel">
       <p>
         <ol>
-          <li>Find the 'Broadcast Message' widget on the admin dashboard</li>
+          <li>Select the message icon on the admin dashboard</li>
           <li>Select the evaluator to message from the list of evaluator names</li>
           <li>Type the message in the message box</li>
           <li>Select <b>'Send'</b></li>
         </ol>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal6">View Example</button>
+        <div id="myModal6" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content text-center">
+              <div class="modal-body">
+                <h5>Select the message icon on the admin dashboard</h5>
+                <img src = "{% static 'assets/images/navBar.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Select the evaluator to message from the list of evaluator names</h5>
+                <img src = "{% static 'assets/images/select_eval.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Input the message in the message field</h5>
+                <img src = "{% static 'assets/images/broad_msg.png' %}" class="img-fluid">
+                <hr/>
+                <h5>Select <b>'Send'</b></h5>
+                <img src = "{% static 'assets/images/sendB.png' %}" class="img-fluid"><br>
+                <br>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
      </p>
     </div>
     <br>
@@ -326,37 +481,39 @@
     <button class="accordion">What is Curriculum Mapping</button>
     <div class="panel">
       <p>
-
         Curriculum mapping enables an admin to track the classes an outcome is associated with. Mapping an outcome to classes allows the admin
         to determine whether specific classes are/aren't satisfying their requirements
      </p>
     </div>
-    <button class="accordion">How to Enable Curriculum Mapping</button>
+    <button class="accordion">Create Curriculum</button>
     <div class="panel">
       <p>
-        <h6 style="font-weight:bold;">Create a Curriculum</h6>
         <ol>
-        <li>Find the 'Create Curriculum' widget on the admin dashboard</li>
+        <li>Select to visit the cycle the curriculum will be associated with</li>
+        <li>Locate the 'Create a curriculum' section</li>
         <li>Fill in the Course Title</li>
         <li>Fill in the course description</li>
         <li>Fill in the number of credit hours</li>
         <li>Select <b>'Create'</b></li>
         </ol>
-        <h6 style="font-weight:bold;">Add Curriculum to Outcomes</h6>
-        <ul>
-          <li>If the outcome is already created:
-        <ol>
-          <li>Access the outcome</li>
-          <li>Select <b>'Edit'</b></li>
-          <li>Select the courses to map to an outcome</li>
-        </ol>  </li>
-        <li>If the outcome has not been created:
-          <ol>
-            <li>Create the outcome</li>
-            <li>During creation, select the classes the outcome will be mapped to</li>
-            </ol>
      </p>
     </div>
+    <button class="accordion">Add Curriculum to Outcome</button>
+        <div class="panel">
+          <p>
+            <h5>If the outcome is already created:</h5>
+            <ol>
+              <li>Access the outcome</li>
+              <li>Select <b>'Edit'</b></li>
+              <li>Select the courses to map to an outcome</li>
+            </ol>
+            <h5>If the outcome has not been created:</h5>
+              <ol>
+                <li>Create the outcome</li>
+                <li>During creation, select the classes the outcome will be mapped to</li>
+                </ol>
+         </p>
+        </div>
 
 
 </div>
