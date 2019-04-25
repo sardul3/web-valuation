@@ -12,6 +12,7 @@
   }
   .speech-bubble { position: relative; background: #f7f7f7; border-radius: .4em; } .speech-bubble:after { content: ''; position: absolute; left: 0; top: 50%; width: 0; height: 0; border: 0.5em solid transparent; border-right-color: #f7f7f7; border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em; }
 </style>
+<script type="text/javascript" src="{%static 'js/'%}radialprogress.js"></script>
 
 <div class = "container-fluid">
 <div  id = "main_content">
@@ -63,9 +64,24 @@
           {%else%}
                 <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
           {%endif%}
-        <h4 class = "d-flex justify-content-between"> {{measure.measureTitle}}  </h4>
+        <span class = "d-flex justify-content-between"> <h4>{{measure.measureTitle}}</h4>
 
-        <p> The {{measure.evaluationPercent|floatformat:0}}% students have already been evaluated</p>
+
+        <div id="bar{{measure.id}}" class = "mb-2">
+          <div>
+            <div id="example6" style="font-size:1.5vw; display:inline-block;"></div>
+          </div>
+        </div>
+        <script type="text/javascript">
+          var bar=new RadialProgress(document.getElementById('bar{{measure.id}}'), {progress:0, colorBg:"rgb(219,217,214)",colorFg:"#7a2831",colorText:"",thick:7,animationSpeed:0.7}  );
+          bar.setValue({{measure.evaluationPercent}}/100);
+          bar.draw(true);
+
+        </script>
+         </span>
+
+
+
         <ul class="list-group mb-2" style = "overflow-y:scroll; height: 40vh;">
           <li class="list-group-item active d-flex justify-content-between">Students
 
@@ -212,6 +228,5 @@
 </div>
 
 </div>
-
 
 {%endblock%}
