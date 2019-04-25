@@ -122,6 +122,9 @@
                      <h3 class = "card-header title">
                      <div class = "d-flex justify-content-between">
                        <span>Outcomes</span>
+                         <button type="button" class="btn btn-primary btn-lg mt-1" data-toggle="modal" data-target="#exampleModalCenter1">
+                             <i class="fas fa-plus"></i>
+                         </button>
                      </div>
                      </h3>
 
@@ -244,6 +247,42 @@
      </div>
            {%endif%}
            {%endfor%}
+             <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Learning Outcome Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action = "{%url 'main:add_learning_outcome' mycyc.id%}" method="POST">
+                  {%csrf_token%}
+                  <input type="hidden" id="url" name = "url" value={{request.path}}>
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Title</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                   <label for="exampleFormControlSelect2">Select Courses for the outcome</label>
+                   <select multiple class="form-control" id="exampleFormControlSelect2" name="course">
+                     {%for course in courses%}
+                     <option value="{{course.id}}">{{course.title}}</option>
+                     {%endfor%}
+                   </select>
+                 </div>
+
+
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </div>
+                </form>
+              </div>
+          </div>
+        </div>
+      </div>
          </div>
 
    {%endfor%}
