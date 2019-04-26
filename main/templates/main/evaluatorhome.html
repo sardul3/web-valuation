@@ -97,8 +97,8 @@
                       <i class="fas fa-check-circle"></i>
                     </span>
                     {%else%}
-                    <span style="font-size:1.5rem; color: #7a2831;">
-                      <i class="fas fa-ellipsis-h"></i>
+                    <span style="font-size:1.5rem; color: #7a2831; margin-left: -5px;">
+                      <i class="fas fa-exclamation-circle "></i>
                     </span>
                     {%endif%}
 
@@ -191,7 +191,7 @@
 
     <div class="container">
   <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Help</button>
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="margin-bottom: 1vh;">Help</button>
 
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
@@ -231,5 +231,18 @@
 </div>
 
 </div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('a[data-toggle = "list"]').on('show.bs.tab',function(e){
+      localStorage.setItem('activeTab',
+      $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    console.log(activeTab);
+    if(activeTab){
+      $('#list-tab a[href="' + activeTab + '"]').tab('show');
+    }
+  });
+</script>
 
 {%endblock%}
