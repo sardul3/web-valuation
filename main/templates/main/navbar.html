@@ -7,6 +7,9 @@
         padding:6px 15px;
         cursor:pointer;
     }
+    ul li a #clear1{
+        color: blue;
+    }
     ul li a:hover {
         text-decoration:none;
         cursor:pointer;
@@ -155,7 +158,7 @@
              <div id="notifications">
                  <h3>Notifications
                      <div id="clear">
-                     <span class="pull-right" font><a href = "{%url 'main:delete_notifications'%}">Clear Notifications</a></span>
+                     <span class="pull-right" font><a id="clear1" href = "{%url 'main:delete_notifications'%}">Clear Notifications</a></span>
                     </div>
                  </h3>
 
