@@ -1,9 +1,16 @@
 {% extends  'main/superadminbase.html' %}
 {% load static %}
 {% block body_block %}
+<style>
+  .card-header {
+      background-color: #800029;
+      color: rgb(252, 248, 242);
+  }
+</style>
+
 <div class = "container">
 <table class="table">
-  <thead>
+  <thead class = "card-header">
     <tr>
       <th scope="col">Coordinator Email</th>
       <th scope="col">Status</th>
@@ -12,7 +19,7 @@
   <tbody>
     {%for invite in invitees%}
     <tr>
-      <th scope="row">{{invite.email}}</th>
+      <td>{{invite.email}}</td>
       <td>
           {%if invite.accepted %}
             Accepted

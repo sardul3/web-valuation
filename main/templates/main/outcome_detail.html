@@ -117,7 +117,7 @@
   </div>
   <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" >
 
-    <h4 class = "d-flex justify-content-between mb-3 align-items-center "> {{outcome.title}}
+    <h4 class = "d-flex justify-content-between mb-3 align-items-center "> {{outcome.desc}}
 
       <button type="button" class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
          <i class="fas fa-plus"></i>
@@ -821,7 +821,13 @@
     <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <h1 class="display-4">No measures associated</h1>
-    <p class="lead">Please press the <strong style="font-size: 2rem;">+</strong> button to add new measures</p>
+    <p class="lead">Please press the
+      <button type="button" class="btn btn-primary btn-lg ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
+         <i class="fas fa-plus"></i>
+       </button>
+
+
+       button to add new measures</p>
   </div>
 </div>
     {%endfor%}

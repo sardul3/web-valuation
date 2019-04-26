@@ -1,19 +1,19 @@
 {% extends  'main/adminbase.html' %}
 {%load static%}
 
-
-
-
-
-
-
+<style>
+.card-header {
+    background-color: #800029;
+    color: rgb(252, 248, 242);
+}
+</style>
 
 {%block body_block%}
 <div class = "container-fluid">
     <div class = "row">
        <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
          <div class = "card border-dark mb-3">
-           <h3 class = "card-header title text-center"> Start a new cycle </h3>
+           <h3 class = "card-header text-center"> Start a new cycle </h3>
 
            <form action = "{% url 'main:newCycle' %}" method = "POST" >
              {% csrf_token%}
