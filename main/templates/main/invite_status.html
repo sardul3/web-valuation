@@ -1,0 +1,28 @@
+{% extends  'main/superadminbase.html' %}
+{% load static %}
+{% block body_block %}
+<div class = "container">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Coordinator Email</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for invite in invitees%}
+    <tr>
+      <th scope="row">{{invite.email}}</th>
+      <td>
+          {%if invite.accepted %}
+            Accepted
+          {%else%}
+            Pending
+          {%endif%}
+      </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+</div>
+{%endblock%}

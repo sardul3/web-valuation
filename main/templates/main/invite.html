@@ -1,0 +1,19 @@
+{% extends  'main/superadminbase.html' %}
+{% load static %}
+{% block body_block %}
+<div class = "container card border-primary login bg-light" style="width:40rem;margin-top:5%; padding:20px;">
+<form action = "{%url 'main:super_admin_home'%}" method="POST">
+  {%csrf_token%}
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name = "email">
+    <small id="emailHelp" class="form-text text-muted">Coordinator will get an invitation link through this email</small>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Department</label>
+    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Department" name = "department">
+  </div>
+  <button type="submit" class="btn btn-primary">Invite</button>
+</form>
+</div>
+{%endblock%}

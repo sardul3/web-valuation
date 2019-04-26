@@ -5,6 +5,9 @@ from django.contrib.auth import views as auth_views
 app_name = 'main'
 
 urlpatterns = [
+    path('invite', views.super_admin_home, name='super_admin_home'),
+    path('invite_status', views.super_admin_past, name='super_admin_past'),
+
     path('eval', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('broadcast', views.broadcast, name='broadcast'),

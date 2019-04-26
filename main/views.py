@@ -4,7 +4,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course, Notification, category_score,CoOrdinator
+from .models import( Rubric, Student, Measure, Category, evaluate_rubric,
+        Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,
+        custom_students, Broadcast, Course, Notification, category_score,
+        CoOrdinator, Invited_Coordinator)
 from django.contrib import messages
 from .forms import RegisterForm, CoOrdinatorRegisterForm
 import csv
@@ -1291,3 +1294,26 @@ def generate_cycle_report(request, cycle_id):
     context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
     'count':range(len(me)), 'data':me}
     return render(request, 'main/cycle_report.html', context)
+
+def super_admin_home(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        department = request.POST.get('department')
+        invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
+        evaluators = Evaluator.objects.all()
+        for eval in evaluators:
+            if eval.email == invited_Coordinator:
+                Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
+
+        messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
+
+        context= {'now':'active'}
+        return render(request, 'main/invite.html', context)
+    context= {'now':'active'}
+    return render(request, 'main/invite.html',context)
+
+
+def super_admin_past(request):
+    invitees = Invited_Coordinator.objects.filter(invited_by=request.user.username)
+    context = {'past':'active', 'invitees':invitees}
+    return render(request, 'main/invite_status.html', context)

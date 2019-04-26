@@ -16,6 +16,15 @@ class Evaluator(models.Model):
     def __str__(self):
         return self.name
 
+class Invited_Coordinator(models.Model):
+    email = models.EmailField()
+    department = models.CharField(max_length=200)
+    invited_by = models.CharField(max_length=200)
+    accepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
+
 class Student(models.Model):
     name = models.CharField(max_length=200)
     classification = models.CharField(max_length=200)
