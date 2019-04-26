@@ -1209,6 +1209,12 @@ def delete_notification(request, notification_id):
 
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
+def delete_notifications(request):
+    notification = Notification.objects.all()
+    notification.update(read = True)
+    
+    return HttpResponseRedirect(reverse_lazy('main:dashboard'))
+
 def upload_test_score_evaluator(request, measure_id):
 
     if request.method=='POST' and request.FILES:
