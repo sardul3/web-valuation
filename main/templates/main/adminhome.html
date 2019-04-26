@@ -257,7 +257,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action = "{%url 'main:add_learning_outcome' mycyc.id%}" method="POST">
+                <form action = "" method="POST">
                   {%csrf_token%}
                   <input type="hidden" id="url" name = "url" value={{request.path}}>
                   <div class="form-group">

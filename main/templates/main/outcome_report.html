@@ -9,14 +9,23 @@
   @media print{
     ;
   }
+  .card-header {
+    background: #800029;
+margin-bottom: 10px;
+}
 </style>
 
 <div class="container-fluid">
 
 
-<h2 ><center>Outcome Report</center></h2>
+<h2 class="card-header" ><center>Outcome Report</center></h2>
 {% if mymeasure is None %}
-    <h1> Nothing to display: Add measures </h1>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">Not enough data to generate report</h1>
+        <p class="lead"> Please add some measures </p>
+      </div>
+    </div>
     {% else %}
 <div class="table-responsive">
 <table class="table table-bordered table-hover table-sm">

@@ -676,7 +676,8 @@ def registerCo(request):
 
 def add_learning_outcome(request, cycle_id):
     title = request.POST.get('outcome_title')
-    outcome = Outcome(title=title)
+    desc = request.POST.get('outcome_desc')
+    outcome = Outcome(title=title, desc=desc)
     outcome.save()
 
     course_id = request.POST.getlist('course')
@@ -890,12 +891,13 @@ def add_evaluator(request, outcome_id, measure_id):
 
 def update_outcome(request, outcome_id, cycle_id):
     new_outcome_text = request.POST.get('outcome_title')
+    new_outcome_desc = request.POST.get('outcome_desc')
     outcome_course = request.POST.getlist('course')
     for course in outcome_course:
         outcome_found = Outcome.objects.get(id=outcome_id)
         course_found = Course.objects.get(id=course)
         outcome_found.course.add(course_found)
-    outcome = Outcome.objects.filter(id = outcome_id).update(title = new_outcome_text)
+    outcome = Outcome.objects.filter(id = outcome_id).update(title = new_outcome_text, desc=new_outcome_desc)
 
     messages.add_message(request, messages.SUCCESS, 'Outcome was edited successfully')
 
@@ -1212,7 +1214,7 @@ def delete_notification(request, notification_id):
 def delete_notifications(request):
     notification = Notification.objects.all()
     notification.update(read = True)
-    
+
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def upload_test_score_evaluator(request, measure_id):

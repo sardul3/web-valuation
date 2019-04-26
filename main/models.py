@@ -49,7 +49,7 @@ class Rubric(models.Model):
 
 
 class Category(models.Model):
-    categoryTitle = models.CharField(max_length=200)
+    categoryTitle = models.CharField(max_length=600)
     index_x = models.PositiveIntegerField(null=True)
     index_y = models.PositiveIntegerField(null=True)
     rubric = models.ForeignKey(Rubric, null=True, on_delete = models.CASCADE)
@@ -66,6 +66,7 @@ class Course(models.Model):
 
 class Outcome(models.Model):
     title = models.CharField(max_length=200, default='', null=True)
+    desc = models.CharField(max_length=600, null=True)
     status = models.BooleanField(default=True)
     cycle = models.ManyToManyField(Cycle)
     course = models.ManyToManyField(Course)

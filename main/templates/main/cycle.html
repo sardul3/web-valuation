@@ -117,8 +117,13 @@
                     <input type="hidden" id="url" name = "url" value={{request.path}}>
                     <div class="form-group">
                       <label for="exampleFormControlTextarea1">Outcome Title</label>
+                      <input type = 'text' class="form-control" name = "outcome_title" value = "{{outcome.title}}">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Outcome Description</label>
                       <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                name = "outcome_title">{{outcome.title}}
+                                name = "outcome_desc">{{outcome.desc}}
                       </textarea>
                     </div>
                     <div class="form-group">
@@ -244,8 +249,15 @@
                   {%csrf_token%}
                   <input type="hidden" id="url" name = "url" value={{request.path}}>
                   <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Title</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
+                    <label for="exampleFormControlTextarea1">Outcome Title</label>
+                    <input type = 'text' class="form-control" name = "outcome_title">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Outcome Description</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                              name = "outcome_desc">
+                    </textarea>
                   </div>
 
                   <div class="form-group">
