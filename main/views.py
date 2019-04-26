@@ -97,7 +97,7 @@ def rubric_data(measure_id):
 
 
     # evaluated_list = evaluate_rubric.objects.filter(measure = measure, rubric=measure.rubric)
-    evaluated_list = custom_students.objects.filter(measure=measure, graded=True, current=True)
+    evaluated_list = custom_students.objects.filter(measure=measure, graded=True, current=True).order_by('student_name')
     ev_cats = category_score.objects.filter(student__in = evaluated_list)
 
     bin_array = []
