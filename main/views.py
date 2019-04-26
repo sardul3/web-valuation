@@ -466,7 +466,7 @@ def dashboard(request):
             for eval_more in mymea.evaluator.all():
                 if (eval == eval_more):
                     evaluator_list.append(eval)
-
+    print(evaluator_list)
     context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
             'notification_count' : Notification.objects.filter(read=False).count(),
             'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses

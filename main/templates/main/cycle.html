@@ -80,8 +80,8 @@
 
       <div class="list-group list-group-flush">
       {%for outcome in outcomes%}
-      <div class = "d-flex justify-content-center">
-      <div class="d-flex w-100 justify-content-between">
+      <div class = "d-flex justify-content-center p-2">
+      <div class=" d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
               <h5 class="mb-1 p-1">{{outcome.title}}</h5>
           </a>
@@ -96,7 +96,7 @@
 
           <a  href = "{%url 'main:generate_outcome_report' outcome.id%}" class = "btn btn-lg ">
             <span style="font-size: 1em; color: #bd955a;">
-              <i> Generate Report</i>
+               Generate Report
           </span>
           </a>
 
