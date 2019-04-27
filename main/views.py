@@ -92,7 +92,7 @@ def rubric_data(measure_id):
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
 
     else:
-        percent_pass_cases=100
+        percent_pass_cases=0
 
 
 
@@ -164,7 +164,7 @@ def rubrics(request):
 @user_passes_test(admin_test)
 def cycles(request):
     cycles = Cycle.objects.all()
-    
+
 
     context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
@@ -390,7 +390,6 @@ def edit_test_score(request, measure_id, student_name):
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
     student = custom_students.objects.get(evaluator=evaluator, measure=measures, student_name=student_name)
-
     context = {'measure':measures, 'test':test, 'student':student, 'measure_id':measure_id}
     return render(request, 'main/edit_test_select.html', context)
 
@@ -428,11 +427,6 @@ def add_test_score_evaluator(request,measure_id):
 
 @user_passes_test(admin_test)
 def dashboard(request):
-    # evaluators = Evaluator.objects.all()
-    # notifications = evaluate_rubric.objects.all()
-    #
-    # context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
-    #             'cycles': cycles, 'notifications':notifications, 'measures':measures}
     outcomes = Outcome.objects.all()
     measures = Measure.objects.all()
     cycles = Cycle.objects.all()
@@ -498,6 +492,9 @@ def cycle(request, cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
     prev_cycles = Cycle.objects.filter(isCurrent=False)
     courses = Course.objects.all()
+
+    for outcome in outcomes:
+        Outcome.objects.filter(id=outcome.id).update(status=outcome_test(outcome.id))
 
     context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles,
@@ -884,6 +881,12 @@ def add_evaluator(request, outcome_id, measure_id):
     if request.method == 'POST':
         evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'))
         evaluator.save()
+
+        # evaluator_list = request.POST.getlist('evaluators')
+        # print(evaluator_list)
+        # for ev in evaluator_list:
+        #     measure.evaluator.add(ev)
+
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
@@ -1318,3 +1321,12 @@ def super_admin_past(request):
     invitees = Invited_Coordinator.objects.filter(invited_by=request.user.username)
     context = {'past':'active', 'invitees':invitees}
     return render(request, 'main/invite_status.html', context)
+
+def outcome_test(outcome_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    measures = Measure.objects.filter(outcome = outcome)
+    flag = True
+    for measure in measures:
+        if measure.status == 'failing':
+            flag = False
+    return flag

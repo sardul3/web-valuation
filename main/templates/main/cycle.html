@@ -15,6 +15,10 @@
       text-decoration: none;
       font-style: oblique;
   }
+  .badge{
+    white-space: inherit;
+  vertical-align: text-top;
+  }
 
 </style>
 <div class = "container-fluid" id = "main_content">
@@ -98,7 +102,13 @@
       <div class = "d-flex justify-content-center p-2">
       <div class=" d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
-              <h5 class="mb-1 p-1">{{outcome.title}}</h5>
+              <h5 class="mb-1 p-1">{{outcome.title}}
+              {%if outcome.status == False%}
+                <div class="badge badge-pill badge-danger" style="font-size:initial;">failing</div>
+              {%else%}
+                <div class="badge badge-pill badge-success" style="font-size:initial;">passing</div>
+              {%endif%}
+</h5>
           </a>
       </div>
 

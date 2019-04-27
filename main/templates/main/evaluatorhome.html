@@ -64,7 +64,16 @@
           {%else%}
                 <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
           {%endif%}
-        <span class = "d-flex justify-content-between">  <h4 class = "mb-2">{{measure.measureTitle}}</h4>
+        <span class = "d-flex justify-content-between ">
+          <h4 class = "mb-2">{{measure.measureTitle}} <br/> <em class = "badge badge-pill badge-info">{{measure.tool_type}}:
+             {%if measure.tool_type == 'Rubric'%}
+                {{measure.rubric}}
+            {%else%}
+                {{measure.test_score}}
+            {%endif%}
+            </em>
+          </h4>
+
 
         <div id="bar{{measure.id}}" class = "mb-2">
           <div>
