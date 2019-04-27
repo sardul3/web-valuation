@@ -1,14 +1,29 @@
 {% extends  'main/adminbase.html' %}
 {% load static %}
 {% block body_block %}
+<style>
+  hr {
+    height: 6px;
+    background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;
+      border: 0;
+    color: #dad86d9;
+  }
+  .list-group-item-action:focus, .list-group-item-action:hover {
+      z-index: 1;
+      color: #495057;
+      background-color: #cae3fb;
+      text-decoration: none;
+      font-style: oblique;
+  }
 
+</style>
 <div class = "container-fluid" id = "main_content">
 
   <div class = "row d-flex justify-content-center  ">
 
       <div class = "col col-lg-2 col-md-12 col-sm-12 col-xs-12 col-12">
         <div class="card border-dark mb-3">
-            <div class="card-header text-center"><h5>{{cycle.semester}} {{cycle.year}}</h5></div>
+            <div class="card-header text-center"><h4>{{cycle.semester}} {{cycle.year}}</h4></div>
             <div class="card-body text-dark text-center">
               <h5 class="card-title">Started at</h5>
               <p class="card-text">{{cycle.startDate}}</p>
@@ -40,8 +55,8 @@
           </div>
 
 
-          <div class = "card border-dark mb-3">
-            <h3 class = "card-header title text-center"> Create a curriculum </h3>
+          <!-- <div class = "card border-dark mb-3">
+            <h4 class = "card-header title text-center"> Create a curriculum </h4>
             <div class="container p-2">
               <form action = "{%url 'main:create_curriculum'%}" method = 'POST'>
                 {%csrf_token%}
@@ -63,7 +78,7 @@
               </div>
             </form>
             </div>
-          </div>
+          </div> -->
 
       </div>
 
@@ -138,6 +153,11 @@
                        {%endfor%}
                      </select>
                    </div>
+
+                   <div class = "text-right">
+                     <a href = "" data-toggle="modal" data-target="#exampleModalCenterCreateCourse"> Create a new Course </a>
+                  </div>
+
 
 
                     <div class="modal-footer">
@@ -268,8 +288,11 @@
                      {%endfor%}
                    </select>
                  </div>
+                 <div class = "text-right">
+                   <a href = "" data-toggle="modal" data-target="#exampleModalCenterCreateCourse"> Create a new Course </a>
+                </div>
 
-
+                  <br/>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save changes</button>
                   </div>
@@ -278,6 +301,53 @@
           </div>
         </div>
       </div>
+
+
+
+
+
+
+      <div class="modal fade" id="exampleModalCenterCreateCourse" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Learning Outcome Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+      <div class = "card border-dark mb-3">
+        <h4 class = "card-header title text-center"> Create a curriculum </h4>
+        <div class="container p-2">
+          <form action = "{%url 'main:create_curriculum'%}" method = 'POST'>
+            {%csrf_token%}
+          <div class="form-group">
+            <label for="exampleFormControlSelect2">Course Title</label>
+            <input class="form-control" type="text" name="title"></input>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Credit hours</label>
+            <input class="form-control" type="number" name="credit_hours"></input>
+          </div>
+
+          <div class = "text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Create</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+
 </div>
 </div>
 

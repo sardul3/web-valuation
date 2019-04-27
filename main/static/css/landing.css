@@ -204,14 +204,33 @@ h4{
 
 .modal-header {
     border-bottom: 2px solid #800029;
+    background-color: #800029;
+    color: white;
+}
+
+.close{
+  color:white;
+}
+
+.close:hover{
+  color:yellow;
 }
 
 .modal-content {
     border: 2px solid #BD955A;
 }
+
 .rubric_select{
   padding:0 !important;
 
+}
+
+group-item-action:hover {
+    z-index: 1;
+    color: #495057;
+    background-color: #cae3fb;
+    text-decoration: none;
+    font-style: oblique;
 }
 
 @media (max-width: 576px) {
