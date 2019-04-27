@@ -84,8 +84,8 @@ td{
   font-size: 1.5rem;
 }
 
-.progress-admin {background: :#9aa1a7; border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px;}
-.progress-bar-custom {background: green;}
+.progress-admin {background: :#9eb5ce; border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px; width:60%;}
+.progress-bar-custom {background: #289548 !important;}
 
 .btn-primary {
     color: #ffefef !important;

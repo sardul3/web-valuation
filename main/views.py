@@ -164,6 +164,7 @@ def rubrics(request):
 @user_passes_test(admin_test)
 def cycles(request):
     cycles = Cycle.objects.all()
+    
 
     context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
