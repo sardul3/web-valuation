@@ -17,6 +17,8 @@ from django.utils.timezone import datetime
 from django.db.models import Avg, Count, Min, Sum
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
+from django.core.mail import send_mail
+
 
 
 
@@ -137,7 +139,74 @@ def admin_test(user):
 
 
 def homepage(request):
-    return render(request, 'main/evaluatorhome.html')
+    rubrics = Rubric.objects.all()
+    students = Student.objects.all()
+    evaluations = evaluate_rubric.objects.all()
+    measures = Measure.objects.all()
+    flags = evaluation_flag.objects.all()
+    alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
+    alerts_count = alerts.count()
+
+    flag = []
+
+    email_address = request.user.email
+    measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+    # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+
+    x = []
+    y = 0
+    for me in measure:
+        x = me.student.all()
+        y = evaluate_rubric.objects.filter(measure=me, grade_score__isnull=False).count()
+        for f in flags:
+            if f.measure == me:
+                flag.append(f.student_name)
+
+            student_count = len(x)
+            eval_student = y
+            if student_count==0:
+                perc=100.0
+            else:
+                perc =100.0* (eval_student/student_count)
+
+            eval = request.user.email
+            current_eval = 0
+            for myeval in Evaluator.objects.all():
+                if(myeval.email==eval):
+                    current_eval = myeval
+            myeval.perc_completed = perc
+            myeval.save()
+
+            cust_student_list=[]
+            for stu in custom_students.objects.all():
+                for evaluator in stu.measure.evaluator.all():
+                    if(evaluator.email==email_address):
+                        cust_student_list.append(stu)
+            for mea in measure:
+                total=0.0
+                graded =0
+
+                for cu in cust_student_list:
+                    if cu.evaluator is not None:
+                        if cu.measure == mea and cu.evaluator.email==request.user.email:
+                            total+=1
+                            if cu.graded:
+                                #print(cu.student_name)
+                                graded+=1
+
+                #print("Graded",graded)
+                #print("Total",total)
+                if graded==0:
+                    mea.evaluationPercent=0.0
+                else:
+                    mea.evaluationPercent = (graded/total)*100.0
+
+
+
+    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
+            , 'now':'active','alerts':alerts, 'alerts_count':alerts_count}
+
+    return render(request, 'main/evaluatorhome.html', context)
 
 @user_passes_test(admin_test)
 def outcomes(request):
@@ -983,7 +1052,7 @@ def add_evaluator(request, outcome_id, measure_id):
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        #email_send.send()
+        email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
 
@@ -1001,7 +1070,7 @@ def add_preexisting_evaluator(request, outcome_id, measure_id):
 
             email = evaluator.email
             email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        #email_send.send()
+        email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
 
@@ -1427,6 +1496,10 @@ def super_admin_home(request):
         evaluators = Evaluator.objects.all()
         co = CoOrdinator(name="",email=email,department=department)
         co.save()
+        email = co.email
+        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send.send()
+
         for eval in evaluators:
             if eval.email == invited_Coordinator:
                 Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
