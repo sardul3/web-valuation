@@ -1383,7 +1383,8 @@ def generate_cycle_report(request, cycle_id):
     outcomes = Outcome.objects.filter(cycle=cycle)
     data = dict()
     me = []
-    count = 0;
+    count = 0
+    measures = None
 
     for outcome in outcomes:
         measures = Measure.objects.filter(outcome=outcome)
