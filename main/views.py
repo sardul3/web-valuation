@@ -481,7 +481,8 @@ def newCycle(request):
     cycle = Cycle(year=year, semester=semester, startDate=today)
     cycle.save()
     messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
-
+    url = request.POST.get("url")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 @user_passes_test(admin_test)
@@ -1203,7 +1204,9 @@ def create_curriculum(request):
     description = request.POST.get('description')
     credit_hours = request.POST.get('credit_hours')
     Course.objects.create(title=title, description=description, credit_hours=credit_hours)
-
+    url = request.POST.get("url1")
+    print("Url is",url)
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def mark_read(request, alert_id):
@@ -1215,13 +1218,13 @@ def mark_read(request, alert_id):
 def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
     notification.update(read=True)
-
+    print(request.build_absolute_uri())
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def delete_notifications(request):
     notification = Notification.objects.all()
     notification.update(read = True)
-
+    print(request.build_absolute_uri())
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def upload_test_score_evaluator(request, measure_id):
