@@ -3,16 +3,7 @@
 
 {%block body_block%}
 
-<style>
-  hr {
-    height: 6px;
-    background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;
-      border: 0;
-    color: #dad86d9;
-  }
 
-
-</style>
     <div class = "container-fluid">
       <div class = "container" id = "main_content">
 
@@ -53,7 +44,7 @@
          <div class = "col col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12">
            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
              <h3 class = "card-header title text-center">Running Cycles </h3>
-             <ul class="list-group">
+             <ul class="list-group"  style="overflow-y:scroll; height:18vh">
                {%for cycle in cycles%}
                  {%if cycle.isCurrent %}
                  <li class="list-group-item d-flex justify-content-between align-items-center">

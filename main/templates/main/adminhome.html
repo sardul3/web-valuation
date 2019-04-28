@@ -25,7 +25,7 @@ hr {
 <div class = "container-fluid">
     <div class = "row">
 
-      <div class = "col col-lg-8 col-md-6 col-sm-12 col-xs-12 col-12">
+      <div class = "col col-lg-8 col-md-12 col-sm-12 col-xs-12 col-12">
 
          <div class = "card border-dark mb-3">
            <h3 class = "card-header title text-center"> Evaluator Progress </h3>
@@ -56,7 +56,7 @@ hr {
      <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
        <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
          <h3 class = "card-header title text-center">Running Cycles </h3>
-         <ul class="list-group" style="overflow-y:scroll; height: 35vh">
+         <ul class="list-group" style="overflow-y:auto; height: 35vh">
            {%for cycle in cycles%}
              {%if cycle.isCurrent %}
              <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -78,7 +78,7 @@ hr {
 <div class = "row">
 
 
-     <div class = "col col-lg-12 col-md-6 col-sm-12 col-xs-12 col-12">
+     <div class = "col col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
 
          <div class = "col col-lg-12 col-md-12 col-sm-12">
                    <div  class = "card border-dark mb-3 justify-content-center" >
@@ -88,7 +88,7 @@ hr {
                      </div>
                      </h3>
 
-         <ul id = "over" class="list-group" style="overflow-y:scroll; height: 35vh">
+         <ul id = "over" class="list-group" style="overflow-y:auto; height: 35vh">
      {%for outcome in outcomes%}
          <div class="accordion" id="accordionExample">
            {%for cycle in outcome.cycle.all%}
@@ -116,7 +116,7 @@ hr {
                      {%if measure.outcome == outcome%}
                      <div class = "row ">
                        <div class = "col col-lg-12 d-flex justify-content-between">
-                           <button class = "btn btn-sm btn-warning mb-2 " data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}">
+                           <span class = "badge badge-info mb-2 p-2 " data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}">
                            {{measure.cutoff_percentage}} % of the students need to get
                            {%if measure.cutoff_score%}
                             {{measure.cutoff_score}}
@@ -130,33 +130,31 @@ hr {
                            {%elif measure.tool_type == "Test score"%}
                              <strong>{{measure.test_score}}</strong>
                            {%endif%}
-                           </button>
+                           </span>
 
                            <div class="modal fade" id="exampleModalCenter{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                              <div class="modal-dialog modal-dialog-centered" role="document">
                                <div class="modal-content">
                                  <div class="modal-header">
-                                   <h5 class="modal-title" id="exampleModalLongTitle">Detailed Stats</h5>
+                                   <h5 class="modal-title" id="exampleModalLongTitle">Detailed Stats - {{measure}}</h5>
                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                      <span aria-hidden="true">&times;</span>
                                    </button>
                                  </div>
                                  <div class="modal-body">
                                    <div class="card bg-light mb-3">
-                                     <div class="card-header">{{measure}}</div>
-                                     <div class="card-body">
-                                       <h5 class="card-title">Tool type: {{measure.tool_type}}</h5>
+                                     <div class="card-body ">
+                                    <div class = "d-flex justify-content-between">   <h5>Tool type </h5> <span class ="badge badge-info" style="padding: 10px;">{{measure.tool_type}}</span></div>
                                        <p class="card-text">
 
                                            {%for k, v in data.items %}
 
                                              {%if v.measure.id == measure.id%}
 
-                                             Total evaluators: {{v.evaluator_count}} <br>
-                                             Total students evaluated: {{v.evaluated_student_count}} <br>
-                                             Average Points: {{v.avg_points|floatformat:2}} <br>
-                                             Percentage passed: {{v.percent_pass_cases|floatformat:2}}% <br>
-                                             Status: {% if v.passed%} passed {%else%} failed {%endif%}
+                                            <div class = "d-flex justify-content-between"> <h5>Total evaluators </h5> <span class="badge badge-primary" style="padding: 10px;"> {{v.evaluator_count}} </span> </div><br>
+                                            <div class = "d-flex justify-content-between"><h5> Total students evaluated </h5><span class="badge badge-primary" style="padding: 10px;">{{v.evaluated_student_count}}</span> </div> <br>
+                                            <div class = "d-flex justify-content-between"> <h5>Percentage passed</h5> <span class="badge badge-primary" style="padding: 10px;"> {{v.percent_pass_cases|floatformat:2}}%</span> </div> <br>
+                                            <div class = "d-flex justify-content-between"> <h5>Status </h5> {% if v.passed%}<span class="badge badge-success" style="padding: 10px;"> passed </span> {%else%} <span class="badge badge-danger" style="padding: 10px;"> failed </span> {%endif%} </div> <br>
 
 
                                              {%endif%}
