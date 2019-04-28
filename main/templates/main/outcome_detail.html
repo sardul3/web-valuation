@@ -147,7 +147,7 @@ hr.not(.style15) {
   <div class="col col-lg-2 md-6 sm-12 xs-12 mb-1">
     <div class = "text-right">
     <button type="button" class="btn btn-primary  mb-2" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
-       <i class="fas fa-plus"></i>
+       <i data-toggle="tooltip" title="Add Measures" class="fas fa-plus"></i>
      </button>
      </div>
 
@@ -197,13 +197,13 @@ hr.not(.style15) {
           <div class = "mr-3">
           <button  class="btn  button_main" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
             <span style="font-size: 2em; color: #bd955a;">
-              <i class="far fa-edit"></i>
+              <i data-toggle="tooltip" title="Edit Measure" class="far fa-edit"></i>
           </span>
           </button>
 
           <button class="btn button_main" data-toggle="modal" data-target="#exampleModalCenterDeleteMeasure{{measure.id}}" data-measure-id = "{{measure.id}}">
             <span style="font-size: 2em; color:#7a2831;">
-              <i class="far fa-trash-alt"></i>
+              <i data-toggle="tooltip" title="Delete Measure" class="far fa-trash-alt"></i>
           </span>
           </button>
           </div>
@@ -324,7 +324,7 @@ hr.not(.style15) {
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add Students to {{measure.title}}</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">Add Students to {{measure.measureTitle}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -388,7 +388,7 @@ hr.not(.style15) {
       <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
         <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}" class = "btn btn-light">
           <span style=" color: #7a2831;">
-            <i class="far fa-trash-alt"></i>
+            <i data-toggle="tooltip" title="Remove Association" class="far fa-trash-alt"></i>
         </span>
          </a>
       </div>
@@ -458,13 +458,13 @@ hr.not(.style15) {
             <li class="list-group-item card-header d-flex align-items-center justify-content-between"><h4>Evaluators</h4>
 
             <button type="button" class="btn btn-light  ml-3" data-toggle="modal" data-target="#exampleModalCenterAddEv{{measure.id}}">
-                 <i class="fas fa-plus"></i>
+                 <i data-toggle="tooltip" title="Add Evaluators" class="fas fa-plus"></i>
             </button>
             </li>
           {%for eval in measure.evaluator.all%}
               <li class="list-group-item d-flex  justify-content-between">{{eval.email}}
               <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
-                <i class="fas fa-user-slash"></i>
+                <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
               </a>
                 </li>
 
@@ -595,11 +595,11 @@ hr.not(.style15) {
 
           <div class = "d-flex justify-content-between">
             <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-              <i class="fas fa-plus"></i>
+              <i data-toggle="tooltip" title="Add Students to Measure" class="fas fa-plus"></i>
             </button>
 
             <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
-              <i class="fas fa-expand-arrows-alt"></i>
+              <i data-toggle="tooltip" title="View Student List" class="fas fa-expand-arrows-alt"></i>
             </button>
           </div>
 
@@ -608,7 +608,7 @@ hr.not(.style15) {
                     <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
                       <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
                             <span style="font-size: 1em; color: #7a2831;">
-                                <i class="fas fa-times"></i>
+                                <i data-toggle="tooltip" title="Remove Student" class="fas fa-times"></i>
                             </span>
                       </a>
                     </li>
@@ -618,7 +618,7 @@ hr.not(.style15) {
                   <h1>No students</h1>
                   <p class="lead">Click the
                     <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-                      <i class="fas fa-plus"></i>
+                      <i data-toggle="tooltip" title="Add Students" class="fas fa-plus"></i>
                     </button>
                      button above to add students</p>
                 </div>
@@ -934,6 +934,10 @@ hr.not(.style15) {
     if(activeTab){
       $('#list-tab a[href="' + activeTab + '"]').tab('show');
     }
+  });
+
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
   });
 </script>
 
