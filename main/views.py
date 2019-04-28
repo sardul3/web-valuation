@@ -233,7 +233,7 @@ def rubrics(request):
     cordinator = CoOrdinator.objects.get(email=request.user.email);
     rubrics = Rubric.objects.filter(coordinator = cordinator)
 
-    context = {'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
+    context = {'evaluator': Evaluator.objects.filter(coordinator=cordinator),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
     return render(request, 'main/rubrics.html', context)
 
@@ -711,7 +711,7 @@ def outcome_detail(request, outcome_id):
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
 
 
-    context = {'evaluator': Evaluator.objects.all(),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+    context = {'evaluator': Evaluator.objects.filter(coordinator=cordinator),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False).count(),
