@@ -150,7 +150,7 @@
              <a id="noti_Button" >
                <span style="font-size: 2rem; color: #7a2831;">
 
-               <i class="fas fa-bell"></i>
+               <i data-toogle="tooltip" title="Notifications" class="fas fa-bell"></i>
                </span>
              </a>
 
@@ -182,7 +182,7 @@
          <li class="nav-item {{msg}}" >
          <a id="noti_Button" data-toggle="modal" data-target="#exampleModalCenter" >
            <span style="font-size: 2rem; color: #7a2831;">
-              <i class="fas fa-envelope-open-text"></i>
+              <i data-toogle="tooltip" title="Send Broadcast" class="fas fa-envelope-open-text"></i>
             </span>
          </a>
        </li>
@@ -193,7 +193,7 @@
          <li class="nav-item {{help}}" >
            <a id="noti_Button" class = "nav-link" href="{% url 'main:admin_instructions'%}">
              <span style="font-size: 2rem; color: #7a2831;">
-               <i class="fas fa-info-circle"></i>
+               <i data-toogle="tooltip" title="User Manual" class="fas fa-info-circle"></i>
             </span>
            </a>
           </li>
@@ -297,5 +297,9 @@
         $('#notifications').click(function () {
             return true;       // DO NOTHING WHEN CONTAINER IS CLICKED.
         });
+    });
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
