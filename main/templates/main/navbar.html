@@ -158,7 +158,9 @@
              <div id="notifications">
                  <h3>Notifications
                      <div id="clear">
-                     <span class="pull-right" font><a id="clear1" href = "{%url 'main:delete_notifications'%}">Clear Notifications</a></span>
+                       <form action = "{%url 'main:delete_notifications'%}" method = "POST">
+                         <button type="submit" class="pull-right"  id="clear1">Clear Notifications</button>
+                     <form>
                     </div>
                  </h3>
 
@@ -166,9 +168,11 @@
                    <ul class="list-group">
                      {%for notification in notifications%}
                        <p class = "text-left list-group-item d-flex justify-content-between">{{notification.message}}
-                         <a href="{%url 'main:delete_notification' notification.id%}">
+                         <form action = "{%url 'main:delete_notification' notification.id%}" method = "POST">
+
+                         <button type="submit" >
                         <i class="fas fa-times"></i>
-                        </a>
+                        </button>
                        </p>
                      {%endfor%}
                    </ul>

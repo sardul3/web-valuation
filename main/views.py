@@ -146,7 +146,8 @@ def homepage(request):
     flags = evaluation_flag.objects.all()
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
     alerts_count = alerts.count()
-
+    perc = 0
+    cust_student_list = None
     flag = []
 
     email_address = request.user.email
