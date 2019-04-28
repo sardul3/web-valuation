@@ -54,6 +54,15 @@
                  </a>
                  </li>
                  {%endif%}
+                 {%empty%}
+            
+                 <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+                   <div class="container">
+                     <h1 class="display-5">No current cycles</h1>
+                     <p class="lead">Please create a cycle </p>
+                   </div>
+                 </div>
+
                {%endfor%}
              </ul>
            </div>
@@ -77,6 +86,14 @@
 
          </li>
          {%endif%}
+         {%empty%}
+         <br/>
+         <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+           <div class="container">
+             <h1 class="display-5">No previous cycles</h1>
+           </div>
+         </div>
+
        {%endfor%}
      </ul>
    </div>

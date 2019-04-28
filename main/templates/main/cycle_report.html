@@ -26,6 +26,7 @@ margin-bottom: 10px;
 
 <h2 class="card-header"><center>2013-2015 Computer Science Assessment Cycle- Summary Of Results</center></h2>
 <div class="table-responsive">
+  {%if outcomes%}
 <table class="table table-bordered table-hover table-sm">
   <tr>
     <th class="align-middle">Outcome</th>
@@ -53,6 +54,18 @@ margin-bottom: 10px;
   {%endif%}
 {%endfor%}
 {%endfor%}
+{%else%}
+
+<br/>
+<div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+  <div class="container">
+    <h1 class="display-5">Not enough data to generate report</h1>
+    <p class="lead">Please add some outcomes </p>
+  </div>
+</div>
+
+
+{%endif%}
 
 </table>
 </div>

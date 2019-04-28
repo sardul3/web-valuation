@@ -17,6 +17,7 @@ hr {
   color: #dad86d9;
 }
 
+
 </style>
 
 {%block body_block%}
@@ -29,7 +30,7 @@ hr {
 
          <div class = "card border-dark mb-3">
            <h3 class = "card-header title text-center"> Evaluator Progress </h3>
-           <div class="container" style="overflow-y:scroll; height: 35vh">
+           <div class="container" style="overflow-y:auto; height: 35vh">
             <ul class="list-group list-group-flush " >
            {% for eval in evaluator %}
 
@@ -45,6 +46,14 @@ hr {
 
 
            </li>
+              {%empty%}
+              <br/>
+              <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+                <div class="container">
+                  <h1 class="display-4">No evaluators present in the running cycles</h1>
+                  <p class="lead">Please assign evaluators to see the data</p>
+                </div>
+              </div>
              {% endfor %}
            </ul>
            </div>
@@ -66,6 +75,14 @@ hr {
              </a>
              </li>
              {%endif%}
+             {%empty%}
+             <br/>
+             <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+               <div class="container">
+                 <h1 class="display-5">No running cycles</h1>
+                 <p class="lead">Click <a href = "{%url 'main:cycles'%}">here </a> to add cycles</p>
+               </div>
+             </div>
            {%endfor%}
          </ul>
        </div>
@@ -242,6 +259,18 @@ hr {
         </div>
       </div>
          </div>
+
+
+
+         {%empty%}
+         <br/>
+         <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+           <div class="container">
+             <h1 class="display-5">No outcomes present</h1>
+             <p class="lead">Go to the current cycle and add outcomes </p>
+           </div>
+         </div>
+
 
    {%endfor%}
  </div>
