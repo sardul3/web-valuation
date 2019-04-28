@@ -22,7 +22,6 @@
               </select>
     <br/>
     <h1> {{rubric.title}} </h1>
-    {{data}}
     <div class = "table-responsive">
     <table class = "table table-bordered  table-hover">
         {% for x in row_num%}
@@ -42,12 +41,15 @@
           <td> Score </td>
           {%else%}
         <td>
+            {% load index %}
           <div class="form-group">
               <select class="form-control rubric_select" id="exampleFormControlSelect1" name = "cat_field">
                   {% for val in super_cat %}
-                  <option value = "{{val}}"
-
-                  >{{val}}</option>
+                  {% if val == data|index:x %}
+                  <option value = "{{val}}" selected>{{val}}</option>
+                  {%else%}
+                  <option value = "{{val}}">{{val}}</option>
+                  {% endif %}
                   {% endfor %}
               </select>
           </div>

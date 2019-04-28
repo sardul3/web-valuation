@@ -19,6 +19,7 @@ from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
 
 
+
 def test_score_data(test_score_test, measure_id):
     measure = Measure.objects.get(id=measure_id)
     # test_score = Test_score.objects.filter(test=test_score_test)
@@ -924,6 +925,7 @@ def view_test_score(request, test_score_test, measure_id):
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     student_id = int(request.POST.getlist('student_to_be_evaluated')[0])
+    print(student_id)
     student_real = custom_students.objects.get(id=student_id)
     student_name = student_real.student_name
     rub = Rubric.objects.get(id=rubric_id)
@@ -958,10 +960,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
                 super_header.append(cat.categoryTitle)
 
     print("This is superheader",super_header)
-    mysc = request.POST.getlist('cat_field')
     myvals = category_score.objects.filter(student=student_real)
     for vals in myvals:
         vals.delete()
+    mysc = request.POST.getlist('cat_field')
     for x in range(0,rub.max_row-1):
         print(mysc[x])
         score = mysc[x]
@@ -1110,9 +1112,9 @@ def edit_evaluation_student(request,evaluation_id):
             mystudent.graded=False
 
     cat_score = category_score.objects.filter(student=mystudent)
-    data = []
+    data = ["dummy"]
     for c_s in cat_score:
-        data.append({c_s.header: c_s.score})
+        data.append(c_s.score)
     print(data)
     measures = measure
     students = measures.student.all()
@@ -1149,8 +1151,6 @@ def edit_evaluation_student(request,evaluation_id):
         if cat.rubric == rubric:
             if cat.index_y in cat_index and cat.index_x == 0:
                 super_cat.append(cat.categoryTitle)
-
-
     context = {'measures': measures, 'mystudent':mystudent, 'measure_id': measure_id, 'rubric': rubric,
                'categories': categories, 'data':data
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
