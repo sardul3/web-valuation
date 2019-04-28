@@ -17,14 +17,14 @@
     </tr>
   </thead>
   <tbody>
-    {%for invite in invitees%}
+    {%for invite in myinvitees%}
     <tr>
       <td>{{invite.email}}</td>
       <td>
-          {%if invite.accepted %}
-            Accepted
-          {%else%}
+          {%if invite.pending %}
             Pending
+          {%else%}
+            Accepted
           {%endif%}
       </td>
     </tr>

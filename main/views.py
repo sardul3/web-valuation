@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import( Rubric, Student, Measure, Category, evaluate_rubric,
         Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,
         custom_students, Broadcast, Course, Notification, category_score,
-        CoOrdinator, Invited_Coordinator)
+        CoOrdinator, Invited_Coordinator,InvitedCo)
 from django.contrib import messages
 from .forms import RegisterForm, CoOrdinatorRegisterForm
 import csv
@@ -816,13 +816,14 @@ def registerCo(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             dept = form.cleaned_data.get('department')
-            co = CoOrdinator.objects.get(email=email)
-            co.name=username
-            co.department=dept
-            #co = CoOrdinator(name=username,email=email,department=dept)
+            co = CoOrdinator(name=username, email=email, department=dept)
             co.save()
             messages.success(request, 'Account created')
-
+            inv = InvitedCo.objects.filter(email=email)[0]
+            print(email)
+            print(inv)
+            inv.pending = False
+            inv.save()
             return redirect('/')
         else:
             messages.add_message(request, messages.SUCCESS, 'Please check your credentials')
@@ -1494,7 +1495,7 @@ def super_admin_home(request):
         department = request.POST.get('department')
         invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
         evaluators = Evaluator.objects.all()
-        co = CoOrdinator(name="",email=email,department=department)
+        co = InvitedCo(email=email, pending=True)
         co.save()
         email = co.email
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
@@ -1513,8 +1514,9 @@ def super_admin_home(request):
 
 
 def super_admin_past(request):
+    myinvitees = InvitedCo.objects.all()
     invitees = Invited_Coordinator.objects.filter(invited_by=request.user.username)
-    context = {'past':'active', 'invitees':invitees}
+    context = {'past':'active', 'invitees':invitees,'myinvitees':myinvitees}
     return render(request, 'main/invite_status.html', context)
 
 def outcome_test(outcome_id):
