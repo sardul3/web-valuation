@@ -1406,12 +1406,16 @@ def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
     notification.update(read=True)
     print(request.build_absolute_uri())
+    url = request.POST.get("url")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def delete_notifications(request):
     notification = Notification.objects.all()
     notification.update(read = True)
     print(request.build_absolute_uri())
+    url = request.POST.get("urls")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def upload_test_score_evaluator(request, measure_id):

@@ -159,8 +159,10 @@
                  <h3>Notifications
                      <div id="clear">
                        <form action = "{%url 'main:delete_notifications'%}" method = "POST">
+                           {% csrf_token %}
+                           <input type="hidden" name="urls" id="urls" value={{request.path}}>
                          <button type="submit" class="pull-right"  id="clear1">Clear Notifications</button>
-                     <form>
+                     </form>
                     </div>
                  </h3>
 
@@ -169,10 +171,13 @@
                      {%for notification in notifications%}
                        <p class = "text-left list-group-item d-flex justify-content-between">{{notification.message}}
                          <form action = "{%url 'main:delete_notification' notification.id%}" method = "POST">
+                       {% csrf_token %}
+                       <input type="hidden" name="url" id="url" value={{request.path}}>
 
                          <button type="submit" >
                         <i class="fas fa-times"></i>
                         </button>
+                   </form>
                        </p>
                      {%endfor%}
                    </ul>
