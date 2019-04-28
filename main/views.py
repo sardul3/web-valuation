@@ -549,6 +549,17 @@ def migrate_outcome(request, cycle_id):
         outcome.cycle.add(to_cycle)
     return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
 
+def migrate_measure(request, outcome_id, cycle_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    measures_to_add = request.POST.getlist('measures')
+    for m_id in measures_to_add:
+        measure = Measure.objects.get(id=m_id)
+        new_measure = Measure.objects.create(measureTitle= measure.measureTitle,
+                  cutoff_score= measure.cutoff_score,cutoff_percentage= measure.cutoff_percentage,
+                  outcome=outcome, tool_type=measure.tool_type, cutoff_type=measure.cutoff_type)
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+
 
 
 def reactivate_cycle(request, cycle_id):
@@ -559,7 +570,12 @@ def reactivate_cycle(request, cycle_id):
 
 def outcome_detail(request, outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
+    cycle_id = None
+    for cyc in outcome.cycle.all():
+        cycle_id = cyc.id
+    print(cycle_id)
     measures = Measure.objects.filter(outcome=outcome)
+    all_measures = Measure.objects.all()
     rubrics = Rubric.objects.all()
     students = None
     evaluators = Evaluator.objects.all()
@@ -596,8 +612,8 @@ def outcome_detail(request, outcome_id):
 
 
     context = {'evaluator': Evaluator.objects.all(),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
-                'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
-                'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student,
+                'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
+                'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False).count(),
                 'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
     return render(request, 'main/outcome_detail.html', context)

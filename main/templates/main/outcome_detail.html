@@ -106,17 +106,33 @@ hr.not(.style15) {
                           placeholder="cutoff score" name = "cutoff_score">
                  </div>
 
+            <div class="form-group">
              <label for="exampleFormControlTextarea1">Select Tool Type</label>
                <select class="custom-select" name="tool_selection">
                <option selected>Select Tool</option>
                <option value="Rubric">Rubric</option>
                <option value ="Test score">Test score</option>
                </select>
+            </div>
 
 
-               <div class="modal-footer">
-                 <button type="submit" class="btn btn-primary">Add</button>
-               </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+             </form>
+             <hr class = "style15" />
+
+             <form action = "{%url 'main:migrate_measure' outcome.id cycle_id%}" method = "POST">
+               {%csrf_token%}
+               <div class="form-group">
+
+                 <label for="exampleFormControlTextarea1">Add pre-existing measures</label>
+                 <select multiple class="form-control custom-select" id="exampleFormControlSelect2" name="measures">
+                   {%for measure in all_measures%}
+                    <option value="{{measure.id}}">{{measure.measureTitle}}</option>
+                   {%endfor%}
+                 </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Add</button>
+
              </form>
            </div>
 

@@ -59,6 +59,8 @@ urlpatterns = [
 
     path('migrate_cycle/<int:cycle_id>', views.migrate_cycle, name = "migrate_cycle"),
     path('migrate_outcome/<int:cycle_id>', views.migrate_outcome, name = "migrate_outcome"),
+    path('migrate_measure/<int:outcome_id>/<int:cycle_id>', views.migrate_measure, name = "migrate_measure"),
+
 
     path('reactivate_cycle/<int:cycle_id>', views.reactivate_cycle, name = "reactivate_cycle"),
 
