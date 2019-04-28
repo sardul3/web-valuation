@@ -180,6 +180,24 @@ def cycles(request):
 
 @login_required
 def evaluatorhome(request):
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            department = request.POST.get('department')
+            invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department,
+                                                                     invited_by=request.user.username)
+            evaluators = Evaluator.objects.all()
+            for eval in evaluators:
+                if eval.email == invited_Coordinator:
+                    Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
+
+            messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
+
+            context = {'now': 'active'}
+            return render(request, 'main/invite.html', context)
+        context = {'now': 'active'}
+        return render(request, 'main/invite.html', context)
+
     if request.user.is_staff:
         cordinator = CoOrdinator.objects.get(email=request.user.email);
         outcomes = Outcome.objects.filter(coordinator=cordinator)
@@ -729,7 +747,10 @@ def registerCo(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             dept = form.cleaned_data.get('department')
-            co = CoOrdinator(name=username,email=email,department=dept)
+            co = CoOrdinator.objects.get(email=email)
+            co.name=username
+            co.department=dept
+            #co = CoOrdinator(name=username,email=email,department=dept)
             co.save()
             messages.success(request, 'Account created')
 
@@ -1404,6 +1425,8 @@ def super_admin_home(request):
         department = request.POST.get('department')
         invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
         evaluators = Evaluator.objects.all()
+        co = CoOrdinator(name="",email=email,department=department)
+        co.save()
         for eval in evaluators:
             if eval.email == invited_Coordinator:
                 Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
