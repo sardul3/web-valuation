@@ -923,6 +923,27 @@ def add_evaluator(request, outcome_id, measure_id):
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
+def add_preexisting_evaluator(request, outcome_id, measure_id):
+    measure = Measure.objects.get(id=measure_id)
+
+    if request.method == 'POST':
+        evaluator_list = request.POST.getlist('evaluators')
+        print(evaluator_list)
+        for ev in evaluator_list:
+            evaluator = Evaluator.objects.get(id=ev)
+            measure.evaluator.add(evaluator)
+
+            email = evaluator.email
+            email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        #email_send.send()
+        messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
+
+
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+
+
+
 def update_outcome(request, outcome_id, cycle_id):
     new_outcome_text = request.POST.get('outcome_title')
     new_outcome_desc = request.POST.get('outcome_desc')

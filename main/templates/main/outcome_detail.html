@@ -30,12 +30,6 @@ vertical-align: text-top;
             border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em;
           }
 
-          hr {
-          	height: 6px;
-          	background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;
-              border: 0;
-            color: #dad86d9;
-          }
 
           hr.style15 {
 	border-top: 4px double #8c8b8b;
@@ -51,6 +45,13 @@ hr.style15::after {
     font-size: 18px;
     background: #f5efe6;
 }
+hr {
+  height: 6px;
+  background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;
+    border: 0;
+  color: #dad86d9;
+}
+
 .progress {background: :#9eb5ce; border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px; width:90%;}
 
 </style>
@@ -485,7 +486,13 @@ hr.style15::after {
                         <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
                    </div>
 
+                   <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+
+                  </form>
                    <hr class = "style15" />
+                   <form class="" action = "{%url 'main:add_preexisting_evaluator' outcome_id measure.id %}" method = "POST">
+                    {%csrf_token%}
+
                    <div class="form-group">
                     <label for="exampleFormControlSelect2">Select Pre existing evaluators </label>
 
@@ -495,10 +502,10 @@ hr.style15::after {
                     {%endfor%}
                     </select>
                   </div>
-
-
-                    <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+                  <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
                   </form>
+
+
 
                 </div>
               </div>

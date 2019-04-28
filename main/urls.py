@@ -107,6 +107,8 @@ urlpatterns = [
     # path('upload', views.upload, name='upload'),
     path('add_learning_outcome/<int:cycle_id>', views.add_learning_outcome, name="add_learning_outcome"),
     path('add_evaluator/<int:outcome_id>/<int:measure_id>', views.add_evaluator, name="add_evaluator"),
+    path('add_preexisting_evaluator/<int:outcome_id>/<int:measure_id>', views.add_preexisting_evaluator, name="add_preexisting_evaluator"),
+
     path('register', views.register, name='register'),
     path('registerCo', views.registerCo, name='registerCo'),
     path('', auth_views.LoginView.as_view(template_name='main/login.html'), name='login'),
