@@ -747,7 +747,10 @@ def registerCo(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             dept = form.cleaned_data.get('department')
-            co = CoOrdinator(name=username,email=email,department=dept)
+            co = CoOrdinator.objects.get(email=email)
+            co.name=username
+            co.department=dept
+            #co = CoOrdinator(name=username,email=email,department=dept)
             co.save()
             messages.success(request, 'Account created')
 
