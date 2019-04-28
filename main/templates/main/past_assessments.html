@@ -22,21 +22,19 @@
     </tr>
   </thead>
   <tbody>
-    {%for evaluation in evaluations%}
+    {%for cust in cust_stu%}
+    {% if cust.graded %}
     <tr style="background-color: #e5e8ff;">
-      <td> {{evaluation.student}}</td>
-      <td>  {{evaluation.measure.measureTitle}}</td>
+      <td> {{cust.student_name}}</td>
+      <td> {{cust.measure.measureTitle}}</td>
       <td class = "justify-content-between">
-      {{evaluation.grade_score|floatformat:2}}
+      {{cust.grade|floatformat:2}}
       </td>
       <td>
-        <a href = "{%url 'main:edit_evaluation_student' evaluation.id%}" class = "btn btn-warning">Edit</a>
+        <a href = "{%url 'main:edit_evaluation_student' cust.id%}" class = "btn btn-warning">Edit</a>
       </td>
-      <!-- <td>
-        <a href = "{%url 'main:view_score' evaluation.id%}" class = "btn btn-warning">View</a>
-      </td> -->
     </tr>
-
+    {% endif %}
     {%endfor%}
 
     {%for score in scores%}

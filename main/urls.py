@@ -34,7 +34,7 @@ urlpatterns = [
 
     path('edit_rubric/<int:rubric_id>', views.edit_rubric, name = 'edit_rubric'),
 
-    path('edit_evaluation_student/<int:evaluation_id>', views.edit_evaluation_student, name='edit_evaluation_student'),
+    path('edit_evaluation_student/<int:cust_id>', views.edit_evaluation_student, name='edit_evaluation_student'),
     path('view_score/<int:evaluation_id>', views.view_score, name='view_score'),
     path('evaluate_students/', views.evaluate_students, name = 'evaluate_students'),
 

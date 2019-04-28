@@ -1152,9 +1152,9 @@ def past_assessments(request):
     print(scores)
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
     alerts_count = alerts.count()
-
+    cust_stu = custom_students.objects.filter(evaluator=evaluator)
     context = {'past':'active', 'evaluations': evaluations, 'scores':scores,
-                'alerts':alerts, 'alerts_count':alerts_count}
+                'alerts':alerts, 'alerts_count':alerts_count,'cust_stu':cust_stu}
     return render(request, 'main/past_assessments.html', context)
 
 
@@ -1174,8 +1174,8 @@ def view_score(request,evaluation_id):
 
 
 
-def edit_evaluation_student(request,evaluation_id):
-    evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
+def edit_evaluation_student(request,cust_id):
+    """evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
     measure = evaluation_found.measure
     measure_id = measure.id
     email_eval = Evaluator.objects.filter(email=evaluation_found.evaluated_by)[0]
@@ -1186,7 +1186,10 @@ def edit_evaluation_student(request,evaluation_id):
         if(stu.measure==measure and stu.student_name==evaluation_found.student and stu.evaluator==email_eval):
             mystudent=stu
             mystudent.graded=False
-
+     """
+    mystudent = custom_students.objects.get(id=cust_id)
+    measure = mystudent.measure
+    measure_id = measure.id
     cat_score = category_score.objects.filter(student=mystudent)
     data = ["dummy"]
     for c_s in cat_score:
