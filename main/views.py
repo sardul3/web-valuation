@@ -1422,6 +1422,8 @@ def super_admin_home(request):
         department = request.POST.get('department')
         invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
         evaluators = Evaluator.objects.all()
+        co = CoOrdinator(name="",email=email,department=department)
+        co.save()
         for eval in evaluators:
             if eval.email == invited_Coordinator:
                 Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)

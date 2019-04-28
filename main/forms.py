@@ -18,6 +18,13 @@ class RegisterForm(UserCreationForm):
 class CoOrdinatorRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
     department = forms.CharField(label="Department",required=True)
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        for em in CoOrdinator.objects.all():
+            if em.email==data:
+                return data
+        raise forms.ValidationError('You must be invited to register!!')
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2','department']
