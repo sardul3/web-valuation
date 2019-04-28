@@ -12,6 +12,12 @@
   white-space: inherit;
 vertical-align: text-top;
 }
+.jumbotron {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    background-color: #f5efe6;
+    border-radius: .3rem;
+}
 
   .speech-bubble {
      position: relative;
@@ -45,7 +51,7 @@ hr.style15::after {
     font-size: 18px;
     background: #f5efe6;
 }
-hr {
+hr.not(.style15) {
   height: 6px;
   background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;
     border: 0;
@@ -357,7 +363,7 @@ hr {
     </div>
     </div>
     </div>
-<hr/>
+<hr> </hr>
 
 <div class = "row">
 
@@ -450,7 +456,7 @@ hr {
 
 
           </ul>
-        <hr />
+        <hr> </hr>
 
 {%if measure.evaluator.exists%}
   {%if measure.student.exists%}
@@ -489,7 +495,7 @@ hr {
                    <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
 
                   </form>
-                   <hr class = "style15" />
+                   <hr class = "style15"> </hr>
                    <form class="" action = "{%url 'main:add_preexisting_evaluator' outcome_id measure.id %}" method = "POST">
                     {%csrf_token%}
 
@@ -668,7 +674,7 @@ hr {
       <button type="button" class="btn btn-primary btn-lg ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
           Upload Test Score
       </button>
-      <hr class = "style15" />
+      <hr class = "style15" > </hr>
     </div>
     <h3 class = 'text-center'> Add individual scores </h3>
     <form class="ml-2" action = "{%url 'main:add_test_score' measure.id outcome_id%}" method = "POST">
@@ -690,7 +696,7 @@ hr {
       <button type="submit" class="btn btn-primary  mb-2">Add Score</button>
     </form>
     <div class = 'text-center'>
-      <hr class = "style15" />
+      <hr class = "style15" > </hr>
 
     <button class="btn btn-lg btn-primary  ml-2 mt-2  mb-2" data-toggle="modal" data-target="#exampleModalCenterAddEvaluatorToTest{{measure.id}}">
     Assign students to Evaluators

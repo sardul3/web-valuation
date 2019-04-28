@@ -498,11 +498,14 @@ def cycle(request, cycle_id):
     prev_cycles = Cycle.objects.filter(isCurrent=False)
     courses = Course.objects.all()
 
+    all_outcomes = Outcome.objects.all()
+
+
     for outcome in outcomes:
         Outcome.objects.filter(id=outcome.id).update(status=outcome_test(outcome.id))
 
     context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
-                'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles,
+                'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles, 'all_outcomes': all_outcomes,
                 'courses':courses,'notification_count' : Notification.objects.filter(read=False).count(),
                 'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
     return render(request, 'main/cycle.html', context)
@@ -537,6 +540,16 @@ def migrate_cycle(request, cycle_id):
                 Measure.objects.filter(id=new_measure.id).update(test_score=mea.test_score)
 
     return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
+
+def migrate_outcome(request, cycle_id):
+    from_outcome_list = request.POST.getlist('outcomes')
+    to_cycle = Cycle.objects.get(id=cycle_id)
+    for outcomes in from_outcome_list:
+        outcome = Outcome.objects.get(id = outcomes)
+        outcome.cycle.add(to_cycle)
+    return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
+
+
 
 def reactivate_cycle(request, cycle_id):
     cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=True, endDate=None)
