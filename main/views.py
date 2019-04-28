@@ -31,7 +31,9 @@ def test_score_data(test_score_test, measure_id):
     data = {}
     above_threshold = None
     percentage = None
+
     test_average = 0
+    above_test_average = 0
 
     bin_array = []
     for student_score in test_score:
@@ -45,6 +47,7 @@ def test_score_data(test_score_test, measure_id):
 
 
     if(measure.cutoff_type == 'Percentage'):
+        if custom_students.objects.filter(measure=measure, graded=True, current=True).count()>0:
             above_threshold = test_score.filter(grade__gte = measure.cutoff_score).count()
             percentage = above_threshold / total_students * 100
             test_average = test_score.aggregate(Avg('grade'))['grade__avg']
@@ -569,10 +572,10 @@ def outcome_detail(request, outcome_id):
 
 
         if measure.tool_type=='Test score':
-            if measure.test_score!= None:
+            if measure.test_score!= None and custom_students.objects.filter(measure=measure, graded=True, current=True).count()>0:
                 test_data = test_score_data(measure.test_score.test, measure.id)
 
-                if(test_data['passed']==True):
+                if test_data['passed']==True:
                      Measure.objects.filter(id=measure.id).update(status='passing', statusPercent = test_data['percentage'])
                 else:
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
@@ -607,6 +610,17 @@ def upload(request, measure_id, outcome_id):
             custom_students.objects.create(measure=Measure.objects.get(id=measure_id), student_name = column[0], grade=int(column[1]), graded=True )
             measure.update(test_score=student_score)
 
+        for m in measure:
+            if m.tool_type=='Test score':
+                if m.test_score!= None and custom_students.objects.filter(measure=m, graded=True, current=True).count()>0:
+                    test_data = test_score_data(m.test_score.test, m.id)
+
+                    if test_data['passed']==True:
+                        Measure.objects.filter(id=m.id).update(status='passing', statusPercent = test_data['percentage'])
+                    else:
+                        Measure.objects.filter(id=m.id).update(status='failing', statusPercent = test_data['percentage'])
+
+
         number_of_students = Test_score.objects.filter(test=test_name).count()
         average = total_points / number_of_students
 
@@ -627,10 +641,21 @@ def add_test_score(request,measure_id, outcome_id):
     student_score = Test_score(student=student, test=test_name, score=score)
     student_score.save()
 
+
     cust_stu  = custom_students(student_name=student_name,measure=Measure.objects.get(id=measure_id), grade=score, graded=True)
     cust_stu.save()
 
     measure.update(test_score=student_score)
+    for m in measure:
+        if m.tool_type=='Test score':
+            if m.test_score!= None and custom_students.objects.filter(measure=m, graded=True, current=True).count()>0:
+                test_data = test_score_data(m.test_score.test, m.id)
+
+                if test_data['passed']==True:
+                    Measure.objects.filter(id=m.id).update(status='passing', statusPercent = test_data['percentage'])
+                else:
+                    Measure.objects.filter(id=m.id).update(status='failing', statusPercent = test_data['percentage'])
+
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
