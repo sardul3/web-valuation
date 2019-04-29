@@ -1600,7 +1600,9 @@ def generate_cycle_report(request, cycle_id):
     data = dict()
     me = []
     count = 0
+    num = 0
     measures = None
+    outcome = None
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
 
@@ -1654,6 +1656,12 @@ def outcome_test(outcome_id):
         if measure.status == 'failing':
             flag = False
     return flag
+
+def cycle_report_test(cycle_id):
+    cycle = Cycle.objects.get(id=cycle_id)
+    outcomes = cycle.outcome.all()
+    print(outcomes)
+    return outcomes == None
 
 def admin_footer(request):
     return render(request, 'main/admin_footer.html')

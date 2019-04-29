@@ -48,10 +48,12 @@ hr {
 
            </li>
               {%empty%}
-              <br/>
+
               <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+
                 <div class="container">
-                  <h1 class="display-4">No evaluators present in the running cycles</h1>
+
+                  <h1>No evaluators present in the running cycles</h1>
                   <p class="lead">Please assign evaluators to see the data</p>
                 </div>
               </div>
@@ -207,9 +209,13 @@ hr {
 
                            <span>
                            {%if measure.statusPercent > 0.0%}
-                           {{measure.statusPercent|floatformat:2}}% {{measure.status}}
+                           {%if measure.status == 'passing'%}
+                           <span class="badge badge-success" style="padding: 10px;"> {{measure.status}}</span>
+                           {%elif measure.status == 'failing'%}
+                           <span class="badge badge-danger" style="padding: 10px;"> {{measure.status}}</span>
+                           {%endif%}
                            {%else%}
-                             <span>  not started </span>
+                             <span class="badge badge-warning" style="padding: 10px;">  not started </span>
                            {%endif%}
                           </span>
                        </div>
