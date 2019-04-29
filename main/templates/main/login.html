@@ -17,6 +17,7 @@
     }
   }
 </style>
+
 <div class = "container login" id = "main_content" class = "container card border-primary bg-light mb-3 form-row" >
 
   <form method="POST">
@@ -35,5 +36,45 @@
     <div>
        Don't have an account yet? <a href="/register">Sign Up</a>
     </div>
+    <div>
+      <!-- Trigger the modal with a button -->
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Help</button>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Getting Started</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          <h5>If you have not registered</h5>
+          <ul><li>Select the link to register</li>
+          <li>If you received an email with a registration link, be sure to register with the email the link was sent to</li>
+        <li>If you did not receive a registration email, you must inform your coordinator of the email you registered with</li></ul>
+        <h5>If you have registered</h5>
+        <ul>
+          <li>Enter login credentials</li>
+          <li>Select <b>'Forgot Password'</b> to recover password</li>
+          </ul>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+      </div>
 </div>
 {% endblock %}
+
+<script>
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover();
+});
+</script>
