@@ -4,15 +4,28 @@
 {% block body_block %}
 <style>
 
-
 .button_main{
   padding:0 !important;
+}
+
+.badge{
+  white-space: inherit;
+vertical-align: text-top;
+}
+.jumbotron {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    background-color: #f5efe6;
+    border-radius: .3rem;
 }
 
   .speech-bubble {
      position: relative;
       background: rgba(189,149,90, 0.15);
        border-radius: .4em;
+       border: 3px solid #800029;
+       padding: 5px;
+       margin-bottom: 4%;
       }
       .speech-bubble:after {
         content: '';
@@ -23,15 +36,36 @@
             border-left: 0; border-top: 0; margin-top: -0.25em; margin-left: -0.5em;
           }
 
+
+          hr.style15 {
+	border-top: 4px double #8c8b8b;
+	text-align: center;
+}
+hr.style15::after {
+    content: 'or';
+    display: inline-block;
+    position: relative;
+    top: -15px;
+    padding: 0 10px;
+    color: #7a2831;
+    font-size: 18px;
+    background: #f5efe6;
+}
+hr.not(.style15) {
+  height: 6px;
+  background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;
+    border: 0;
+  color: #dad86d9;
+}
+
+.progress {background: :#9eb5ce; border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px; width:90%;}
+
 </style>
 
 
 
 
 <div class = "container-fluid" >
-  <!-- <div class = "container" id = "main_content" > -->
-
-
      <div class="modal fade" id="exampleModalCenterNewMeasure{{outcome.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
        <div class="modal-dialog modal-dialog-centered" role="document">
          <div class="modal-content">
@@ -72,17 +106,33 @@
                           placeholder="cutoff score" name = "cutoff_score">
                  </div>
 
+            <div class="form-group">
              <label for="exampleFormControlTextarea1">Select Tool Type</label>
                <select class="custom-select" name="tool_selection">
                <option selected>Select Tool</option>
                <option value="Rubric">Rubric</option>
                <option value ="Test score">Test score</option>
                </select>
+            </div>
 
 
-               <div class="modal-footer">
-                 <button type="submit" class="btn btn-primary">Add</button>
-               </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+             </form>
+             <hr class = "style15" />
+
+             <form action = "{%url 'main:migrate_measure' outcome.id cycle_id%}" method = "POST">
+               {%csrf_token%}
+               <div class="form-group">
+
+                 <label for="exampleFormControlTextarea1">Add pre-existing measures</label>
+                 <select multiple class="form-control custom-select" id="exampleFormControlSelect2" name="measures">
+                   {%for measure in all_measures%}
+                    <option value="{{measure.id}}">{{measure.measureTitle}}</option>
+                   {%endfor%}
+                 </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Add</button>
+
              </form>
            </div>
 
@@ -95,9 +145,13 @@
 
   <div class="row d-flex align-items-center">
   <div class="col col-lg-2 md-6 sm-12 xs-12 mb-1">
+    <div class = "text-right">
+    <button type="button" class="btn btn-primary  mb-2" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
+       <i data-toggle="tooltip" title="Add Measures" class="fas fa-plus"></i>
+     </button>
+     </div>
 
     <div class="list-group" id="list-tab" role="tablist">
-
 
       {%for measure in measures%}
         {%if measure.outcome == outcome%}
@@ -117,11 +171,9 @@
   </div>
   <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" >
 
-    <h4 class = "d-flex justify-content-between mb-3 align-items-center "> {{outcome.title}}
-
-      <button type="button" class="btn btn-primary btn-lg ml-3" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
-         <i class="fas fa-plus"></i>
-       </button>
+    <h4 style="border: 2px solid #800029;color: ghostwhite;background: #BD955A;font-style: oblique;
+               padding: 4px;border-radius: 12px;margin-bottom: 5px !important;">
+       {{outcome.desc}}
       </h4>
 
     <div class="tab-content speech-bubble" id="nav-tabContent">
@@ -132,17 +184,26 @@
           {%else%}
                 <div class="tab-pane fade show measure_section" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
           {%endif%}
-        <h1 class = "d-flex justify-content-between pl-3"> {{measure.measureTitle}}
+        <h2 class = "d-flex justify-content-between pl-3">
+          <div>
+           {{measure.measureTitle}}
+          {%if measure.status == 'failing'%}
+            <div class="badge badge-pill badge-danger" style="font-size:initial;">failing</div>
+          {%else%}
+            <div class="badge badge-pill badge-success" style="font-size:initial;">passing</div>
+          {%endif%}
+          </div>
+
           <div class = "mr-3">
-          <button  class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
+          <button  class="btn  button_main" data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}" data-measure-id = "{{measure.id}}">
             <span style="font-size: 2em; color: #bd955a;">
-              <i class="far fa-edit"></i>
+              <i data-toggle="tooltip" title="Edit Measure" class="far fa-edit"></i>
           </span>
           </button>
 
-          <button class="btn btn-lg button_main" data-toggle="modal" data-target="#exampleModalCenterDeleteMeasure{{measure.id}}" data-measure-id = "{{measure.id}}">
+          <button class="btn button_main" data-toggle="modal" data-target="#exampleModalCenterDeleteMeasure{{measure.id}}" data-measure-id = "{{measure.id}}">
             <span style="font-size: 2em; color:#7a2831;">
-              <i class="far fa-trash-alt"></i>
+              <i data-toggle="tooltip" title="Delete Measure" class="far fa-trash-alt"></i>
           </span>
           </button>
           </div>
@@ -183,7 +244,6 @@
 
                         <label for="exampleFormControlTextarea1">Select Tool Type</label>
                           <select class="custom-select" name="tool_selection">
-                            <!-- FIX selected option -->
                             {%if measure.tool_type == 'Rubric'%}
                               <option selected>Rubric</option>
                               <option value ="Test score">Test score</option>
@@ -238,15 +298,14 @@
                       </div>
                     </div>
                   </div>
-         </h1>
+         </h2>
 
         <p> {{measure.measureText}} </p>
 
 
 
-        <div class = "col col-lg-6  ml-2 mb-2 ">
-
-        <button class = "btn btn-warning ">
+        <div class = "col col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12  mb-2 ">
+        <span class = "badge badge-pill badge-info" style="font-size:1rem;">
         {{measure.cutoff_percentage}} % of the students need to get
         {%if measure.cutoff_score%}
          {{measure.cutoff_score}}
@@ -255,7 +314,7 @@
          {%endif%}
             or higher
         on {{measure.tool_type}}
-        </button>
+        </span>
 </div>
 
 
@@ -265,7 +324,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add Students to {{measure.title}}</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">Add Students to {{measure.measureTitle}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -306,8 +365,8 @@
 
 
 
-    <div class = "col col-lg-5  ml-2 mb-2 ">
-    <div class = "progress  " style="background:#9aa1a7;">
+    <div class = "col col-lg-12 mb-2 ">
+    <div class = "progress" style="background:#9aa1a7;">
     <div class="progress-bar" role="progressbar" aria-valuenow="40"
     aria-valuemin="0" aria-valuemax="100" style="width:{{measure.statusPercent}}%;
       {%if measure.status == 'passing'%}
@@ -320,7 +379,7 @@
     </div>
     </div>
     </div>
-
+<hr> </hr>
 
 <div class = "row">
 
@@ -329,7 +388,7 @@
       <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
         <a href = "{% url 'main:remove_rubric_association' measure.id outcome_id %}" class = "btn btn-light">
           <span style=" color: #7a2831;">
-            <i class="far fa-trash-alt"></i>
+            <i data-toggle="tooltip" title="Remove Association" class="far fa-trash-alt"></i>
         </span>
          </a>
       </div>
@@ -395,17 +454,17 @@
 
 
         <div class = "col col-lg-4 md-12 sm-12 xs-12">
-          <ul class="list-group">
+          <ul class="list-group" style="overflow-y:auto; height: 30vh">
             <li class="list-group-item card-header d-flex align-items-center justify-content-between"><h4>Evaluators</h4>
 
             <button type="button" class="btn btn-light  ml-3" data-toggle="modal" data-target="#exampleModalCenterAddEv{{measure.id}}">
-                 <i class="fas fa-plus"></i>
+                 <i data-toggle="tooltip" title="Add Evaluators" class="fas fa-plus"></i>
             </button>
             </li>
           {%for eval in measure.evaluator.all%}
               <li class="list-group-item d-flex  justify-content-between">{{eval.email}}
               <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
-                <i class="fas fa-user-slash"></i>
+                <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
               </a>
                 </li>
 
@@ -413,11 +472,11 @@
 
 
           </ul>
-        <hr />
+        <hr> </hr>
 
 {%if measure.evaluator.exists%}
   {%if measure.student.exists%}
-          <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModalCenterAddEvaluator{{measure.id}}">
+          <button class="btn btn-lg btn-primary btn-block mb-2" data-toggle="modal" data-target="#exampleModalCenterAddEvaluator{{measure.id}}">
           Assign students to Evaluators
           </button>
 {%endif%}
@@ -440,19 +499,38 @@
                 <div class="modal-body">
                    <form class="" action = "{%url 'main:add_evaluator' outcome_id measure.id %}" method = "POST">
                     {%csrf_token%}
+                    <label for="exampleFormControlSelect2">Invite new evaluator</label>
+
                     <div class="form-group mb-2">
                         <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name" required>
                    </div>
                     <div class="form-group mb-2">
                         <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
                    </div>
-                    <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
-                  </form>
 
+                   <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+
+                  </form>
+                   <hr class = "style15"> </hr>
+                   <form class="" action = "{%url 'main:add_preexisting_evaluator' outcome_id measure.id %}" method = "POST">
+                    {%csrf_token%}
+
+                   <div class="form-group">
+                    <label for="exampleFormControlSelect2">Select Pre existing evaluators </label>
+
+                    <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="evaluators" required>
+                      {%for ev in evaluator%}
+                          <option value="{{ev.id}}">{{ev.email}}</option>
+                    {%endfor%}
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
+
 
 
 
@@ -474,7 +552,7 @@
 
                     <div class="form-group">
                         <label for="exampleFormControlSelect1">Select Evaluator</label>
-                        <select class="form-control" id="exampleFormControlSelect1" name = "evaluator_email">
+                        <select class="form-control" id="exampleFormControlSelect1" name = "evaluator_email" required>
                           {%for ev in measure.evaluator.all%}
                           <option value="{{ev.email}}">{{ev.email}}</option>
                           {%endfor%}
@@ -482,7 +560,7 @@
                       </div>
                           <div class="form-group">
                            <label for="exampleFormControlSelect2">Select Students</label>
-                           <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="students">
+                           <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="students" required>
                              {%for student in measure.student.all%}
                              <option value="{{student.name}}">{{student.name}}</option>
                              {%endfor%}
@@ -510,16 +588,16 @@
 
 
           <div class = "col col-lg-4 md-12 sm-12 xs-12">
-          <ul class="list-group" style="overflow-y:scroll; height: 40vh">
-            <li class="list-group-item d-flex justify-content-between card-header sticky-top align-items-center"> <h4>Students</h4>
+          <ul class="list-group" style="overflow-y:auto; height: 40vh">
+            <li class="list-group-item d-flex justify-content-between card-header align-items-center"> <h4>Students</h4>
 
           <div class = "d-flex justify-content-between">
             <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-              <i class="fas fa-plus"></i>
+              <i data-toggle="tooltip" title="Add Students to Measure" class="fas fa-plus"></i>
             </button>
 
             <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
-              <i class="fas fa-expand-arrows-alt"></i>
+              <i data-toggle="tooltip" title="View Student List" class="fas fa-expand-arrows-alt"></i>
             </button>
           </div>
 
@@ -528,7 +606,7 @@
                     <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
                       <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
                             <span style="font-size: 1em; color: #7a2831;">
-                                <i class="fas fa-times"></i>
+                                <i data-toggle="tooltip" title="Remove Student" class="fas fa-times"></i>
                             </span>
                       </a>
                     </li>
@@ -538,7 +616,7 @@
                   <h1>No students</h1>
                   <p class="lead">Click the
                     <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-                      <i class="fas fa-plus"></i>
+                      <i data-toggle="tooltip" title="Add Students" class="fas fa-plus"></i>
                     </button>
                      button above to add students</p>
                 </div>
@@ -549,7 +627,7 @@
         </div>
 
     {%else%}
-    <br/>
+
     <button type="button" class="btn btn-primary ml-4 mb-2" data-toggle="modal" data-target="#exampleModalCenterAddRubric{{measure.id}}">
         Add Rubric
       </button>
@@ -561,7 +639,7 @@
 
     <div class = "row">
 
-    <div class = " col col-lg-5 ml-4">
+    <div class = " col col-lg-12 ml-3">
     <div class = "progress " style="background:#9aa1a7;
   ">
     <div class="progress-bar" role="progressbar" aria-valuenow="40"
@@ -578,8 +656,7 @@
     </div>
     </div>
   </div>
-    <hr>
-    <br/>
+    <hr/>
 
     <div class = "row">
       {%if measure.test_score %}
@@ -587,8 +664,8 @@
     <div class = "col col-lg-4 md-6 sm-12 xs-12">
         <div class="card bg-light ml-2 mb-3">
           <div class="card-header d-flex justify-content-between align-items-center"><h4 class = "">Associated Tool</h4>
-            <a href = "{% url 'main:remove_test_association' measure.id outcome_id %}" class = "btn btn-primary">
-              <span style="font-size: 1.5em;">
+            <a href = "{% url 'main:remove_test_association' measure.id outcome_id %}" class = "btn btn-light">
+              <span style=" color: #7a2831;">
                 <i class="far fa-trash-alt"></i>
             </span>
              </a>
@@ -603,15 +680,35 @@
         </div>
 
 
+        <ul class="list-group" style="overflow-y:auto; height: 25vh">
+          <li class="list-group-item card-header d-flex align-items-center justify-content-between"><h4>Evaluators</h4>
+
+          <button type="button" class="btn btn-light  ml-3" data-toggle="modal" data-target="#exampleModalCenterAddEv2{{measure.id}}">
+               <i data-toggle="tooltip" title="Add Evaluators" class="fas fa-plus"></i>
+          </button>
+          </li>
+        {%for eval in measure.evaluator.all%}
+            <li class="list-group-item d-flex  justify-content-between">{{eval.email}}
+            <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
+              <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
+            </a>
+              </li>
+
+          {%endfor%}
+
+
+        </ul>
+
+
       </div>
       {%endif%}
 
     <div class = "col col-lg-4 col-md-6 col-sm-12 col-12">
       <div class = 'text-center'>
-      <button type="button" class="btn btn-primary btn-lg ml-2 mb-1" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
+      <button type="button" class="btn btn-primary btn-lg ml-2 mb-1 mt-2" data-toggle="modal" data-target="#exampleModalCenterAddTestScore{{measure.id}}">
           Upload Test Score
       </button>
-      <h2> or </h2>
+      <hr class = "style15" > </hr>
     </div>
     <h3 class = 'text-center'> Add individual scores </h3>
     <form class="ml-2" action = "{%url 'main:add_test_score' measure.id outcome_id%}" method = "POST">
@@ -633,7 +730,7 @@
       <button type="submit" class="btn btn-primary  mb-2">Add Score</button>
     </form>
     <div class = 'text-center'>
-      <h2> or </h2>
+      <hr class = "style15" > </hr>
 
     <button class="btn btn-lg btn-primary  ml-2 mt-2  mb-2" data-toggle="modal" data-target="#exampleModalCenterAddEvaluatorToTest{{measure.id}}">
     Assign students to Evaluators
@@ -642,45 +739,99 @@
 </div>
 
 
-<div class = "col col-lg-4 md-12 sm-12 xs-12">
-<ul class="list-group" style="overflow-y:scroll; height: 40vh">
-  <li class="list-group-item d-flex justify-content-between card-header sticky-top align-items-center"> <h4>Students</h4>
+<div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+  <ul class="list-group" style="overflow-y:auto; height: 40vh">
+    <li class="list-group-item d-flex justify-content-between card-header  align-items-center"> <h4>Students</h4>
 
-<div class = "d-flex justify-content-between">
-  <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-    <i class="fas fa-plus"></i>
-  </button>
+  <div class = "d-flex justify-content-between">
+    <button type="button" class="btn btn-md btn-light mr-3" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
+      <i class="fas fa-plus"></i>
+    </button>
 
-  <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
-    <i class="fas fa-expand-arrows-alt"></i>
-  </button>
+    <button type="button" class="btn btn-md btn-light" data-toggle="modal" data-target="#exampleModalLongExpandStudentList{{measure.id}}">
+      <i class="fas fa-expand-arrows-alt"></i>
+    </button>
+  </div>
+
+    </li>
+      {% for student in measure.student.all %}
+            <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
+              <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
+                    <span style="font-size: 1em; color: #7a2831;">
+                        <i class="fas fa-times"></i>
+                    </span>
+              </a>
+            </li>
+
+            {%empty%}
+            <div class="jumbotron jumbotron-fluid">
+              <div class="container">
+                <h1>No students</h1>
+                <p class="lead">Click the
+                  <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                   button above to add students</p>
+              </div>
+            </div>
+
+      {%endfor%}
+  </ul>
+
+
+
+
+
+
+
+  <div class="modal fade" id="exampleModalCenterAddEv2{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Add evaluator</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           <form class="" action = "{%url 'main:add_evaluator' outcome_id measure.id %}" method = "POST">
+            {%csrf_token%}
+            <label for="exampleFormControlSelect2">Invite new evaluator</label>
+
+            <div class="form-group mb-2">
+                <input type="text" name = "evaluator_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="name" required>
+           </div>
+            <div class="form-group mb-2">
+                <input type="email" name = "evaluator_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
+           </div>
+
+           <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+
+          </form>
+           <hr class = "style15"> </hr>
+           <form class="" action = "{%url 'main:add_preexisting_evaluator' outcome_id measure.id %}" method = "POST">
+            {%csrf_token%}
+
+           <div class="form-group">
+            <label for="exampleFormControlSelect2">Select Pre existing evaluators </label>
+
+            <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="evaluators" required>
+              {%for ev in evaluator%}
+                  <option value="{{ev.id}}">{{ev.email}}</option>
+            {%endfor%}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary mb-2">Add Evaluator</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </div>
 
-  </li>
-    {% for student in measure.student.all %}
-          <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
-            <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
-                  <span style="font-size: 1em; color: #7a2831;">
-                      <i class="fas fa-times"></i>
-                  </span>
-            </a>
-          </li>
-
-          {%empty%}
-          <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-              <h1>No students</h1>
-              <p class="lead">Click the
-                <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-                  <i class="fas fa-plus"></i>
-                </button>
-                 button above to add students</p>
-            </div>
-          </div>
-
-    {%endfor%}
-</ul>
-
+<div class = "col col-lg-4 md-12 sm-12 xs-12">
 
 
 </div>
@@ -740,15 +891,16 @@
 
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Select Evaluator</label>
-                    <select class="form-control" id="exampleFormControlSelect1" name = "evaluator_email">
+                    <select class="form-control" id="exampleFormControlSelect1" name = "evaluator_email" required>
                       {%for ev in evaluators%}
                       <option value="{{ev.email}}">{{ev.email}}</option>
                       {%endfor%}
                     </select>
                   </div>
+
                       <div class="form-group">
                        <label for="exampleFormControlSelect2">Select Students</label>
-                       <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="students">
+                       <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="students" required>
                          {%for student in measure.student.all%}
                          <option value="{{student.name}}">{{student.name}}</option>
                          {%endfor%}
@@ -821,7 +973,13 @@
     <div class="jumbotron jumbotron-fluid">
   <div class="container">
     <h1 class="display-4">No measures associated</h1>
-    <p class="lead">Please press the <strong style="font-size: 2rem;">+</strong> button to add new measures</p>
+    <p class="lead">Please press the
+      <button type="button" class="btn btn-primary btn-lg ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterNewMeasure{{outcome.id}}" data-measure-id = "{{measure.id}}">
+         <i class="fas fa-plus"></i>
+       </button>
+
+
+       button to add new measures</p>
   </div>
 </div>
     {%endfor%}
@@ -849,6 +1007,10 @@
     if(activeTab){
       $('#list-tab a[href="' + activeTab + '"]').tab('show');
     }
+  });
+
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
   });
 </script>
 

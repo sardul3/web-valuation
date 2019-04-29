@@ -5,6 +5,10 @@
   td {
       font-size: 1rem;
   }
+  .rubric_select{
+    padding:0 !important;
+
+  }
 
 </style>
 
@@ -42,8 +46,8 @@
           <td> Score </td>
           {%else%}
         <td>
-          <div class="form-group">
-              <select class="form-control rubric_form_control" name = "cat_field">
+          <div class="form-group ">
+              <select class="form-control rubric_select" name = "cat_field">
                   {% for val in super_cat %}
                   <option value = "{{val}}">{{val}}</option>
                   {% endfor %}

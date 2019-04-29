@@ -1,0 +1,307 @@
+<style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
+ body {
+	 background: #fff;
+	 color: #212121;
+	 font-family: 'Open Sans', sans-serif;
+}
+ .instructions {
+	 width: 100vw;
+	 height: 100vh;
+	 display: flex;
+	 justify-content: center;
+	 align-items: center;
+}
+ .instructions h1 {
+	 text-align: center;
+	 font-size: calc(100vw / 7);
+}
+ .chat-window {
+	 position: fixed;
+	 bottom: 0;
+	 right: 3em;
+	 width: 300px;
+	 height: 420px;
+	 transition: all ease-out 250ms;
+}
+ .chat-window.docked {
+	 transform: translateY(375px);
+}
+ .chat-window.docked .chat-header span {
+	 opacity: 0;
+}
+ .chat-window p {
+	 margin: 0;
+}
+ .chat-window .chat-header {
+	 height: 45px;
+	 border-radius: 6px 6px 0 0;
+	 background: #263238;
+	 position: relative;
+	 cursor: pointer;
+}
+ .chat-window .chat-header p {
+	 display: block;
+	 padding: 0 1em 0 2em;
+	 color: #fff;
+	 font-weight: 700;
+	 line-height: 45px;
+}
+ .chat-window .chat-header span {
+	 opacity: 1;
+	 position: absolute;
+	 display: block;
+	 top: calc(50% - (1em / 2));
+	 right: calc(1.5em - (1em / 2));
+	 width: 1em;
+	 height: 1em;
+	 transition-delay: 250ms;
+	 transition: all ease 350ms;
+}
+ .chat-window .chat-header span:before, .chat-window .chat-header span:after {
+	 content: '';
+	 display: block;
+	 position: absolute;
+	 top: calc(50% - (5px / 2));
+	 left: -11%;
+	 width: 120%;
+	 height: 5px;
+	 background: #fff;
+	 transform-origin: 50% 50%;
+	 border-radius: 20px;
+}
+ .chat-window .chat-header span:before {
+	 transform: rotate(45deg);
+}
+ .chat-window .chat-header span:after {
+	 transform: rotate(-45deg);
+}
+ .chat-window .chat-header:before {
+	 content: '';
+	 position: absolute;
+	 display: block;
+	 top: calc(50% - (.7em / 2));
+	 left: calc(1em - (.7em / 2));
+	 width: 0.7em;
+	 height: 0.7em;
+	 border-radius: 100%;
+	 background: #fff;
+}
+ .chat-window .chat-header.online:before {
+	 background: #43a047;
+}
+ .chat-window .chat-header.offline:before {
+	 background: #c62828;
+}
+ .chat-window .chat-body {
+	 height: calc(450px - ( 45px + 70px));
+	 border: 1px solid #263238;
+	 background: #fff;
+	 border-top: 0;
+	 border-bottom: 0;
+	 position: relative;
+}
+ .chat-window .chat-body .message-container {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 width: 100%;
+	 height: 100%;
+	 overflow-y: scroll;
+	 overflow-x: hidden;
+}
+ .chat-window .chat-body .message {
+	 position: relative;
+	 padding: 1em 0.7em 2em;
+	 margin-bottom: 0.5em;
+	 border-bottom: 1px dotted #cfd8dc;
+}
+ .chat-window .chat-body .message .profile {
+	 position: absolute;
+	 top: 1em;
+	 left: 0.7em;
+}
+ .chat-window .chat-body .message .profile img {
+	 width: 40px;
+	 height: auto;
+	 border-radius: 100%;
+}
+ .chat-window .chat-body .message .message-meta {
+	 width: calc(100% - (40px + 1em));
+	 height: 25px;
+	 float: right;
+}
+ .chat-window .chat-body .message .message-meta p {
+	 display: inline-block;
+	 font-size: 0.75em;
+	 font-weight: 700;
+	 color: #90a4ae;
+	 margin-top: 5px;
+}
+ .chat-window .chat-body .message .message-meta p:last-child {
+	 font-size: 0.5em;
+	 vertical-align: bottom;
+	 margin-top: 7px;
+	 float: right;
+}
+ .chat-window .chat-body .message .message-content {
+	 width: calc(100% - (40px + 1em));
+	 height: 40px;
+	 float: right;
+}
+ .chat-window .chat-body .message .message-content p {
+	 text-align: left;
+	 line-height: 1.2;
+	 font-size: 0.9em;
+	 color: #263238;
+}
+ .chat-window .chat-body .message .message-content p + p {
+	 margin-top: 0.5em;
+}
+ .chat-window .chat-body .message:after {
+	 content: '';
+	 display: block;
+	 width: 100%;
+	 clear: both;
+}
+ .chat-window .chat-body .message.user .profile {
+	 left: auto;
+	 right: 0.7em;
+}
+ .chat-window .chat-body .message.user .message-meta, .chat-window .chat-body .message.user .message-content {
+	 float: left;
+}
+ .chat-window .chat-body .message.user .message-meta p {
+	 float: right;
+}
+ .chat-window .chat-body .message.user .message-meta p:last-child {
+	 float: left;
+}
+ .chat-window .chat-body .message.user .message-content p {
+	 text-align: right;
+}
+ .chat-window .chat-footer {
+	 height: 70px;
+	 border: 1px solid #263238;
+	 border-top: 0;
+	 border-bottom: 0;
+	 margin-top: -30px;
+}
+ .chat-window .chat-footer .progress-indicator {
+	 opacity: 1;
+	 background: rgba(255, 255, 255, .9);
+	 height: 30px;
+	 text-align: center;
+	 font-size: 0.7em;
+	 font-weight: 300;
+	 line-height: 30px;
+	 position: relative;
+	 z-index: 4;
+	 transition: all ease 150ms;
+}
+ .chat-window .chat-footer .form-area {
+	 height: 40px;
+	 position: relative;
+}
+ .chat-window .chat-footer .form-area input {
+	 height: 40px;
+	 width: calc(100% - (.7em + 2.5em + 2px));
+	 border: 0;
+	 padding: 0 0.7em;
+	 font-size: 1em;
+	 border-top: 1px dotted #607d8b;
+	 outline: none;
+	 font-family: 'Open Sans', sans-serif;
+}
+ .chat-window .chat-footer .form-area input:focus + button:after {
+	 border-left: 1.6em solid #66bb6a;
+}
+ .chat-window .chat-footer .form-area button {
+	 border: 0;
+	 border-top: 1px dotted #607d8b;
+	 position: absolute;
+	 display: block;
+	 width: 2.5em;
+	 height: 40px;
+	 top: 0;
+	 right: 0;
+	 z-index: 2;
+	 background: transparent;
+	 outline: none;
+}
+ .chat-window .chat-footer .form-area button:before {
+	 position: absolute;
+	 top: calc(50% - .4em);
+	 left: 0.4em;
+	 content: '';
+	 display: block;
+	 width: 0;
+	 height: 0;
+	 border-top: 0.4em solid transparent;
+	 border-right: 0.4em solid transparent;
+	 border-bottom: 0.4em solid transparent;
+	 border-left: 0.4em solid #fff;
+	 z-index: 3;
+}
+ .chat-window .chat-footer .form-area button:after {
+	 content: '';
+	 display: block;
+	 width: 0;
+	 height: 0;
+	 border-top: 0.8em solid transparent;
+	 border-right: 0.8em solid transparent;
+	 border-bottom: 0.8em solid transparent;
+	 border-left: 1.6em solid #b0bec5;
+	 z-index: 2;
+}
+ .hide {
+	 opacity: 0 !important;
+}
+</style>
+<script
+        src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+<script>
+  $(function(){
+  $('.chat-header').click(function(){
+    $(this).toggleClass('offline');
+    $(this).toggleClass('online');
+    $('.chat-window').toggleClass('docked');
+  });
+
+  setInterval(function(){
+    $('.progress-indicator').toggleClass('hide');
+  },7846);
+});
+</script>
+
+
+
+<section class="chat-window docked">
+  <div class="chat-header">
+    <p>Messages</p>
+    <span class="close"></span>
+  </div>
+  <div class="chat-body">
+    <div class="message-container">
+    <!-- loop -->
+      <div class="message">
+        <div class="message-meta">
+          <p>Isobel</p>
+          <p>17:43</p>
+        </div>
+        <div class="message-content">
+          <p>If two vegiterians fight, is it still considered a Beef?</p>
+        </div>
+      </div>
+    <!-- end loop -->
+    </div>
+  </div>
+  <div class="chat-footer">
+  </div>
+</section>
+
+<div class="instructions">
+  <h1>CLICK ME<br />&searr;</h1>
+</div>

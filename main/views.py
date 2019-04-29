@@ -4,7 +4,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .models import Rubric, Student, Measure, Category, evaluate_rubric, Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,custom_students, Broadcast, Course, Notification, category_score,CoOrdinator
+from .models import( Rubric, Student, Measure, Category, evaluate_rubric,
+        Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,
+        custom_students, Broadcast, Course, Notification, category_score,
+        CoOrdinator, Invited_Coordinator,InvitedCo)
 from django.contrib import messages
 from .forms import RegisterForm, CoOrdinatorRegisterForm
 import csv
@@ -14,6 +17,9 @@ from django.utils.timezone import datetime
 from django.db.models import Avg, Count, Min, Sum
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
+from django.core.mail import send_mail
+
+
 
 
 def test_score_data(test_score_test, measure_id):
@@ -27,7 +33,9 @@ def test_score_data(test_score_test, measure_id):
     data = {}
     above_threshold = None
     percentage = None
+
     test_average = 0
+    above_test_average = 0
 
     bin_array = []
     for student_score in test_score:
@@ -41,6 +49,7 @@ def test_score_data(test_score_test, measure_id):
 
 
     if(measure.cutoff_type == 'Percentage'):
+        if custom_students.objects.filter(measure=measure, graded=True, current=True).count()>0:
             above_threshold = test_score.filter(grade__gte = measure.cutoff_score).count()
             percentage = above_threshold / total_students * 100
             test_average = test_score.aggregate(Avg('grade'))['grade__avg']
@@ -89,12 +98,12 @@ def rubric_data(measure_id):
         percent_pass_cases = number_of_pass_cases/evaluated_student_count * 100.0
 
     else:
-        percent_pass_cases=100
+        percent_pass_cases=0
 
 
 
     # evaluated_list = evaluate_rubric.objects.filter(measure = measure, rubric=measure.rubric)
-    evaluated_list = custom_students.objects.filter(measure=measure, graded=True, current=True)
+    evaluated_list = custom_students.objects.filter(measure=measure, graded=True, current=True).order_by('student_name')
     ev_cats = category_score.objects.filter(student__in = evaluated_list)
 
     bin_array = []
@@ -130,13 +139,82 @@ def admin_test(user):
 
 
 def homepage(request):
-    return render(request, 'main/evaluatorhome.html')
+    rubrics = Rubric.objects.all()
+    students = Student.objects.all()
+    evaluations = evaluate_rubric.objects.all()
+    measures = Measure.objects.all()
+    flags = evaluation_flag.objects.all()
+    alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
+    alerts_count = alerts.count()
+    perc = 0
+    cust_student_list = None
+    flag = []
+
+    email_address = request.user.email
+    measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+    # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+
+    x = []
+    y = 0
+    for me in measure:
+        x = me.student.all()
+        y = evaluate_rubric.objects.filter(measure=me, grade_score__isnull=False).count()
+        for f in flags:
+            if f.measure == me:
+                flag.append(f.student_name)
+
+            student_count = len(x)
+            eval_student = y
+            if student_count==0:
+                perc=100.0
+            else:
+                perc =100.0* (eval_student/student_count)
+
+            eval = request.user.email
+            current_eval = 0
+            for myeval in Evaluator.objects.all():
+                if(myeval.email==eval):
+                    current_eval = myeval
+            myeval.perc_completed = perc
+            myeval.save()
+
+            cust_student_list=[]
+            for stu in custom_students.objects.all():
+                for evaluator in stu.measure.evaluator.all():
+                    if(evaluator.email==email_address):
+                        cust_student_list.append(stu)
+            for mea in measure:
+                total=0.0
+                graded =0
+
+                for cu in cust_student_list:
+                    if cu.evaluator is not None:
+                        if cu.measure == mea and cu.evaluator.email==request.user.email:
+                            total+=1
+                            if cu.graded:
+                                #print(cu.student_name)
+                                graded+=1
+
+                #print("Graded",graded)
+                #print("Total",total)
+                if graded==0:
+                    mea.evaluationPercent=0.0
+                else:
+                    mea.evaluationPercent = (graded/total)*100.0
+
+
+
+    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
+            , 'now':'active','alerts':alerts, 'alerts_count':alerts_count}
+
+    return render(request, 'main/evaluatorhome.html', context)
 
 @user_passes_test(admin_test)
 def outcomes(request):
-    outcomes = Outcome.objects.all()
-    measures = Measure.objects.all()
-    cycles = Cycle.objects.all()
+    coordinator = CoOrdinator.objects.get(request.user.email)
+    outcomes = Outcome.objects.filter(coordinator = coordinator);
+    measures = Measure.objects.all(coordinator = coordinator)
+    cycles = Cycle.objects.all(coordinator = coordinator)
     data = dict()
     for measure in measures:
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
@@ -152,27 +230,52 @@ def outcomes(request):
     return render(request, 'main/outcomes.html', context)
 
 def rubrics(request):
-    rubrics = Rubric.objects.all()
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    rubrics = Rubric.objects.filter(coordinator = cordinator)
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
+
 
     context = {'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/rubrics.html', context)
 
 @user_passes_test(admin_test)
 def cycles(request):
-    cycles = Cycle.objects.all()
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    cycles = Cycle.objects.filter(coordinator=cordinator)
+
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/cycles.html', context)
 
 
 @login_required
 def evaluatorhome(request):
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            department = request.POST.get('department')
+            invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department,
+                                                                     invited_by=request.user.username)
+            evaluators = Evaluator.objects.all()
+            for eval in evaluators:
+                if eval.email == invited_Coordinator:
+                    Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
+
+            messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
+
+            context = {'now': 'active', 'cordinator':InvitedCo.objects.all()}
+            return render(request, 'main/invite.html', context)
+        context = {'now': 'active', 'cordinator':InvitedCo.objects.all()}
+        return render(request, 'main/invite.html', context)
+
     if request.user.is_staff:
-        outcomes = Outcome.objects.all()
-        measures = Measure.objects.all()
-        cycles = Cycle.objects.all()
+        cordinator = CoOrdinator.objects.get(email=request.user.email);
+        outcomes = Outcome.objects.filter(coordinator=cordinator)
+        measures = Measure.objects.filter(coordinator=cordinator)
+        cycles = Cycle.objects.filter(coordinator=cordinator)
         data = dict()
         for measure in measures:
             evaluations = evaluate_rubric.objects.filter(measure=measure).count()
@@ -182,35 +285,37 @@ def evaluatorhome(request):
                 elif measure.tool_type == 'Test score':
                     data.update({measure.id: test_score_data(measure.test_score, measure.id)})
 
-        cyc = Cycle.objects.all()
+        cyc = Cycle.objects.filter(coordinator=cordinator)
         mycyc = 0
         for cycles in cyc:
             if (cycles.isCurrent):
                 mycyc = cycles
-        outcome_a = Outcome.objects.all()
+        outcome_a = Outcome.objects.filter(coordinator=cordinator)
         outcome_list = []
         for oc in outcome_a:
             for v in oc.cycle.all():
                 if (v == mycyc):
                     outcome_list.append(oc)
-        measure_a = Measure.objects.all()
+        measure_a = Measure.objects.filter(coordinator=cordinator)
         measure_list = []
         for me in measure_a:
             for o in outcome_list:
                 if (me.outcome == o):
                     measure_list.append(me)
-        eval_a = Evaluator.objects.all()
+        eval_a = Evaluator.objects.filter(coordinator=cordinator)
         evaluator_list = []
-        courses = Course.objects.all()
+        courses = Course.objects.filter(coordinator=cordinator)
         for eval in eval_a:
             for mymea in measure_list:
                 for eval_more in mymea.evaluator.all():
                     if (eval == eval_more):
                         evaluator_list.append(eval)
 
+        msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
+
         context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
-                   'notification_count': Notification.objects.filter(read=False).count(),
+                   'notification_count': Notification.objects.filter(read=False).count(), 'msgs':msgs,
                    'notifications': Notification.objects.filter(read=False).order_by('-created_at'), 'cycles': cyc,'mycyc':mycyc,'courses':courses
                    }
         return render(request, 'main/adminhome.html', context)
@@ -237,7 +342,6 @@ def evaluatorhome(request):
             for f in flags:
                 if f.measure == me:
                     flag.append(f.student_name)
-
         student_count = len(x)
         eval_student = y
         if student_count==0:
@@ -288,7 +392,7 @@ def evaluatorhome(request):
 @login_required
 def grade(request):
     rubrics = Rubric.objects.filter(id=1)[0]
-    measures = Measure.objects.all()
+    measures = Measure.objects.filter()
     students = Student.objects.all()
     evaluations = evaluate_rubric.objects.all()
     categories = Category.objects.all()
@@ -386,7 +490,6 @@ def edit_test_score(request, measure_id, student_name):
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
     student = custom_students.objects.get(evaluator=evaluator, measure=measures, student_name=student_name)
-
     context = {'measure':measures, 'test':test, 'student':student, 'measure_id':measure_id}
     return render(request, 'main/edit_test_select.html', context)
 
@@ -424,14 +527,10 @@ def add_test_score_evaluator(request,measure_id):
 
 @user_passes_test(admin_test)
 def dashboard(request):
-    # evaluators = Evaluator.objects.all()
-    # notifications = evaluate_rubric.objects.all()
-    #
-    # context = {'rubrics':rubrics, 'evaluators': evaluators, 'outcomes': outcomes,
-    #             'cycles': cycles, 'notifications':notifications, 'measures':measures}
-    outcomes = Outcome.objects.all()
-    measures = Measure.objects.all()
-    cycles = Cycle.objects.all()
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    outcomes = Outcome.objects.filter(coordinator=cordinator)
+    measures = Measure.objects.filter(coordinator=cordinator)
+    cycles = Cycle.objects.filter(coordinator=cordinator)
     data = dict()
     for measure in measures:
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
@@ -441,64 +540,80 @@ def dashboard(request):
             elif measure.tool_type == 'Test score':
                 data.update({measure.id: test_score_data(measure.test_score, measure.id)})
 
-    cyc = Cycle.objects.all()
+    cyc = Cycle.objects.filter(coordinator=cordinator)
     mycyc = 0
     for cycles in cyc:
         if (cycles.isCurrent):
             mycyc = cycles
-    outcome_a = Outcome.objects.all()
+    outcome_a = Outcome.objects.filter(coordinator=cordinator)
     outcome_list = []
     for oc in outcome_a:
         for v in oc.cycle.all():
             if (v == mycyc):
                 outcome_list.append(oc)
-    measure_a = Measure.objects.all()
+    measure_a = Measure.objects.filter(coordinator=cordinator)
     measure_list = []
     for me in measure_a:
         for o in outcome_list:
             if (me.outcome == o):
                 measure_list.append(me)
-    eval_a = Evaluator.objects.all()
-    courses = Course.objects.all()
+    eval_a = Evaluator.objects.filter(coordinator=cordinator)
+    courses = Course.objects.filter(coordinator=cordinator)
     evaluator_list = []
     for eval in eval_a:
         for mymea in measure_list:
             for eval_more in mymea.evaluator.all():
                 if (eval == eval_more):
                     evaluator_list.append(eval)
+    print(evaluator_list)
 
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
     context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
             'notification_count' : Notification.objects.filter(read=False).count(),
-            'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses
+            'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses,
+            'msgs':msgs
             }
     return render(request, 'main/adminhome.html', context)
 
 @login_required
 def newCycle(request):
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
     year = request.POST.get('year')
     semester = request.POST.get('semester')
     today = datetime.today()
 
-    cycle = Cycle(year=year, semester=semester, startDate=today)
+    cycle = Cycle(year=year, semester=semester, startDate=today, coordinator=cordinator)
     cycle.save()
     messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
-
+    url = request.POST.get("url")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 @user_passes_test(admin_test)
 def cycle(request, cycle_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
     outcomes = Outcome.objects.filter(cycle=cycle_id)
-    evaluators = Evaluator.objects.all()
-    measures = Measure.objects.all()
-    rubrics = Rubric.objects.all()
+    evaluators = Evaluator.objects.filter(coordinator=cordinator)
+    measures = Measure.objects.filter(coordinator=cordinator)
+    rubrics = Rubric.objects.filter(coordinator=cordinator)
     cycle = Cycle.objects.get(id=cycle_id)
-    prev_cycles = Cycle.objects.filter(isCurrent=False)
-    courses = Course.objects.all()
+    prev= Cycle.objects.filter(isCurrent=False)
+    courses = Course.objects.filter(coordinator=cordinator)
+    prev_cycles = []
+    for cy in prev:
+        if cy.coordinator==cordinator:
+            prev_cycles.append(cy)
+    all_outcomes = Outcome.objects.filter(coordinator=cordinator)
+
+
+    for outcome in outcomes:
+        Outcome.objects.filter(id=outcome.id).update(status=outcome_test(outcome.id))
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
-                'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles,
+                'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles, 'all_outcomes': all_outcomes,
                 'courses':courses,'notification_count' : Notification.objects.filter(read=False).count(),
-                'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+                'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/cycle.html', context)
 
 @user_passes_test(admin_test)
@@ -510,6 +625,7 @@ def end_cycle(request, cycle_id):
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def migrate_cycle(request, cycle_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
     from_cycle_id = request.POST.get('cycle_migrate')
     from_cycle = Cycle.objects.get(id=from_cycle_id)
     outcomes = Outcome.objects.filter(cycle=from_cycle)
@@ -523,7 +639,7 @@ def migrate_cycle(request, cycle_id):
         for mea in measures:
             new_measure = Measure(measureTitle= mea.measureTitle,
                       cutoff_score= mea.cutoff_score,cutoff_percentage= mea.cutoff_percentage,
-                      outcome=new_outcome, tool_type=mea.tool_type, cutoff_type=mea.cutoff_type)
+                      outcome=new_outcome, tool_type=mea.tool_type, cutoff_type=mea.cutoff_type,coordinator=cordinator)
             new_measure.save()
             if mea.tool_type=='Rubric':
                 Measure.objects.filter(id=new_measure.id).update(rubric=mea.rubric)
@@ -532,6 +648,27 @@ def migrate_cycle(request, cycle_id):
 
     return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
 
+def migrate_outcome(request, cycle_id):
+    from_outcome_list = request.POST.getlist('outcomes')
+    to_cycle = Cycle.objects.get(id=cycle_id)
+    for outcomes in from_outcome_list:
+        outcome = Outcome.objects.get(id = outcomes)
+        outcome.cycle.add(to_cycle)
+    return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
+
+def migrate_measure(request, outcome_id, cycle_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    measures_to_add = request.POST.getlist('measures')
+    for m_id in measures_to_add:
+        measure = Measure.objects.get(id=m_id)
+        new_measure = Measure.objects.create(measureTitle= measure.measureTitle,
+                  cutoff_score= measure.cutoff_score,cutoff_percentage= measure.cutoff_percentage,
+                  outcome=outcome, tool_type=measure.tool_type, cutoff_type=measure.cutoff_type)
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+
+
+
 def reactivate_cycle(request, cycle_id):
     cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=True, endDate=None)
     return HttpResponseRedirect(reverse('main:dashboard'))
@@ -539,11 +676,17 @@ def reactivate_cycle(request, cycle_id):
 
 
 def outcome_detail(request, outcome_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
     outcome = Outcome.objects.get(id=outcome_id)
+    cycle_id = None
+    for cyc in outcome.cycle.all():
+        cycle_id = cyc.id
+    print(cycle_id)
     measures = Measure.objects.filter(outcome=outcome)
-    rubrics = Rubric.objects.all()
+    all_measures = Measure.objects.filter(coordinator=cordinator)
+    rubrics = Rubric.objects.filter(coordinator=cordinator)
     students = None
-    evaluators = Evaluator.objects.all()
+    evaluators = Evaluator.objects.filter(coordinator=cordinator)
     num_of_evaluations = []
     test_data = {}
     data = {}
@@ -567,20 +710,22 @@ def outcome_detail(request, outcome_id):
 
 
         if measure.tool_type=='Test score':
-            if measure.test_score!= None:
+            if measure.test_score!= None and custom_students.objects.filter(measure=measure, graded=True, current=True).count()>0:
                 test_data = test_score_data(measure.test_score.test, measure.id)
 
-                if(test_data['passed']==True):
+                if test_data['passed']==True:
                      Measure.objects.filter(id=measure.id).update(status='passing', statusPercent = test_data['percentage'])
                 else:
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
 
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
-    context = {'evaluator': Evaluator.objects.all(),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
-                'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations,
-                'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student,
+
+    context = {'evaluator': Evaluator.objects.filter(coordinator=cordinator),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+                'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
+                'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False).count(),
-                'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+                'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -605,6 +750,17 @@ def upload(request, measure_id, outcome_id):
             custom_students.objects.create(measure=Measure.objects.get(id=measure_id), student_name = column[0], grade=int(column[1]), graded=True )
             measure.update(test_score=student_score)
 
+        for m in measure:
+            if m.tool_type=='Test score':
+                if m.test_score!= None and custom_students.objects.filter(measure=m, graded=True, current=True).count()>0:
+                    test_data = test_score_data(m.test_score.test, m.id)
+
+                    if test_data['passed']==True:
+                        Measure.objects.filter(id=m.id).update(status='passing', statusPercent = test_data['percentage'])
+                    else:
+                        Measure.objects.filter(id=m.id).update(status='failing', statusPercent = test_data['percentage'])
+
+
         number_of_students = Test_score.objects.filter(test=test_name).count()
         average = total_points / number_of_students
 
@@ -625,10 +781,21 @@ def add_test_score(request,measure_id, outcome_id):
     student_score = Test_score(student=student, test=test_name, score=score)
     student_score.save()
 
+
     cust_stu  = custom_students(student_name=student_name,measure=Measure.objects.get(id=measure_id), grade=score, graded=True)
     cust_stu.save()
 
     measure.update(test_score=student_score)
+    for m in measure:
+        if m.tool_type=='Test score':
+            if m.test_score!= None and custom_students.objects.filter(measure=m, graded=True, current=True).count()>0:
+                test_data = test_score_data(m.test_score.test, m.id)
+
+                if test_data['passed']==True:
+                    Measure.objects.filter(id=m.id).update(status='passing', statusPercent = test_data['percentage'])
+                else:
+                    Measure.objects.filter(id=m.id).update(status='failing', statusPercent = test_data['percentage'])
+
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -660,10 +827,14 @@ def registerCo(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             dept = form.cleaned_data.get('department')
-            co = CoOrdinator(name=username,email=email,department=dept)
+            co = CoOrdinator(name=username, email=email, department=dept)
             co.save()
             messages.success(request, 'Account created')
-
+            inv = InvitedCo.objects.filter(email=email)[0]
+            print(email)
+            print(inv)
+            inv.pending = False
+            inv.save()
             return redirect('/')
         else:
             messages.add_message(request, messages.SUCCESS, 'Please check your credentials')
@@ -675,8 +846,10 @@ def registerCo(request):
 
 
 def add_learning_outcome(request, cycle_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
     title = request.POST.get('outcome_title')
-    outcome = Outcome(title=title)
+    desc = request.POST.get('outcome_desc')
+    outcome = Outcome(title=title, desc=desc,coordinator=cordinator)
     outcome.save()
 
     course_id = request.POST.getlist('course')
@@ -709,6 +882,7 @@ def update_measure(request, measure_id):
     return render(request, 'main/cycle.html')
 
 def new_measure(request, outcome_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
     measure_title = request.POST.get('measure_title')
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
@@ -718,7 +892,7 @@ def new_measure(request, outcome_id):
     outcome_found = Outcome.objects.get(id=outcome_id)
     measure = Measure(measureTitle= measure_title,
                       cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent,
-                      outcome=outcome_found, tool_type=tool_type, cutoff_type=cutoff_type)
+                      outcome=outcome_found, tool_type=tool_type, cutoff_type=cutoff_type,coordinator=cordinator)
     measure.save()
 
     messages.add_message(request, messages.SUCCESS, 'New measure is added to the outcome')
@@ -782,12 +956,13 @@ def test_rubric(request):
 
 def created_test_rubric(request):
     if request.method == 'POST':
+        cordinator = CoOrdinator.objects.get(email=request.user.email);
         row_num = int(request.POST.get('row_num'))
         row_col = int(request.POST.get('col_num'))
         rubric_title = request.POST.get("rubric_title")
         isWeighted = request.POST.get("isWeighted")
         isAscending = request.POST.get("isAscending")
-        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted,ascending=isAscending)
+        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted,ascending=isAscending,coordinator=cordinator)
         rubric_new.save()
         for x in range(row_num):
             for y in range(row_col):
@@ -874,28 +1049,57 @@ def upload_student(request, outcome_id, measure_id):
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def add_evaluator(request, outcome_id, measure_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
     measure = Measure.objects.get(id=measure_id)
 
     if request.method == 'POST':
-        evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'))
+        evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'),coordinator=cordinator)
         evaluator.save()
+
+        # evaluator_list = request.POST.getlist('evaluators')
+        # print(evaluator_list)
+        # for ev in evaluator_list:
+        #     measure.evaluator.add(ev)
+
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        #email_send.send()
+        email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
+def add_preexisting_evaluator(request, outcome_id, measure_id):
+    measure = Measure.objects.get(id=measure_id)
+
+    if request.method == 'POST':
+        evaluator_list = request.POST.getlist('evaluators')
+        print(evaluator_list)
+        for ev in evaluator_list:
+            evaluator = Evaluator.objects.get(id=ev)
+            measure.evaluator.add(evaluator)
+
+            email = evaluator.email
+            email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send.send()
+        messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
+
+
+    return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
+
+
+
+
 def update_outcome(request, outcome_id, cycle_id):
     new_outcome_text = request.POST.get('outcome_title')
+    new_outcome_desc = request.POST.get('outcome_desc')
     outcome_course = request.POST.getlist('course')
     for course in outcome_course:
         outcome_found = Outcome.objects.get(id=outcome_id)
         course_found = Course.objects.get(id=course)
         outcome_found.course.add(course_found)
-    outcome = Outcome.objects.filter(id = outcome_id).update(title = new_outcome_text)
+    outcome = Outcome.objects.filter(id = outcome_id).update(title = new_outcome_text, desc=new_outcome_desc)
 
     messages.add_message(request, messages.SUCCESS, 'Outcome was edited successfully')
 
@@ -915,6 +1119,7 @@ def view_test_score(request, test_score_test, measure_id):
 
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     student_id = int(request.POST.getlist('student_to_be_evaluated')[0])
+    print(student_id)
     student_real = custom_students.objects.get(id=student_id)
     student_name = student_real.student_name
     rub = Rubric.objects.get(id=rubric_id)
@@ -949,10 +1154,10 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
                 super_header.append(cat.categoryTitle)
 
     print("This is superheader",super_header)
-    mysc = request.POST.getlist('cat_field')
     myvals = category_score.objects.filter(student=student_real)
     for vals in myvals:
         vals.delete()
+    mysc = request.POST.getlist('cat_field')
     for x in range(0,rub.max_row-1):
         print(mysc[x])
         score = mysc[x]
@@ -1055,16 +1260,21 @@ def view_rubric_data(request, measure_id):
     return render(request, 'main/rubric_scores.html', context)
 
 def past_assessments(request):
-    evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email)
+    evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email).order_by('-id')
     email = request.user.email
-    evaluator = Evaluator.objects.filter(email=email)[0]
-    scores = custom_students.objects.filter(evaluator=evaluator, graded=True)
+    evaluator = Evaluator.objects.filter(email=email)
+    if len(evaluator)==0:
+        messages.add_message(request, messages.SUCCESS, 'No past assessments')
+        return render(request, 'main/past_assessments.html', {})
+    else:
+        evaluator = evaluator[0]
+    scores = custom_students.objects.filter(evaluator=evaluator, graded=True).order_by('-id')
     print(scores)
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
     alerts_count = alerts.count()
-
+    cust_stu = custom_students.objects.filter(evaluator=evaluator)
     context = {'past':'active', 'evaluations': evaluations, 'scores':scores,
-                'alerts':alerts, 'alerts_count':alerts_count}
+                'alerts':alerts, 'alerts_count':alerts_count,'cust_stu':cust_stu}
     return render(request, 'main/past_assessments.html', context)
 
 
@@ -1084,8 +1294,8 @@ def view_score(request,evaluation_id):
 
 
 
-def edit_evaluation_student(request,evaluation_id):
-    evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
+def edit_evaluation_student(request,cust_id):
+    """evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
     measure = evaluation_found.measure
     measure_id = measure.id
     email_eval = Evaluator.objects.filter(email=evaluation_found.evaluated_by)[0]
@@ -1096,11 +1306,14 @@ def edit_evaluation_student(request,evaluation_id):
         if(stu.measure==measure and stu.student_name==evaluation_found.student and stu.evaluator==email_eval):
             mystudent=stu
             mystudent.graded=False
-
+     """
+    mystudent = custom_students.objects.get(id=cust_id)
+    measure = mystudent.measure
+    measure_id = measure.id
     cat_score = category_score.objects.filter(student=mystudent)
-    data = []
+    data = ["dummy"]
     for c_s in cat_score:
-        data.append({c_s.header: c_s.score})
+        data.append(c_s.score)
     print(data)
     measures = measure
     students = measures.student.all()
@@ -1137,8 +1350,6 @@ def edit_evaluation_student(request,evaluation_id):
         if cat.rubric == rubric:
             if cat.index_y in cat_index and cat.index_x == 0:
                 super_cat.append(cat.categoryTitle)
-
-
     context = {'measures': measures, 'mystudent':mystudent, 'measure_id': measure_id, 'rubric': rubric,
                'categories': categories, 'data':data
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
@@ -1186,12 +1397,24 @@ def broadcast(request):
 
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
+def broadcast_super(request):
+    send_to = request.POST.getlist('evaluator')
+    message = request.POST.get('message')
+    for x in send_to:
+        broadcast = Broadcast.objects.create(sender=request.user.username, receiver=x,message=message, sent_at=datetime.today())
+
+    return HttpResponseRedirect(reverse_lazy('main:super_admin_home'))
+
+
 def create_curriculum(request):
+    cordinator = CoOrdinator.objects.get(email=request.user.email);
     title = request.POST.get('title')
     description = request.POST.get('description')
     credit_hours = request.POST.get('credit_hours')
-    Course.objects.create(title=title, description=description, credit_hours=credit_hours)
-
+    Course.objects.create(title=title, description=description, credit_hours=credit_hours,coordinator=cordinator)
+    url = request.POST.get("url1")
+    print("Url is",url)
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def mark_read(request, alert_id):
@@ -1203,7 +1426,17 @@ def mark_read(request, alert_id):
 def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
     notification.update(read=True)
+    print(request.build_absolute_uri())
+    url = request.POST.get("url")
+    return redirect(url)
+    return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
+def delete_notifications(request):
+    notification = Notification.objects.all()
+    notification.update(read = True)
+    print(request.build_absolute_uri())
+    url = request.POST.get("urls")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def upload_test_score_evaluator(request, measure_id):
@@ -1267,7 +1500,8 @@ def generate_cycle_report(request, cycle_id):
     outcomes = Outcome.objects.filter(cycle=cycle)
     data = dict()
     me = []
-    count = 0;
+    count = 0
+    measures = None
 
     for outcome in outcomes:
         measures = Measure.objects.filter(outcome=outcome)
@@ -1275,8 +1509,50 @@ def generate_cycle_report(request, cycle_id):
             evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
             number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
             count = count + 1
-            me.append([evaluated_student_count, number_of_pass_cases,  outcome.title, measure.measureTitle,  measure.statusPercent, measure.status, count, outcome.id])
+            me.append([evaluated_student_count, number_of_pass_cases,  outcome.title, measure.measureTitle,  measure.statusPercent, measure.status, Measure.objects.filter(outcome=outcome).count(), outcome.id])
     print(me)
     context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
-    'count':count, 'data':me}
+    'count':range(len(me)), 'data':me}
     return render(request, 'main/cycle_report.html', context)
+
+def super_admin_home(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        department = request.POST.get('department')
+        invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
+        evaluators = Evaluator.objects.all()
+        co = InvitedCo(email=email, pending=True)
+        co.save()
+        email = co.email
+        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send.send()
+
+        for eval in evaluators:
+            if eval.email == invited_Coordinator:
+                Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
+
+        messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
+
+        context= {'now':'active','cordinator':InvitedCo.objects.all()}
+        return render(request, 'main/invite.html', context)
+    context= {'now':'active','cordinator':InvitedCo.objects.all()}
+    return render(request, 'main/invite.html',context)
+
+
+def super_admin_past(request):
+    myinvitees = InvitedCo.objects.all()
+    invitees = Invited_Coordinator.objects.filter(invited_by=request.user.username)
+    context = {'past':'active', 'invitees':invitees,'myinvitees':myinvitees,'cordinator':InvitedCo.objects.all()}
+    return render(request, 'main/invite_status.html', context)
+
+def outcome_test(outcome_id):
+    outcome = Outcome.objects.get(id=outcome_id)
+    measures = Measure.objects.filter(outcome = outcome)
+    flag = True
+    for measure in measures:
+        if measure.status == 'failing':
+            flag = False
+    return flag
+
+def admin_footer(request):
+    return render(request, 'main/admin_footer.html')

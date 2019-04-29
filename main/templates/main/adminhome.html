@@ -1,73 +1,71 @@
 {% extends  'main/adminbase.html' %}
 {%load static%}
 
+<style>
+.card-header {
+    background-color: #800029;
+    color: rgb(252, 248, 242);
+}
+.border-dark{
+  border-color: #800029 !important;
+}
+
+hr {
+  height: 6px;
+  background: url(http://ibrahimjabbari.com/english/images/hr-12.png) repeat-x 0 0;
+    border: 0;
+  color: #dad86d9;
+}
 
 
-
-
-
-
+</style>
 
 {%block body_block%}
+<div class = "container" id = "main_content">
+
 <div class = "container-fluid">
-
     <div class = "row">
-       <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+
+      <div class = "col col-lg-8 col-md-12 col-sm-12 col-xs-12 col-12">
+
          <div class = "card border-dark mb-3">
-           <h3 class = "card-header title text-center"> Start a new cycle </h3>
+           <h3 class = "card-header title text-center"> Evaluator Progress </h3>
+           <div class="container" style="overflow-y:auto; height: 35vh">
+            <ul class="list-group list-group-flush " >
+           {% for eval in evaluator %}
 
-           <form action = "{% url 'main:newCycle' %}" method = "POST" >
-             {% csrf_token%}
-             <div class="row mt-4 ml-2 mr-2">
-               <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12">
-                  <div class="form-group">
-                    <input type="text" name = "year" class="form-control" placeholder="Year" required>
-                  </div>
-               </div>
-               <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12">
-                 <div class="form-group">
-                   <input type="text" name = "semester" class="form-control" placeholder="Semester" required>
+               <li class = "list-group-item d-flex justify-content-between d-flex align-items-center">{{eval}}
+
+
+             <div class="progress progress-admin ">
+                 <div class="progress-bar bg-danger " role="progressbar" aria-valuenow="40"
+                 aria-valuemin="0" aria-valuemax="100" style="width:{{eval.perc_completed}}%">
+                   {{eval.perc_completed|floatformat:0}}% Evaluation Completed
                  </div>
-               </div>
              </div>
 
 
-             <div class = "row p-1">
-               <div class = "col col-12 ml-0.5">
-             <div class="form-group">
-               <button type = "submit" class = "btn btn-primary btn-lg btn-block">Start</button>
-             </div>
-             </div>
+           </li>
+              {%empty%}
+              <br/>
+              <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+                <div class="container">
+                  <h1 class="display-4">No evaluators present in the running cycles</h1>
+                  <p class="lead">Please assign evaluators to see the data</p>
+                </div>
+              </div>
+             {% endfor %}
+           </ul>
            </div>
-           </form>
+         </div>
 
-
-
-           </div>
-           </div>
-
-      <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
-       <div class = "card border-dark mb-3" >
-         <h3 class = "card-header title text-center"> Previous Cycles </h3>
-         <ul class="list-group" style="overflow-y:scroll; height: 20vh">
-           {%for cycle in cycles%}
-             {%if cycle.isCurrent == False %}
-             <li class="list-group-item d-flex justify-content-between align-items-center">
-               {{cycle.semester}}: {{cycle.year}}
-             <a href = "{% url 'main:cycle' cycle.id %}">
-               <button class = "btn btn-primary"> Visit </button>
-             </a>
-             </li>
-             {%endif%}
-           {%endfor%}
-         </ul>
        </div>
-     </div>
+
 
      <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
        <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
          <h3 class = "card-header title text-center">Running Cycles </h3>
-         <ul class="list-group" style="overflow-y:scroll; height: 20vh">
+         <ul class="list-group" style="overflow-y:auto; height: 35vh">
            {%for cycle in cycles%}
              {%if cycle.isCurrent %}
              <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -77,58 +75,37 @@
              </a>
              </li>
              {%endif%}
+             {%empty%}
+             <br/>
+             <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+               <div class="container">
+                 <h1 class="display-5">No running cycles</h1>
+                 <p class="lead">Click <a href = "{%url 'main:cycles'%}">here </a> to add cycles</p>
+               </div>
+             </div>
            {%endfor%}
          </ul>
        </div>
      </div>
 
 </div>
+
 <hr/>
+
 <div class = "row">
-    <div class = "col col-lg-4 col-md-6 col-sm-12 col-xs-12 col-12">
-
-       <div class = "card border-dark mb-3">
-         <h3 class = "card-header title text-center"> Evaluator Progress </h3>
-         <div class="container">
-          <ul class="list-group list-group-flush " style="overflow-y:scroll; height: 35vh">
-         {% for eval in evaluator %}
-
-             <li class = "list-group-item d-flex justify-content-between d-flex align-items-center">{{eval}}
 
 
-           <div class="progress progress-admin ">
-               <div class="progress-bar bg-danger " role="progressbar" aria-valuenow="40"
-               aria-valuemin="0" aria-valuemax="100" style="width:{{eval.perc_completed}}%">
-                 {{eval.perc_completed|floatformat:0}}% Evaluation Completed
-               </div>
-           </div>
+     <div class = "col col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
 
-
-         </li>
-           {% endfor %}
-         </ul>
-         </div>
-       </div>
-
-     </div>
-
-
-
-     <div class = "col col-lg-8 col-md-6 col-sm-12 col-xs-12 col-12">
-
-       <div class = "container" id = "main_content">
          <div class = "col col-lg-12 col-md-12 col-sm-12">
                    <div  class = "card border-dark mb-3 justify-content-center" >
                      <h3 class = "card-header title">
-                     <div class = "d-flex justify-content-between">
-                       <span>Outcomes</span>
-                         <button type="button" class="btn btn-primary btn-lg mt-1" data-toggle="modal" data-target="#exampleModalCenter1">
-                             <i class="fas fa-plus"></i>
-                         </button>
+                     <div class = " text-center">
+                      Outcomes and their progress
                      </div>
                      </h3>
 
-         <ul id = "over" class="list-group" style="overflow-y:scroll; height: 35vh">
+         <ul id = "over" class="list-group" style="overflow-y:auto; height: 35vh">
      {%for outcome in outcomes%}
          <div class="accordion" id="accordionExample">
            {%for cycle in outcome.cycle.all%}
@@ -156,7 +133,7 @@
                      {%if measure.outcome == outcome%}
                      <div class = "row ">
                        <div class = "col col-lg-12 d-flex justify-content-between">
-                           <button class = "btn btn-sm btn-warning mb-2 " data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}">
+                           <span class = "badge badge-info mb-2 p-2 " data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}">
                            {{measure.cutoff_percentage}} % of the students need to get
                            {%if measure.cutoff_score%}
                             {{measure.cutoff_score}}
@@ -170,33 +147,31 @@
                            {%elif measure.tool_type == "Test score"%}
                              <strong>{{measure.test_score}}</strong>
                            {%endif%}
-                           </button>
+                           </span>
 
                            <div class="modal fade" id="exampleModalCenter{{measure.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                              <div class="modal-dialog modal-dialog-centered" role="document">
                                <div class="modal-content">
                                  <div class="modal-header">
-                                   <h5 class="modal-title" id="exampleModalLongTitle">Detailed Stats</h5>
+                                   <h5 class="modal-title" id="exampleModalLongTitle">Detailed Stats - {{measure}}</h5>
                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                      <span aria-hidden="true">&times;</span>
                                    </button>
                                  </div>
                                  <div class="modal-body">
                                    <div class="card bg-light mb-3">
-                                     <div class="card-header">{{measure}}</div>
-                                     <div class="card-body">
-                                       <h5 class="card-title">Tool type: {{measure.tool_type}}</h5>
+                                     <div class="card-body ">
+                                    <div class = "d-flex justify-content-between">   <h5>Tool type </h5> <span class ="badge badge-info" style="padding: 10px;">{{measure.tool_type}}</span></div>
                                        <p class="card-text">
 
                                            {%for k, v in data.items %}
 
                                              {%if v.measure.id == measure.id%}
 
-                                             Total evaluators: {{v.evaluator_count}} <br>
-                                             Total students evaluated: {{v.evaluated_student_count}} <br>
-                                             Average Points: {{v.avg_points|floatformat:2}} <br>
-                                             Percentage passed: {{v.percent_pass_cases|floatformat:2}}% <br>
-                                             Status: {% if v.passed%} passed {%else%} failed {%endif%}
+                                            <div class = "d-flex justify-content-between"> <h5>Total evaluators </h5> <span class="badge badge-primary" style="padding: 10px;"> {{v.evaluator_count}} </span> </div><br>
+                                            <div class = "d-flex justify-content-between"><h5> Total students evaluated </h5><span class="badge badge-primary" style="padding: 10px;">{{v.evaluated_student_count}}</span> </div> <br>
+                                            <div class = "d-flex justify-content-between"> <h5>Percentage passed</h5> <span class="badge badge-primary" style="padding: 10px;"> {{v.percent_pass_cases|floatformat:2}}%</span> </div> <br>
+                                            <div class = "d-flex justify-content-between"> <h5>Status </h5> {% if v.passed%}<span class="badge badge-success" style="padding: 10px;"> passed </span> {%else%} <span class="badge badge-danger" style="padding: 10px;"> failed </span> {%endif%} </div> <br>
 
 
                                              {%endif%}
@@ -257,7 +232,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action = "{%url 'main:add_learning_outcome' mycyc.id%}" method="POST">
+                <form action = "" method="POST">
                   {%csrf_token%}
                   <input type="hidden" id="url" name = "url" value={{request.path}}>
                   <div class="form-group">
@@ -285,6 +260,18 @@
       </div>
          </div>
 
+
+
+         {%empty%}
+         <br/>
+         <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+           <div class="container">
+             <h1 class="display-5">No outcomes present</h1>
+             <p class="lead">Go to the current cycle and add outcomes </p>
+           </div>
+         </div>
+
+
    {%endfor%}
  </div>
  </div>
@@ -308,6 +295,21 @@
 
 
 </div>
+
+
+
+
+
+
+
+
+<!-- <div class="instructions">
+</div> -->
+
+
+
+
+
 
 <script type="text/javascript">
   $(document).ready(function(){

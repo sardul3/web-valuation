@@ -5,6 +5,10 @@
   td {
       font-size: 1rem;
   }
+  .rubric_select{
+    padding:0 !important;
+
+  }
 
 </style>
 
@@ -12,7 +16,7 @@
 
     <form action = "{%url 'main:evaluate_single_student' rubric.max_row rubric.id measure_id%}" method = "POST">
       {%csrf_token%}
-        <label for="exampleFormControlSelect1">Evaluate a student</label>
+        <label for="exampleFormControlSelect1">Updating the evaluation for {{mystudent.student_name}} </label>
              <select class="form-control" name = "student_to_be_evaluated">
                         <option value = "{{mystudent.id}}">{{mystudent.student_name}}</option>
               </select>
@@ -37,12 +41,15 @@
           <td> Score </td>
           {%else%}
         <td>
+            {% load index %}
           <div class="form-group">
-              <select class="form-control" id="exampleFormControlSelect1" name = "cat_field">
+              <select class="form-control rubric_select" id="exampleFormControlSelect1" name = "cat_field">
                   {% for val in super_cat %}
-                  <option value = "{{val}}"
-
-                  >{{val}}</option>
+                  {% if val == data|index:x %}
+                  <option value = "{{val}}" selected>{{val}}</option>
+                  {%else%}
+                  <option value = "{{val}}">{{val}}</option>
+                  {% endif %}
                   {% endfor %}
               </select>
           </div>
@@ -53,7 +60,7 @@
         </table>
         </div>
         <div class = "text-center">
-          <button type = "submit" class = "btn btn-primary btn-lg mt-3"> Evaluate </button>
+          <button type = "submit" class = "btn btn-primary btn-lg mt-3"> Update </button>
         </div>
         </form>
 </div>

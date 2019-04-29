@@ -16,6 +16,15 @@ class Evaluator(models.Model):
     def __str__(self):
         return self.name
 
+class Invited_Coordinator(models.Model):
+    email = models.EmailField()
+    department = models.CharField(max_length=200)
+    invited_by = models.CharField(max_length=200)
+    accepted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
+
 class Student(models.Model):
     name = models.CharField(max_length=200)
     classification = models.CharField(max_length=200)
@@ -49,7 +58,7 @@ class Rubric(models.Model):
 
 
 class Category(models.Model):
-    categoryTitle = models.CharField(max_length=200)
+    categoryTitle = models.CharField(max_length=600)
     index_x = models.PositiveIntegerField(null=True)
     index_y = models.PositiveIntegerField(null=True)
     rubric = models.ForeignKey(Rubric, null=True, on_delete = models.CASCADE)
@@ -62,10 +71,11 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     credit_hours = models.PositiveIntegerField(default=3)
-
+    coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
 
 class Outcome(models.Model):
     title = models.CharField(max_length=200, default='', null=True)
+    desc = models.CharField(max_length=600, null=True)
     status = models.BooleanField(default=True)
     cycle = models.ManyToManyField(Cycle)
     course = models.ManyToManyField(Course)
@@ -169,3 +179,7 @@ class Notification(models.Model):
     message = models.CharField(max_length=400)
     created_at = models.DateTimeField()
     read = models.BooleanField(default=False)
+
+class InvitedCo(models.Model):
+    email = models.CharField(max_length=200)
+    pending = models.BooleanField(default=True)

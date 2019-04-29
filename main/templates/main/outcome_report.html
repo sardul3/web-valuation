@@ -9,15 +9,36 @@
   @media print{
     ;
   }
+  .card-header {
+    background: #800029;
+margin-bottom: 10px;
+}
 </style>
 
-<div class="container-fluid">
+<div class="container">
 
 
-<h2 ><center>Outcome Report</center></h2>
+<h2 class="card-header" ><center>Outcome Report</center></h2>
+
+
+
+
+
 {% if mymeasure is None %}
-    <h1> Nothing to display: Add measures </h1>
+    <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+      <div class="container">
+        <h1 class="display-4">Not enough data to generate report</h1>
+        <p class="lead"> Please add some measures </p>
+      </div>
+    </div>
     {% else %}
+
+    <ul class="list-group list-group-horizontal-sm mb-2">
+      <li class="list-group-item active">Associated classes </li>
+      {%for class in outcome.course.all%}
+      <li class="list-group-item   list-group-item-danger">{{class.title}}</li>
+       {%endfor%}
+    </ul>
 <div class="table-responsive">
 <table class="table table-bordered table-hover table-sm">
   <tr>
@@ -27,7 +48,7 @@
     <th class="align-middle">Number meeting Criteria</th>
     <th class="align-middle">Percentage Meeting Criteria</th>
     <th class="align-middle">Results</th>
-  </b>
+
   </tr>
 
   <tr>
@@ -41,6 +62,7 @@
       <td >{{m.1}} </td>
       <td>{{m.3|floatformat:2}} </td>
       <td>{{m.4}}</td>
+
   </tr>
 {%endfor%}
 

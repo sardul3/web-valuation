@@ -1,0 +1,116 @@
+<style>
+    ul li a {
+        color:#FFF;
+        text-decoration:none;
+        padding:6px 15px;
+        cursor:pointer;
+    }
+    ul li a:hover {
+        text-decoration:none;
+        cursor:pointer;
+    }
+
+
+    h3 {
+        display:block;
+        color:#333;
+        background:#FFF;
+        font-weight:bold;
+        padding:8px;
+        margin:0;
+        border-bottom:solid 1px rgba(100, 100, 100, .30);
+    }
+
+    .seeAll {
+        background:#F6F7F8;
+        padding:8px;
+        font-size:12px;
+        font-weight:bold;
+        border-top:solid 1px rgba(100, 100, 100, .30);
+        text-align:center;
+    }
+    .seeAll a {
+        color:#3b5998;
+    }
+    .seeAll a:hover {
+        background:#F6F7F8;
+        color:#3b5998;
+        text-decoration:underline;
+    }
+</style>
+
+    <div class = "container-fluid">
+      <div class = "container" id = "main_content">
+<nav class="navbar sticky-top navbar-expand-lg  navbar-light ">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+    <ul class="navbar-nav w-100 mr-auto mt-2 mt-lg-0 justify-content-around">
+
+      <li class="nav-item {{now}}" >
+        <a class="nav-link" href="{%url 'main:super_admin_home'%}" >Invite Coordinators</a>
+      </li>
+      <li class="nav-item {{past}}" >
+        <a class="nav-link" href="{%url 'main:super_admin_past'%}">View Invite status</a>
+      </li>
+
+      <li class="nav-item {{msg}}" >
+      <a id="noti_Button" data-toggle="modal" data-target="#exampleModalCenterSendBro" >
+        <span style="font-size: 2rem; color: #7a2831;">
+           <i data-toogle="tooltip" title="Send Broadcast" class="fas fa-envelope-open-text"></i>
+         </span>
+      </a>
+    </li>
+
+
+
+<li class="nav-item {{logout}}">
+  <a class = "nav-link" href="{%url 'main:logout'%}">Log Out</a>
+</li>
+
+
+  </ul>
+  </div>
+</nav>
+<br/>
+</div>
+</div>
+
+<div class="modal fade" id="exampleModalCenterSendBro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+ <span aria-hidden="true">&times;</span>
+</button>
+<div class="modal-body">
+  <div class = "card border-dark mb-3">
+    <h3 class = "card-header title text-center"> Send a broadcast </h3>
+    <div class="container p-2">
+      <form action = "{%url 'main:broadcast_super'%}" method = 'POST'>
+        {%csrf_token%}
+      <div class="form-group">
+        <label for="exampleFormControlSelect2">Select a Coordinator</label>
+        <select multiple class="form-control" id="exampleFormControlSelect2" name = "evaluator">
+          {%for ev in cordinator%}
+          <option value = "{{ev.email}}">{{ev.email}}</option>
+          {%endfor%}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Message</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
+      </div>
+      <div class = "text-center">
+        <button type="submit" class="btn btn-primary btn-lg">Send</button>
+      </div>
+    </form>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+</div>

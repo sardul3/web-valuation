@@ -1,14 +1,69 @@
 {% extends  'main/adminbase.html' %}
 {% load static %}
 {% block body_block %}
+<style>
+  hr.style15 {
+border-top: 4px double #8c8b8b;
+text-align: center;
+}
+hr.style15::after {
+content: 'or';
+display: inline-block;
+position: relative;
+top: -15px;
+padding: 0 10px;
+color: #7a2831;
+font-size: 18px;
+background: #f5efe6;
+}
 
+  .list-group-item-action:focus, .list-group-item-action:hover {
+      z-index: 1;
+      color: #495057;
+      background-color: #cae3fb;
+      text-decoration: none;
+      font-style: oblique;
+  }
+  .badge{
+    white-space: inherit;
+  vertical-align: text-top;
+  }
+@media only screen and (max-width: 375px) {
+  .d-flex {
+    display: inline-flex;
+  }
+  .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+  }
+}
+
+@media only screen and (max-width: 320px) {
+    .d-flex{
+        display: inline-flex !important;
+    }
+    .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+  }
+}
+
+</style>
 <div class = "container-fluid" id = "main_content">
 
   <div class = "row d-flex justify-content-center  ">
 
       <div class = "col col-lg-2 col-md-12 col-sm-12 col-xs-12 col-12">
         <div class="card border-dark mb-3">
-            <div class="card-header text-center"><h5>{{cycle.semester}} {{cycle.year}}</h5></div>
+            <div class="card-header text-center"><h4>{{cycle.semester}} {{cycle.year}}</h4></div>
             <div class="card-body text-dark text-center">
               <h5 class="card-title">Started at</h5>
               <p class="card-text">{{cycle.startDate}}</p>
@@ -25,7 +80,7 @@
               <a href = "{% url 'main:end_cycle' cycle_id%}"class = "btn btn-lg btn-danger mb-3">
                 End Cycle
               </a>
-                <a  href = "{%url 'main:generate_cycle_report' cycle_id%}" class = "btn btn-lg btn-success ">
+                <a  href = "{%url 'main:generate_cycle_report' cycle_id%}" class = "btn btn-lg btn-success mb-3">
                  View Report
                </a>
 
@@ -40,8 +95,8 @@
           </div>
 
 
-          <div class = "card border-dark mb-3">
-            <h3 class = "card-header title text-center"> Create a curriculum </h3>
+          <!-- <div class = "card border-dark mb-3">
+            <h4 class = "card-header title text-center"> Create a curriculum </h4>
             <div class="container p-2">
               <form action = "{%url 'main:create_curriculum'%}" method = 'POST'>
                 {%csrf_token%}
@@ -63,7 +118,7 @@
               </div>
             </form>
             </div>
-          </div>
+          </div> -->
 
       </div>
 
@@ -73,30 +128,36 @@
     <h1 class="d-flex justify-content-between card-header">  Learning outcomes
     {%if cycle.isCurrent%}
           <button type="button" class="btn btn-primary btn-lg mt-1" data-toggle="modal" data-target="#exampleModalCenter1">
-           <i class="fas fa-plus"></i>
+           <i class="fas fa-plus" data-toogle="tooltip" title="Add Outcome"></i>
           </button>
     {%endif%}
     </h1>
 
       <div class="list-group list-group-flush">
       {%for outcome in outcomes%}
-      <div class = "d-flex justify-content-center">
-      <div class="d-flex w-100 justify-content-between">
+      <div class = "d-flex justify-content-center p-2">
+      <div class=" d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
-              <h5 class="mb-1 p-1">{{outcome.title}}</h5>
+              <h5 class="mb-1 p-1">{{outcome.title}}
+              {%if outcome.status == False%}
+                <div class="badge badge-pill badge-danger" style="font-size:initial;">failing</div>
+              {%else%}
+                <div class="badge badge-pill badge-success" style="font-size:initial;">passing</div>
+              {%endif%}
+              </h5>
           </a>
       </div>
 
         <div class="btn-group align-items-center">
           <a  href = "" class = "btn btn-lg "  data-toggle="modal" data-target="#exampleModalCenterEditOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: #bd955a;">
-              <i class="far fa-edit"></i>
+              <i data-toogle="tooltip" title="Edit Outcome"class="far fa-edit"></i>
           </span>
           </a>
 
           <a  href = "{%url 'main:generate_outcome_report' outcome.id%}" class = "btn btn-lg ">
-            <span style="font-size: 1em; color: #bd955a;">
-              <i> Generate Report</i>
+            <span style="font-size: 1.8em; color: #bd955a;">
+               <i data-toogle="tooltip" title="Generate Report" class="fas fa-file-contract"></i>
           </span>
           </a>
 
@@ -117,8 +178,13 @@
                     <input type="hidden" id="url" name = "url" value={{request.path}}>
                     <div class="form-group">
                       <label for="exampleFormControlTextarea1">Outcome Title</label>
+                      <input type = 'text' class="form-control" name = "outcome_title" value = "{{outcome.title}}">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleFormControlTextarea1">Outcome Description</label>
                       <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                name = "outcome_title">{{outcome.title}}
+                                name = "outcome_desc">{{outcome.desc}}
                       </textarea>
                     </div>
                     <div class="form-group">
@@ -134,6 +200,11 @@
                      </select>
                    </div>
 
+                   <div class = "text-right">
+                     <a href = "" data-toggle="modal" data-target="#exampleModalCenterCreateCourse"> Create a new Course </a>
+                  </div>
+
+
 
                     <div class="modal-footer">
                       <button type="submit" class="btn btn-primary">Save changes</button>
@@ -146,7 +217,7 @@
 
           <a  href = "#" class = "btn btn-lg" style = "margin-left: 5px;" data-toggle="modal" data-target="#exampleModalCenterDeleteOutcome{{outcome.id}}">
             <span style="font-size: 2em; color: #7a2831;">
-              <i class="far fa-trash-alt"></i>
+              <i data-toogle="tooltip" title="Delete Outcome" class="far fa-trash-alt"></i>
           </span>
           </a>
 
@@ -244,8 +315,15 @@
                   {%csrf_token%}
                   <input type="hidden" id="url" name = "url" value={{request.path}}>
                   <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Title</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name = "outcome_title"></textarea>
+                    <label for="exampleFormControlTextarea1">Outcome Title</label>
+                    <input type = 'text' class="form-control" name = "outcome_title">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Outcome Description</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                              name = "outcome_desc">
+                    </textarea>
                   </div>
 
                   <div class="form-group">
@@ -256,18 +334,88 @@
                      {%endfor%}
                    </select>
                  </div>
+                 <div class = "text-right">
+                   <a href = "" data-toggle="modal" data-target="#exampleModalCenterCreateCourse"> Create a new Course </a>
+                </div>
 
-
-                  <div class="modal-footer">
+                  <br/>
                     <button type="submit" class="btn btn-primary">Save changes</button>
-                  </div>
+                </form>
+
+                <hr class = "style15" />
+                <form action = "{%url 'main:migrate_outcome' cycle_id%}" method="POST">
+                  {%csrf_token%}
+                  <div class="form-group">
+                   <label for="exampleFormControlSelect2">Select from pre existing outcomes</label>
+                   <select multiple class="form-control" id="exampleFormControlSelect2" name="outcomes">
+                     {%for outcome in all_outcomes%}
+                     <option value="{{outcome.id}}">{{outcome.title}}</option>
+                     {%endfor%}
+                   </select>
+                 </div>
+                 <button type="submit" class="btn btn-primary">Save changes</button>
+
                 </form>
               </div>
           </div>
         </div>
       </div>
+
+
+
+
+
+
+      <div class="modal fade" id="exampleModalCenterCreateCourse" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Learning Outcome Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+      <div class = "card border-dark mb-3">
+        <h4 class = "card-header title text-center"> Create a curriculum </h4>
+        <div class="container p-2">
+          <form action = "{%url 'main:create_curriculum'%}" method = 'POST'>
+            {%csrf_token%}
+          <div class="form-group">
+            <label for="exampleFormControlSelect2">Course Title</label>
+            <input class="form-control" type="text" name="title"></input>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Credit hours</label>
+            <input class="form-control" type="number" name="credit_hours"></input>
+          </div>
+
+          <div class = "text-center">
+              <input type = "hidden" name="url1" id="url1" value="{{request.get_full_path}}">
+
+            <button type="submit" class="btn btn-primary btn-lg">Create</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
 </div>
 </div>
+</div>
+
+
+
+</div>
+</div>
+<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 
 
 {%endblock%}

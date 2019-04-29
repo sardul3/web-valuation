@@ -37,9 +37,8 @@
             {%endif%}
           </div>
           </div>
-
+          <h3> {{measure.rubric}} </h3>
           <tr>
-             <td> Rubric </td>
              <td> Student </td>
              <td> Score </td>
              <td> Breakdown </td>
@@ -52,7 +51,6 @@
           {%for st in evaluated_list%}
 
            <tr>
-              <td> {{st.measure.rubric}} </td>
               <td> {{st.student_name}} </td>
               <td> {{st.grade|floatformat:2}} </td>
               <td>

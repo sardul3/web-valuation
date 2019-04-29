@@ -1,15 +1,22 @@
-from django.urls import path
+from django.urls import path,re_path,include
 from . import views
 from django.contrib.auth import views as auth_views
 
 app_name = 'main'
 
 urlpatterns = [
+    path('invite', views.super_admin_home, name='super_admin_home'),
+    path('invite_status', views.super_admin_past, name='super_admin_past'),
+    path('footer', views.admin_footer, name='admin_footer'),
+
     path('eval', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('broadcast', views.broadcast, name='broadcast'),
+    path('broadcast_super', views.broadcast_super, name='broadcast_super'),
+
     path('mark_read/<int:alert_id>', views.mark_read, name='mark_read'),
     path('delete_notification/<int:notification_id>', views.delete_notification, name='delete_notification'),
+    path('delete_notifications',views.delete_notifications, name='delete_notifications'),
 
     path('upload_test_score_evaluator/<int:measure_id>', views.upload_test_score_evaluator, name = 'upload_test_score_evaluator'),
 
@@ -30,7 +37,7 @@ urlpatterns = [
 
     path('edit_rubric/<int:rubric_id>', views.edit_rubric, name = 'edit_rubric'),
 
-    path('edit_evaluation_student/<int:evaluation_id>', views.edit_evaluation_student, name='edit_evaluation_student'),
+    path('edit_evaluation_student/<int:cust_id>', views.edit_evaluation_student, name='edit_evaluation_student'),
     path('view_score/<int:evaluation_id>', views.view_score, name='view_score'),
     path('evaluate_students/', views.evaluate_students, name = 'evaluate_students'),
 
@@ -54,6 +61,10 @@ urlpatterns = [
 
 
     path('migrate_cycle/<int:cycle_id>', views.migrate_cycle, name = "migrate_cycle"),
+    path('migrate_outcome/<int:cycle_id>', views.migrate_outcome, name = "migrate_outcome"),
+    path('migrate_measure/<int:outcome_id>/<int:cycle_id>', views.migrate_measure, name = "migrate_measure"),
+
+
     path('reactivate_cycle/<int:cycle_id>', views.reactivate_cycle, name = "reactivate_cycle"),
 
 
@@ -103,10 +114,16 @@ urlpatterns = [
     # path('upload', views.upload, name='upload'),
     path('add_learning_outcome/<int:cycle_id>', views.add_learning_outcome, name="add_learning_outcome"),
     path('add_evaluator/<int:outcome_id>/<int:measure_id>', views.add_evaluator, name="add_evaluator"),
+    path('add_preexisting_evaluator/<int:outcome_id>/<int:measure_id>', views.add_preexisting_evaluator, name="add_preexisting_evaluator"),
+
     path('register', views.register, name='register'),
     path('registerCo', views.registerCo, name='registerCo'),
     path('', auth_views.LoginView.as_view(template_name='main/login.html'), name='login'),
     path('logout', auth_views.LogoutView.as_view(template_name='main/logout.html'), name='logout'),
-
+    re_path(r'^password_reset/$', auth_views.PasswordResetView.as_view(template_name="registration/password_reset_form.html"),name='password_reset'),
+    re_path(r'^password_reset/done/$', auth_views.PasswordResetDoneView.as_view(template_name="registration/password_reset_done.html"),name='password_reset_done'),
+    path('password_reset_confirm',auth_views.PasswordResetConfirmView.as_view(template_name="registration/password_reset_confirm.html"), name='password_reset_confirm'),
+    re_path(r'^reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.PasswordResetConfirmView.as_view(template_name="registration/password_reset_confirm.html"),name='password_reset_confirm'),
+    re_path(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(template_name="registration/password_reset_complete.html"), name='password_reset_complete'),
 
 ]

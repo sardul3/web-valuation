@@ -2,11 +2,13 @@
 {%load static%}
 
 {%block body_block%}
+
+
     <div class = "container-fluid">
       <div class = "container" id = "main_content">
 
         <div class = "row">
-           <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+           <div class = "col col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12">
              <div class = "card border-dark mb-3">
                <h3 class = "card-header title text-center"> Start a new cycle </h3>
 
@@ -21,6 +23,7 @@
                    <div class="col col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12">
                      <div class="form-group">
                        <input type="text" name = "semester" class="form-control" placeholder="Semester" required>
+                       <input type="hidden" id="url" name="url" value={{request.path}}>
                      </div>
                    </div>
                  </div>
@@ -38,28 +41,10 @@
                </div>
                </div>
 
-          <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
-           <div class = "card border-dark mb-3" >
-             <h3 class = "card-header title text-center"> Previous Cycles </h3>
-             <ul class="list-group" style="overflow-y:scroll; height: 40vh">
-               {%for cycle in cycles%}
-                 {%if cycle.isCurrent == False %}
-                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                   {{cycle.semester}}: {{cycle.year}}
-                 <a href = "{% url 'main:cycle' cycle.id %}">
-                   <button class = "btn btn-primary"> Visit </button>
-                 </a>
-                 </li>
-                 {%endif%}
-               {%endfor%}
-             </ul>
-           </div>
-         </div>
-
-         <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+         <div class = "col col-lg-6 col-md-12 col-sm-12 col-xs-12 col-12">
            <div id= "card-border-dark-mb-3" class = "card border-dark mb-3">
              <h3 class = "card-header title text-center">Running Cycles </h3>
-             <ul class="list-group">
+             <ul class="list-group"  style="overflow-y:scroll; height:18vh">
                {%for cycle in cycles%}
                  {%if cycle.isCurrent %}
                  <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -69,10 +54,51 @@
                  </a>
                  </li>
                  {%endif%}
+                 {%empty%}
+            
+                 <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+                   <div class="container">
+                     <h1 class="display-5">No current cycles</h1>
+                     <p class="lead">Please create a cycle </p>
+                   </div>
+                 </div>
+
                {%endfor%}
              </ul>
            </div>
          </div>
+
+</div>
+
+<hr/>
+<div class = "row">
+  <div class = "col col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
+   <div class = "card border-dark mb-3" >
+     <h3 class = "card-header title text-center"> Previous Cycles </h3>
+     <ul class="list-group" style="overflow-y:scroll; height: 40vh">
+       {%for cycle in cycles%}
+         {%if cycle.isCurrent == False %}
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+           {{cycle.semester}}: {{cycle.year}}
+         <a href = "{% url 'main:cycle' cycle.id %}">
+           <button class = "btn btn-primary"> Visit </button>
+         </a>
+
+         </li>
+         {%endif%}
+         {%empty%}
+         <br/>
+         <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+           <div class="container">
+             <h1 class="display-5">No previous cycles</h1>
+           </div>
+         </div>
+
+       {%endfor%}
+     </ul>
+   </div>
+ </div>
+
 
 </div>
 </div>

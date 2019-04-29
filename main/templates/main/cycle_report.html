@@ -26,6 +26,7 @@ margin-bottom: 10px;
 
 <h2 class="card-header"><center>2013-2015 Computer Science Assessment Cycle- Summary Of Results</center></h2>
 <div class="table-responsive">
+  {%if outcomes%}
 <table class="table table-bordered table-hover table-sm">
   <tr>
     <th class="align-middle">Outcome</th>
@@ -37,23 +38,34 @@ margin-bottom: 10px;
     <th class="align-middle">Use of Results/Actions Taken</th>
   </tr>
 {%for outcome in outcomes%}
-<tr>
-<td rowspan="{{count}}">{{outcome}}</td>
-</tr>
+
+
 {%for d in data%}
   {%if d.7 == outcome.id%}
-  <tr>
+<tr>
+      <td> {{d.2}} </td>
       <td>{{d.3}}</td>
       <td >{{d.0}} </td>
       <td >{{d.1}} </td>
       <td>{{d.4|floatformat:2}} </td>
       <td>{{d.5}}</td>
 </tr>
+
   {%endif%}
 {%endfor%}
-
 {%endfor%}
+{%else%}
 
+<br/>
+<div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
+  <div class="container">
+    <h1 class="display-5">Not enough data to generate report</h1>
+    <p class="lead">Please add some outcomes </p>
+  </div>
+</div>
+
+
+{%endif%}
 
 </table>
 </div>

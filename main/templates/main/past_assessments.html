@@ -1,11 +1,18 @@
 {% extends  'main/evaluatorbase.html' %}
 {% load static %}
 {% block body_block %}
-
+<style>
+  .card-header {
+      background-color: #800029;
+      color: rgb(252, 248, 242);
+  }
+</style>
 
 <div class = "container">
-<table class="table">
-  <thead class=" card-header">
+  <div class = "row">
+  <div class = "col col-lg-10 col-md-10 col-sm-12 col-xs-12 col-12"  style="overflow-y:scroll; height: 80vh;">
+<table class="table" >
+  <thead class="card-header">
     <tr>
       <th scope="col">Student</th>
       <th scope="col">Measure Title</th>
@@ -14,27 +21,25 @@
 
     </tr>
   </thead>
-  <tbody >
-    {%for evaluation in evaluations%}
-    <tr>
-      <td> {{evaluation.student}}</td>
-      <td>  {{evaluation.measure.measureTitle}}</td>
+  <tbody>
+    {%for cust in cust_stu%}
+    {% if cust.graded %}
+    <tr style="background-color: #e5e8ff;">
+      <td> {{cust.student_name}}</td>
+      <td> {{cust.measure.measureTitle}}</td>
       <td class = "justify-content-between">
-      {{evaluation.grade_score|floatformat:2}}
+      {{cust.grade|floatformat:2}}
       </td>
       <td>
-        <a href = "{%url 'main:edit_evaluation_student' evaluation.id%}" class = "btn btn-warning">Edit</a>
+        <a href = "{%url 'main:edit_evaluation_student' cust.id%}" class = "btn btn-warning">Edit</a>
       </td>
-      <!-- <td>
-        <a href = "{%url 'main:view_score' evaluation.id%}" class = "btn btn-warning">View</a>
-      </td> -->
     </tr>
-
+    {% endif %}
     {%endfor%}
 
     {%for score in scores%}
       {%if score.type == 'Test score'%}
-    <tr>
+    <tr style="background-color: #edd7d2">
       <td> {{score.student_name}}</td>
       <td>  {{score.measure.measureTitle}}</td>
       <td class = "justify-content-between">
@@ -48,6 +53,23 @@
     {%endfor%}
   </tbody>
 </table>
+</div>
 
+
+<div class = "col col-lg-2 col-md-2 col-sm-12 col-xs-12 col-12 ">
+  <div class="card border-dark mb-3 " style="max-width: 18rem; ">
+  <div class="card-header"><h4>Legend</h4></div>
+  <div class="card-body text-dark" style="background-color: #e7ff91;">
+    <h5 class="card-title" style="height:15px; width:15px; background-color: #edd7d2; border: 2px solid black;">
+    </h5>
+    <p class="card-text">Test scores</p>
+    <h5 class="card-title" style="height:15px; width:15px;background-color: #e5e8ff; border: 2px solid black;">
+    </h5>
+    <p class="card-text">Rubric scores</p>
+
+  </div>
+</div>
+</div>
+</div>
 </div>
 {%endblock%}
