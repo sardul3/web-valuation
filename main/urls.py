@@ -7,6 +7,9 @@ app_name = 'main'
 urlpatterns = [
     path('invite', views.super_admin_home, name='super_admin_home'),
     path('invite_status', views.super_admin_past, name='super_admin_past'),
+    path('logs', views.logs, name='logs'),
+    path('clear_log', views.clear_log, name="clear_log"),
+
     path('footer', views.admin_footer, name='admin_footer'),
 
     path('evaluator_instructions', views.evaluator_instructions, name = 'evaluator_instructions'),

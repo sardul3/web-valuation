@@ -24,7 +24,7 @@
         <h4 class = "breadcrumb-item"> Hi {{ user.username }}</h4>
         <h4 class = "breadcrumb-item"> Evaluator View </h4>
     </ol>
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
     <p> <a class = "btn btn-dark btn-lg" href="{%url 'main:dashboard'%}"> Act as Admin</a> </p>
     {% endif %}
 

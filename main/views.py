@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import( Rubric, Student, Measure, Category, evaluate_rubric,
         Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,
         custom_students, Broadcast, Course, Notification, category_score,
-        CoOrdinator, Invited_Coordinator,InvitedCo)
+        CoOrdinator, Invited_Coordinator,InvitedCo, Log)
 from django.contrib import messages
 from .forms import RegisterForm, CoOrdinatorRegisterForm
 import csv
@@ -591,6 +591,10 @@ def newCycle(request):
     cycle = Cycle(year=year, semester=semester, startDate=today, coordinator=cordinator)
     cycle.save()
     messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
+
+    text = cordinator.name + " ( " + cordinator.email + " ) " + 'created a new cycle, ' + cycle.year + " " + cycle.semester
+    Log.objects.create(message=text, created_at=datetime.today())
+
     url = request.POST.get("url")
     return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
@@ -625,6 +629,9 @@ def cycle(request, cycle_id):
 @user_passes_test(admin_test)
 def end_cycle(request, cycle_id):
     cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=False, endDate=datetime.today())
+    cycle_d = Cycle.objects.get(id=cycle_id)
+    text = request.user.username + " ( " + request.user.email + " ) " + 'ended the cycle, ' + str(cycle_d.year) + ' ' + cycle_d.semester
+    Log.objects.create(message=text, created_at=datetime.today())
 
     messages.add_message(request, messages.WARNING, 'Cycle was deleted successfully')
 
@@ -652,6 +659,10 @@ def migrate_cycle(request, cycle_id):
             elif mea.tool_type=='Test score':
                 Measure.objects.filter(id=new_measure.id).update(test_score=mea.test_score)
 
+    text = cordinator.name + " ( " + cordinator.email + " ) " + 'bulk migrated data from ' + str(from_cycle.year) + ' ' + str(from_cycle.semester) + ' to ' + str(to_cycle.year) + ' ' + str(to_cycle.semester)
+    Log.objects.create(message=text, created_at=datetime.today())
+
+
     return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
 
 def migrate_outcome(request, cycle_id):
@@ -660,6 +671,10 @@ def migrate_outcome(request, cycle_id):
     for outcomes in from_outcome_list:
         outcome = Outcome.objects.get(id = outcomes)
         outcome.cycle.add(to_cycle)
+
+        text = request.user.username + " ( " + request.user.email + " ) " + 'migrated outcome, '+ outcome.title + ' to the cycle, ' + str(to_cycle.year) +  " " + str(to_cycle.semester)
+        Log.objects.create(message=text, created_at=datetime.today())
+
     return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
 
 def migrate_measure(request, outcome_id, cycle_id):
@@ -670,6 +685,10 @@ def migrate_measure(request, outcome_id, cycle_id):
         new_measure = Measure.objects.create(measureTitle= measure.measureTitle,
                   cutoff_score= measure.cutoff_score,cutoff_percentage= measure.cutoff_percentage,
                   outcome=outcome, tool_type=measure.tool_type, cutoff_type=measure.cutoff_type)
+        text = request.user.username + " ( " + request.user.email + " ) " + 'migrated measure, '+ measure.measureTitle + ' to a new cycle'
+        Log.objects.create(message=text, created_at=datetime.today())
+
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 
@@ -677,6 +696,10 @@ def migrate_measure(request, outcome_id, cycle_id):
 
 def reactivate_cycle(request, cycle_id):
     cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=True, endDate=None)
+    cycle_r = Cycle.objects.get(id=cycle_id)
+    text = request.user.username + " ( " + request.user.email + " ) " + 'reactivated the old cycle, '+ str(cycle_r.year) + ' ' + str(cycle_r.semester)
+    Log.objects.create(message=text, created_at=datetime.today())
+
     return HttpResponseRedirect(reverse('main:dashboard'))
 
 
@@ -770,6 +793,7 @@ def upload(request, measure_id, outcome_id):
         number_of_students = Test_score.objects.filter(test=test_name).count()
         average = total_points / number_of_students
 
+
         messages.add_message(request, messages.SUCCESS, 'Test data uploaded with success')
 
 
@@ -841,6 +865,8 @@ def registerCo(request):
             print(inv)
             inv.pending = False
             inv.save()
+            text = inv.username + " ( " + inv.email + " ) " + 'accepted your invitation'
+            Log.objects.create(message=text, created_at=datetime.today())
             return redirect('/')
         else:
             messages.add_message(request, messages.SUCCESS, 'Please check your credentials')
@@ -866,6 +892,10 @@ def add_learning_outcome(request, cycle_id):
     cycle_found = Cycle.objects.get(id=cycle_id)
     outcome.cycle.add(cycle_found)
 
+    text = cordinator.name + " ( " + cordinator.email + " ) " + 'added a new learning outcome, '+ outcome.title + ' to the cycle, ' + str(cycle_found.year) + " " + str(cycle_found.semester)
+    Log.objects.create(message=text, created_at=datetime.today())
+
+
     messages.add_message(request, messages.SUCCESS, 'Learning outcome created')
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
@@ -881,6 +911,10 @@ def update_measure(request, measure_id):
     cutoff_type=cutoff_type, tool_type=tool_type)
 
     messages.add_message(request, messages.SUCCESS, 'Measure was edited successfully')
+
+    text = request.user.username + " ( " + request.user.email + " ) " + 'updated the measure, '+ Measure.objects.get(id=measure_id).measureTitle
+    Log.objects.create(message=text, created_at=datetime.today())
+
 
     url = request.POST.get("url")
     return redirect(url)
@@ -903,6 +937,10 @@ def new_measure(request, outcome_id):
 
     messages.add_message(request, messages.SUCCESS, 'New measure is added to the outcome')
 
+    text = cordinator.name + " ( " + cordinator.email + " ) " + 'created a new measure, '+ measure.measureTitle
+    Log.objects.create(message=text, created_at=datetime.today())
+
+
     url = request.POST.get("url")
     return redirect(url)
     return render(request, 'main/cycle.html')
@@ -917,9 +955,12 @@ def add_rubric_to_measure(request, measure_id, outcome_id):
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def delete_measure(request, measure_id):
-    Measure.objects.filter(id=measure_id).delete()
-
+    measure_d = Measure.objects.get(id=measure_id).measureTitle
+    measure = Measure.objects.filter(id=measure_id).delete()
     messages.add_message(request, messages.WARNING, 'Measure was removed successfully')
+
+    text = request.user.username + " ( " + request.user.email + " ) " + 'deleted a measure, ' + measure_d
+    Log.objects.create(message=text, created_at=datetime.today())
 
     url = request.POST.get("url")
     return redirect(url)
@@ -975,7 +1016,12 @@ def created_test_rubric(request):
                 text = request.POST.get(str(x)+str(y))
                 category = Category(categoryTitle=text,index_x=x, index_y=y, rubric=rubric_new)
                 category.save()
+
         messages.add_message(request, messages.SUCCESS, 'Successfull creation of rubric')
+
+        text = request.user.username + " ( " + request.user.email + " ) " + 'created a new rubric, ' + rubric_new.title
+        Log.objects.create(message=text, created_at=datetime.today())
+
 
     return HttpResponseRedirect(reverse_lazy('main:rubrics'))
 
@@ -1003,6 +1049,10 @@ def edit_rubric(request, rubric_id):
 
         messages.add_message(request, messages.SUCCESS, 'Successfully edited the rubric')
 
+        text = request.user.username + " ( " + request.user.email + " ) " + 'edited the rubric, ' + rubric_found.title
+        Log.objects.create(message=text, created_at=datetime.today())
+
+
         return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
     context={'rubric_id':rubric_id,'rubric':rubric_found,'rows': rows, 'cols': cols, 'categories':categories}
@@ -1017,6 +1067,10 @@ def add_individual_student(request, outcome_id, measure_id):
     measure.student.add(student)
 
     messages.add_message(request, messages.SUCCESS, 'Successfully added Student added to the Measure')
+
+    text = request.user.username + " ( " + request.user.email + " ) " + 'added students to  ' + measure.measureTitle
+    Log.objects.create(message=text, created_at=datetime.today())
+
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -1048,7 +1102,12 @@ def upload_student(request, outcome_id, measure_id):
             student.save()
             measure.student.add(student)
 
+
         messages.add_message(request, messages.SUCCESS, 'Successfully added Students to the Measure')
+
+        text = request.user.username + " ( " + request.user.email + " ) " + 'added students via file upload to measure, ' + measure.measureTitle
+        Log.objects.create(message=text, created_at=datetime.today())
+
 
         return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -1073,6 +1132,10 @@ def add_evaluator(request, outcome_id, measure_id):
         email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
+        text = request.user.username + " ( " + request.user.email + " ) " + 'added evaluators to measure, ' + measure.measureTitle
+        Log.objects.create(message=text, created_at=datetime.today())
+
+
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -1090,6 +1153,10 @@ def add_preexisting_evaluator(request, outcome_id, measure_id):
             email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
         email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
+
+        text = request.user.username + " ( " + request.user.email + " ) " + 'added evaluators to measure, ' + measure.measureTitle
+        Log.objects.create(message=text, created_at=datetime.today())
+
 
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
@@ -1109,11 +1176,20 @@ def update_outcome(request, outcome_id, cycle_id):
 
     messages.add_message(request, messages.SUCCESS, 'Outcome was edited successfully')
 
+    text = request.user.username + " ( " + request.user.email + " ) " + 'updated the outcome, ' + new_outcome_text
+    Log.objects.create(message=text, created_at=datetime.today())
+
+
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
 def delete_outcome(request, outcome_id, cycle_id):
+    title = Outcome.objects.get(id=outcome_id).title
     outcome = Outcome.objects.filter(id=outcome_id).delete()
     messages.add_message(request, messages.WARNING, 'Outcome was deleted successfully')
+
+    text = request.user.username + " ( " + request.user.email + " ) " + 'deleted the outcome, ' + title
+    Log.objects.create(message=text, created_at=datetime.today())
+
 
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
@@ -1255,6 +1331,9 @@ def remove_evaluator_access(request, evaluator_id, measure_id, outcome_id):
     measure.evaluator.remove(evaluator)
 
     messages.add_message(request, messages.SUCCESS, 'Evaluator access removed')
+    text = request.user.username + " ( " + request.user.email + " ) " + 'removed the evaluator, ' + evaluator.name + " ( " + evaluator.email + " ) from measure, " + measure.measureTitle
+    Log.objects.create(message=text, created_at=datetime.today())
+
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
@@ -1381,6 +1460,10 @@ def assign_evaluator(request, measure_id, outcome_id):
         custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator, type=measure.tool_type)
         custom_student.save()
 
+    text = request.user.username + " ( " + request.user.email + " ) " + 'assigned some tasks to the evaluator, ' + evaluator_email
+    Log.objects.create(message=text, created_at=datetime.today())
+
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def assign_evaluatorToTest(request, measure_id, outcome_id):
@@ -1395,6 +1478,10 @@ def assign_evaluatorToTest(request, measure_id, outcome_id):
 
         custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator, type=measure.tool_type)
         custom_student.save()
+
+    text = request.user.username + " ( " + request.user.email + " ) " + 'assigned some tasks to the evaluator, ' + evaluator_email
+    Log.objects.create(message=text, created_at=datetime.today())
+
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
 def broadcast(request):
@@ -1574,3 +1661,16 @@ def admin_footer(request):
 def evaluator_instructions(request):
     return render(request, 'main/evaluator_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})
+
+def logs(request):
+    logs = Log.objects.filter(read=False).order_by('-created_at')
+    logs_count = logs.count()
+    context = {"logs":logs, 'log':'active', 'logs_count':logs_count}
+    return render(request, 'main/logs.html', context)
+
+def clear_log(request):
+    Log.objects.filter(read=False).update(read=True)
+    logs = Log.objects.filter(read=False).order_by('-created_at')
+    context = {"logs":logs, 'log':'active'}
+
+    return render(request, 'main/logs.html', context)

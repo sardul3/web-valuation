@@ -182,6 +182,12 @@ class Notification(models.Model):
     read = models.BooleanField(default=False)
     to = models.CharField(max_length=200, default='no one')
 
+class Log(models.Model):
+    message = models.CharField(max_length=400)
+    created_at = models.DateTimeField()
+    read = models.BooleanField(default=False)
+
+
 class InvitedCo(models.Model):
     email = models.CharField(max_length=200)
     pending = models.BooleanField(default=True)
