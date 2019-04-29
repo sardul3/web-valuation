@@ -1526,7 +1526,7 @@ def generate_cycle_report(request, cycle_id):
             me.append([evaluated_student_count, number_of_pass_cases,  outcome.title, measure.measureTitle,  measure.statusPercent, measure.status, Measure.objects.filter(outcome=outcome).count(), outcome.id])
     print(me)
     context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
-    'count':range(len(me)), 'data':me, 'msgs':msgs}
+    'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': measures.count()}
     return render(request, 'main/cycle_report.html', context)
 
 def super_admin_home(request):
