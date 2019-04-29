@@ -1,4 +1,3 @@
-{% load static %}
 <style>
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
  body {
@@ -37,7 +36,7 @@
  .chat-window .chat-header {
 	 height: 45px;
 	 border-radius: 6px 6px 0 0;
-	 background: #800029;
+	 background: #263238;
 	 position: relative;
 	 cursor: pointer;
 }
@@ -113,9 +112,9 @@
 }
  .chat-window .chat-body .message {
 	 position: relative;
-   padding: 0.2em
+	 padding: 1em 0.7em 2em;
 	 margin-bottom: 0.5em;
-	 border-bottom: 3px dotted #BD955A;;
+	 border-bottom: 1px dotted #cfd8dc;
 }
  .chat-window .chat-body .message .profile {
 	 position: absolute;
@@ -130,14 +129,13 @@
  .chat-window .chat-body .message .message-meta {
 	 width: calc(100% - (40px + 1em));
 	 height: 25px;
-   float: unset;
-   margin: auto;
+	 float: right;
 }
  .chat-window .chat-body .message .message-meta p {
 	 display: inline-block;
 	 font-size: 0.75em;
 	 font-weight: 700;
-color: #646469;
+	 color: #90a4ae;
 	 margin-top: 5px;
 }
  .chat-window .chat-body .message .message-meta p:last-child {
@@ -148,9 +146,8 @@ color: #646469;
 }
  .chat-window .chat-body .message .message-content {
 	 width: calc(100% - (40px + 1em));
-   padding: 3px;
-   margin-bottom: 5px;
-   margin-left: 10%;
+	 height: 40px;
+	 float: right;
 }
  .chat-window .chat-body .message .message-content p {
 	 text-align: left;
@@ -280,93 +277,31 @@ color: #646469;
 </script>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- CSS cdn to connect bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href = "{% static 'css/landing.css' %}">
-    <!-- <script src="{% static 'js/tab.js' %}"> -->
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Lato|Merienda|Merriweather|Ropa+Sans|Montserrat|Nunito+Sans+Platino+Garamond+Bookman+Lucidia" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <script
-    			  src="https://code.jquery.com/jquery-3.3.1.js"
-    			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-    			  crossorigin="anonymous"></script>
-
-
-        <link rel="apple-touch-icon" sizes="180x180" href="{%static 'assets/images/apple-touch-icon.png'%}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{%static 'assets/images/favicon-32x32.png'%}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{%static 'assets/images/favicon-16x16.png'%}">
-        <link rel="manifest" href="{%static 'assets/images/site.webmanifest'%}">
-        <link rel="mask-icon" href="{%static 'assets/images/safari-pinned-tab.svg'%}" color="#5bbad5">
-        <meta name="msapplication-TileColor" content="#da532c">
-        <meta name="theme-color" content="#de2a2a">
-
-
-    <title>Evaluation Home Page</title>
-</head>
-
-<body>
-  {% if messages %}
-                {% for message in messages %}
-                <div class="messages alert alert-{{message.tags}} animated slideInRight fast" role = "alert" id="alert-msg">
-                <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
-                </div>
-                {% endfor %}
-
-      {% endif %}
-{% include 'main/navbar.html'%}
-  {% block body_block %}
-
-  {% endblock %}
-  <section class="chat-window docked">
-    <div class="chat-header">
-      <p>Messages</p>
-      <span class="close"></span>
-
-    </div>
-    <div class="chat-body">
-      <div class="message-container">
-      <!-- loop -->
-      {%for msg in msgs%}
-        <div class="message">
-          <div class="message-meta">
-            <p>{{msg.sender}}</p>
-            <p>{{msg.sent_at|timesince}} ago</p>
-          </div>
-          <div class="message-content">
-            <p>{{msg.message}}</p>
-          </div>
+<section class="chat-window docked">
+  <div class="chat-header">
+    <p>Messages</p>
+    <span class="close"></span>
+  </div>
+  <div class="chat-body">
+    <div class="message-container">
+    <!-- loop -->
+      <div class="message">
+        <div class="message-meta">
+          <p>Isobel</p>
+          <p>17:43</p>
         </div>
-        {%endfor%}
-      <!-- end loop -->
+        <div class="message-content">
+          <p>If two vegiterians fight, is it still considered a Beef?</p>
+        </div>
       </div>
+    <!-- end loop -->
     </div>
-    <div class="chat-footer " style="background: #bd955a; color:white;">
-        <h4> sfj </h4>
-    </div>
-  </section>
+  </div>
+  <div class="chat-footer">
+  </div>
+</section>
 
-
-
-
-
-
-
-</body>
-
-<script type = "text/javascript">
-setTimeout(function(){
-  $( "#alert-msg" ).fadeOut( "slow", function() {
-  // Animation complete.
-});
-}, 2000)
-</script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</html>
+<div class="instructions">
+  <h1>CLICK ME<br />&searr;</h1>
+</div>

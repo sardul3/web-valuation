@@ -7,10 +7,13 @@ app_name = 'main'
 urlpatterns = [
     path('invite', views.super_admin_home, name='super_admin_home'),
     path('invite_status', views.super_admin_past, name='super_admin_past'),
+    path('footer', views.admin_footer, name='admin_footer'),
 
     path('eval', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('broadcast', views.broadcast, name='broadcast'),
+    path('broadcast_super', views.broadcast_super, name='broadcast_super'),
+
     path('mark_read/<int:alert_id>', views.mark_read, name='mark_read'),
     path('delete_notification/<int:notification_id>', views.delete_notification, name='delete_notification'),
     path('delete_notifications',views.delete_notifications, name='delete_notifications'),
