@@ -9,6 +9,7 @@
     }
     #clear1{
         color: blue !important;
+        font-size: 12px;
     }
     ul li a:hover {
         text-decoration:none;
@@ -141,16 +142,15 @@
           <a class = "nav-link" href="{%url 'main:homepage'%}">Act as Evaluator</a>
       </li>
 
-<li id="noti_Container">
+      <li id="noti_Container">
              <div id="noti_Counter">
-             {{notification_count}}
-           </div>   <!--SHOW NOTIFICATIONS COUNT.-->
+               {{notification_count}}
+             </div>   <!--SHOW NOTIFICATIONS COUNT.-->
 
              <!--A CIRCLE LIKE BUTTON TO DISPLAY NOTIFICATION DROPDOWN.-->
              <a id="noti_Button" >
                <span style="font-size: 2rem; color: #7a2831;">
-
-               <i data-toogle="tooltip" title="Notifications" class="fas fa-bell"></i>
+                 <i data-toogle="tooltip" title="Notifications" class="fas fa-bell"></i>
                </span>
              </a>
 
@@ -159,27 +159,49 @@
                  <h3>Notifications
                      <div id="clear">
                        <form action = "{%url 'main:delete_notifications'%}" method = "POST">
+<<<<<<< HEAD
+                         {%csrf_token%}
+                         <button class = "btn btn-link" type="submit" class="pull-right"  id="clear1" style="text-decoration: none">Clear Notifications</button>
+                       <form>
+=======
                            {% csrf_token %}
                            <input type="hidden" name="urls" id="urls" value={{request.path}}>
-                         <button type="submit" class="pull-right"  id="clear1">Clear Notifications</button>
+                         <button class = "btn btn-link" type="submit" class="pull-right"  id="clear1" style="text-decoration: none">Clear Notifications</button>
                      </form>
+>>>>>>> f94d9fecf8f992ec5bc3db83fc46937443ae1502
                     </div>
                  </h3>
 
                  <div style="height:300px; overflow-y:scroll;">
                    <ul class="list-group">
                      {%for notification in notifications%}
+<<<<<<< HEAD
+=======
                        <p class = "text-left list-group-item d-flex justify-content-between">{{notification.message}}
                          <form action = "{%url 'main:delete_notification' notification.id%}" method = "POST">
                        {% csrf_token %}
                        <input type="hidden" name="url" id="url" value={{request.path}}>
+>>>>>>> f94d9fecf8f992ec5bc3db83fc46937443ae1502
 
-                         <button type="submit" >
-                        <i class="fas fa-times"></i>
+
+                       <p class = "text-left list-group-item " > {{notification.message}}
+                         <!-- <form action = "{%url 'main:delete_notification' notification.id%}" method = "POST">
+                           {%csrf_token%}
+                         <button type="submit" class="btn btn-link">
+                           <i data-toogle="tooltip" title="Delete Notification" class="fas fa-times"></i>
                         </button>
+<<<<<<< HEAD
+                        </form> -->
+                        </p>
+
+
+
+=======
                    </form>
                        </p>
+>>>>>>> f94d9fecf8f992ec5bc3db83fc46937443ae1502
                      {%endfor%}
+
                    </ul>
 
                  </div>
