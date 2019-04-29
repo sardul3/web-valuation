@@ -18,6 +18,7 @@ urlpatterns = [
 
      path('admin_instructions', views.admin_instructions, name = 'admin_instructions'),
 
+     path('evaluator_instructions', views.evaluator_instructions, name = 'evaluator_instructions'),
 
 
     path('create_curriculum', views.create_curriculum, name = 'create_curriculum'),

@@ -1,0 +1,168 @@
+{% extends  'main/evaluatorbase.html' %}
+{%load static%}
+{%block body_block%}
+
+
+
+
+
+<style>
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+.active, .accordion:hover {
+  background-color: maroon;
+  color: white;
+}
+.panel {
+  padding: 0 18px;
+  display: none;
+  background-color: ivory;
+  overflow: hidden;
+}
+</style>
+<div class = "container-fluid">
+  <div class = "container" id = "main_content">
+
+      <h1 class="text-center">Evaluator Instructions</h1>
+      <br>
+      <h4>Perform Evaluation</h4>
+        <button class="accordion">Access Evaluation</button>
+        <div class="panel">
+          <p>
+            <ol>
+              <li>Select 'Current Assesments'</li>
+              <li>Locate the list of assigned evaluations</li>
+              <li>Select the evaluation to perform</li>
+              <li>The actions required to perform an evaluation depend on the evaluation tool</li>
+            </ol>
+          </p>
+        </div>
+        <button class="accordion">Rubric Evaluation</button>
+        <div class="panel">
+          <p>
+            <ol>
+              <li>Access the rubric evaluation</li>
+              <ul>Check out 'Access Evaluation'</ul>
+              <li>Select <b>'Start Evaluations'</b></li>
+              <li>Select the students name to evaluate from the dropdown list</li>
+              <li>Select a score for each score field</li>
+              <li>Select <b>'Evaluate'</b></li>
+            </ol>
+          </p>
+        </div>
+        <button class="accordion">Test Evaluation</button>
+        <div class="panel">
+        <button class="accordion">Multiple Scores File Upload</button>
+        <div class="panel">
+          <p>
+            <ol>
+              <li>Access the evaluation the scores will be added to</li>
+              <ul><li>Check out <b>'Access Evaluation'</b></li></ul>
+              <li>Select <b>'Upload Test Score'</b></li>
+              <li>Fill in the <i>Full Marks</i> field with the total number of points the exam is worth</li>
+              <li>Select <b>'Choose File'</b></li>
+              <ul><li>Make sure the file follows the correct format</li>
+              <li>The formatting instructions can be found in the window that pops up after selecting to <b>'Upload Test Scores'</b></li></ul>
+              <li>Once the file has been located, select <b>'Upload'</b></li>
+            </ol>
+         </p>
+        </div>
+        <button class="accordion">Individual Score Input</button>
+        <div class="panel">
+          <p>
+            <ol>
+              <li>Access the evaluation the scores will be added to</li>
+              <ul><li>Check out <b>'Access Evaluation'</b></li></ul>
+              <li>Select <b>'Add test scores'</b></li>
+              <li>Select the student's name from the dropdown box</li>
+              <li>Fill in the <i>marks obtained</i> field with the number of points the student received</li>
+              <li>Select <b>'Add Score'</b></li>
+            </ol>
+         </p>
+        </div>
+        </div>
+        <br>
+        <br>
+        <h4>Other</h4>
+        <button class="accordion">Edit Completed Evaluation</button>
+        <div class="panel">
+          <p>
+            <ol>
+              <li>Select <b>'Past Assesments'</b></li>
+              <li>Locate the title of the evaluation and the name of the student whose evaluations needs editing</li>
+              <li>Select <b>'Edit'</b></li>
+              <li>Perform edits</li>
+              <li>Select <b>'Save'</b></li>
+            </ol>
+         </p>
+        </div>
+        <button class="accordion">Check Evaluation Progress</button>
+        <div class="panel">
+          <p>
+            <h6>The evaluator's progress is represented by a percent circle that displays the percent of completed evaluations for the measure
+            that has been selected</h6>
+            <ol>
+              <li>Access the desired evaluation</li>
+              <ul><li>Check out <b>'Access Evaluation'</b></li></ul>
+              <li>The progress circle can then be viewed</li>
+            </ol>
+         </p>
+        </div>
+        <button class="accordion">View Rubric Prior to Evaluation</button>
+        <div class="panel">
+          <p>
+            <h6>The evaluator can receive messages from admins of their program, and other programs they are evaluators for</h6>
+            <ol>
+              <li>Access the rubric evaluation</li>
+              <ul>Check out 'Access Evaluation'</ul>
+              <li>Select <b>'Start Evaluations'</b></li>
+              <li>Review the rubric</li>
+              <li>Select <b>'Current Assesments'</b> to exit the rubric</li>
+            </ol>
+         </p>
+        </div>
+        <button class="accordion">Check Messages</button>
+        <div class="panel">
+          <p>
+            <h6>The evaluator can receive messages from admins of their program, and other programs they are evaluators for</h6>
+            <ol>
+              <li>Select the message icon on the navigation bar</li>
+              <li>Select a message to view</li>
+            </ol>
+         </p>
+        </div>
+</div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
+
+
+
+{%endblock%}
