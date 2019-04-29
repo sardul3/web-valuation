@@ -224,8 +224,8 @@ def outcomes(request):
             elif measure.tool_type == 'Test score':
                 data.update({measure.id: test_score_data(measure.test_score, measure.id)})
 
-    context = {'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active','notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at' ), 'data':data
+    context = {'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ), 'data':data
 }
     return render(request, 'main/outcomes.html', context)
 
@@ -234,9 +234,9 @@ def rubrics(request):
     rubrics = Rubric.objects.filter(coordinator = cordinator)
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
-
-    context = {'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
+    print(Notification.objects.filter(read=False, to=request.user.email))
+    context = {'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/rubrics.html', context)
 
 @user_passes_test(admin_test)
@@ -246,8 +246,8 @@ def cycles(request):
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
-    context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
+    context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/cycles.html', context)
 
 
@@ -315,8 +315,8 @@ def evaluatorhome(request):
 
         context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
-                   'notification_count': Notification.objects.filter(read=False).count(), 'msgs':msgs,
-                   'notifications': Notification.objects.filter(read=False).order_by('-created_at'), 'cycles': cyc,'mycyc':mycyc,'courses':courses
+                   'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(), 'msgs':msgs,
+                   'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'cycles': cyc,'mycyc':mycyc,'courses':courses
                    }
         return render(request, 'main/adminhome.html', context)
     else:
@@ -516,7 +516,7 @@ def add_test_score_evaluator(request,measure_id):
     student = Student.objects.create(name=custom_students.objects.get(id=student_id).student_name)
 
     msg = evaluator.name + ' evaluated '+ student.name
-    Notification.objects.create(message=msg, created_at = datetime.today())
+    Notification.objects.create(message=msg, created_at = datetime.today(), to = evaluator.invited_by)
 
 
     test_score_student = Test_score.objects.create(student=student, score=score, test=test_name)
@@ -569,8 +569,8 @@ def dashboard(request):
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
     context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
-            'notification_count' : Notification.objects.filter(read=False).count(),
-            'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses,
+            'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+            'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses,
             'msgs':msgs
             }
     return render(request, 'main/adminhome.html', context)
@@ -612,8 +612,8 @@ def cycle(request, cycle_id):
 
     context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles, 'all_outcomes': all_outcomes,
-                'courses':courses,'notification_count' : Notification.objects.filter(read=False).count(),
-                'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
+                'courses':courses,'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+                'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/cycle.html', context)
 
 @user_passes_test(admin_test)
@@ -724,8 +724,8 @@ def outcome_detail(request, outcome_id):
     context = {'evaluator': Evaluator.objects.filter(coordinator=cordinator),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
-                'notification_count' : Notification.objects.filter(read=False).count(),
-                'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
+                'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+                'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -1053,7 +1053,7 @@ def add_evaluator(request, outcome_id, measure_id):
     measure = Measure.objects.get(id=measure_id)
 
     if request.method == 'POST':
-        evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'),coordinator=cordinator)
+        evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'),coordinator=cordinator, invited_by=cordinator.email)
         evaluator.save()
 
         # evaluator_list = request.POST.getlist('evaluators')
@@ -1213,7 +1213,8 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     flag.save()
 
     msg = student_real.evaluator.name + ' evaluated '+ student_real.student_name
-    Notification.objects.create(message=msg, created_at = datetime.today())
+    Notification.objects.create(message=msg, created_at = datetime.today(), to = eval.invited_by)
+
 
 
     messages.add_message(request, messages.SUCCESS, 'Student was evaluated successfully')
@@ -1492,8 +1493,8 @@ def generate_outcome_report(request, outcome_id):
     return render(request, 'main/outcome_report.html', context)
 
 def admin_instructions(request):
-    return render(request, 'main/admin_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})
+    return render(request, 'main/admin_instructions.html', {'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' )})
 
 def generate_cycle_report(request, cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)

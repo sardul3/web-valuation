@@ -175,9 +175,6 @@
                        {% csrf_token %}
                        <input type="hidden" name="url" id="url" value={{request.path}}>
 
-
-                       <p class = "text-left list-group-item " > {{notification.message}}
-                        </p>
                      {%endfor%}
 
                    </ul>
