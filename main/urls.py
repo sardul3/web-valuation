@@ -30,7 +30,7 @@ urlpatterns = [
 
      path('admin_instructions', views.admin_instructions, name = 'admin_instructions'),
 
-
+     path('superadmin_instructions', views.superadmin_instructions, name = 'superadmin_instructions'),
 
     path('create_curriculum', views.create_curriculum, name = 'create_curriculum'),
 
