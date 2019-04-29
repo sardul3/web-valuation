@@ -153,6 +153,7 @@ class evaluate_rubric(models.Model):
 class evaluation_flag(models.Model):
     student_name = models.CharField(max_length=200)
     measure = models.ForeignKey(Measure, on_delete=models.CASCADE)
+    by = models.CharField(max_length=200, null=True)
 
 class custom_students(models.Model):
     student_name = models.CharField(max_length=200)

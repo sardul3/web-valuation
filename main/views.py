@@ -382,7 +382,8 @@ def evaluatorhome(request):
                 mea.evaluationPercent = (graded/total)*100.0
 
 
-
+        for st in cust_student_list:
+            print(st.student_name, st.evaluator.email)
         context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
         , 'now':'active','alerts':alerts, 'alerts_count':alerts_count}
 
@@ -438,14 +439,19 @@ def evaluator_rubric_select(request, measure_id):
             evaluated_flag.append(stu.name)
 
     cust_student_list = []
-    for stu in custom_students.objects.all():
+    for stu in custom_students.objects.filter(graded=False):
         for evaluator in stu.measure.evaluator.all():
             if (evaluator.email == request.user.email):
                 cust_student_list.append(stu)
+
+    for stu in cust_student_list:
+        print(stu.student_name, stu.evaluator)
     final_cust=[]
     for st in cust_student_list:
         if st.measure==measures:
             final_cust.append(st)
+    for st in final_cust:
+        print(st.student_name)
 
     maximum_rows = rubric.max_col
     cat_index = range(1, maximum_rows)
@@ -1205,11 +1211,12 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     print(perc_evaluated)
     eval.perc_completed = perc_evaluated
 
-    student_real.graded=True
-    student_real.grade = avg
-    student_real.evaluator = eval
-    student_real.save()
-    flag = evaluation_flag(student_name=student_name, measure=measure)
+    custom_students.objects.filter(id=student_id).update(graded=True, grade=avg, evaluator=eval)
+    # student_real.graded=True
+    # student_real.grade = avg
+    # student_real.evaluator = eval
+    # student_real.save()
+    flag = evaluation_flag(student_name=student_name, measure=measure, by = eval.email)
     flag.save()
 
     msg = student_real.evaluator.name + ' evaluated '+ student_real.student_name
