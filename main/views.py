@@ -722,7 +722,7 @@ def outcome_detail(request, outcome_id):
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
 
-    context = {'evaluator': Evaluator.objects.all(),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+    context = {'evaluator': Evaluator.objects.filter(coordinator=cordinator),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False).count(),
@@ -1263,10 +1263,12 @@ def view_rubric_data(request, measure_id):
 def past_assessments(request):
     evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email).order_by('-id')
     email = request.user.email
-    evaluator = Evaluator.objects.filter(email=email)[0]
-    if evaluator == None:
+    evaluator = Evaluator.objects.filter(email=email)
+    if len(evaluator)==0:
         messages.add_message(request, messages.SUCCESS, 'No past assessments')
-
+        return render(request, 'main/past_assessments.html', {})
+    else:
+        evaluator = evaluator[0]
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True).order_by('-id')
     print(scores)
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
@@ -1426,12 +1428,16 @@ def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
     notification.update(read=True)
     print(request.build_absolute_uri())
+    url = request.POST.get("url")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def delete_notifications(request):
     notification = Notification.objects.all()
     notification.update(read = True)
     print(request.build_absolute_uri())
+    url = request.POST.get("urls")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def upload_test_score_evaluator(request, measure_id):
