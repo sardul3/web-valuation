@@ -1252,10 +1252,12 @@ def view_rubric_data(request, measure_id):
 def past_assessments(request):
     evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email).order_by('-id')
     email = request.user.email
-    evaluator = Evaluator.objects.filter(email=email)[0]
-    if evaluator == None:
+    evaluator = Evaluator.objects.filter(email=email)
+    if len(evaluator)==0:
         messages.add_message(request, messages.SUCCESS, 'No past assessments')
-
+        return render(request, 'main/past_assessments.html', {})
+    else:
+        evaluator = evaluator[0]
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True).order_by('-id')
     print(scores)
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
