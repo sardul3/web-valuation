@@ -1557,3 +1557,7 @@ def outcome_test(outcome_id):
 
 def admin_footer(request):
     return render(request, 'main/admin_footer.html')
+
+def evaluator_instructions(request):
+    return render(request, 'main/evaluator_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})

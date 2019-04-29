@@ -9,6 +9,8 @@ urlpatterns = [
     path('invite_status', views.super_admin_past, name='super_admin_past'),
     path('footer', views.admin_footer, name='admin_footer'),
 
+    path('evaluator_instructions', views.evaluator_instructions, name = 'evaluator_instructions'),
+
     path('eval', views.homepage, name='homepage'),
     path('home', views.evaluatorhome, name='evaluatorhome'),
     path('broadcast', views.broadcast, name='broadcast'),
