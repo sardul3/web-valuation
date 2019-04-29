@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15eb8ac5-b517-4c29-a46b-e1fbe16a6bd5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password_reset_complete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password_reset_confirm.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password_reset_done.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password_reset_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password_reset_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password_reset_subject.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="606">
-              <caret line="123" column="107" selection-start-line="123" selection-start-column="107" selection-end-line="123" selection-end-column="107" />
+            <state relative-caret-position="105">
+              <caret line="7" column="41" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="41" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -54,6 +44,18 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="837">
+              <caret line="184" column="46" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="46" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/templates/main/login.html">
           <provider selected="true" editor-type-id="text-editor">
             <state>
@@ -62,20 +64,30 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/templates/main/evaluator_navbar.html">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="107" column="54" selection-start-line="107" selection-start-column="54" selection-end-line="107" selection-end-column="54" />
+            <state relative-caret-position="570">
+              <caret line="350" column="37" selection-start-line="350" selection-start-column="37" selection-end-line="350" selection-end-column="37" />
+              <folding>
+                <element signature="e#0#45#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/templates/registration/password_reset_email.html">
+        <entry file="file://$PROJECT_DIR$/main/templates/main/adminhome.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="10" lean-forward="true" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
+            <state relative-caret-position="-94" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/templates/main/evaluator_navbar.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="107" column="54" selection-start-line="107" selection-start-column="54" selection-end-line="107" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -98,15 +110,6 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/templates/registration/password_reset_confirm.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -125,6 +128,8 @@
       <find>Evaluator.objects.all</find>
       <find>pree</find>
       <find>outcome_detail</find>
+      <find>home</find>
+      <find>perc_com</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -137,7 +142,6 @@
         <option value="$PROJECT_DIR$/main/models.py" />
         <option value="$PROJECT_DIR$/main/templates/main/invite_status.html" />
         <option value="$PROJECT_DIR$/main/templates/main/navbar.html" />
-        <option value="$PROJECT_DIR$/main/views.py" />
         <option value="$PROJECT_DIR$/main/templates/main/evaluator_navbar.html" />
         <option value="$PROJECT_DIR$/main/templates/registration/password_reset_subject.txt" />
         <option value="$PROJECT_DIR$/main/templates/registration/password_reset_done.html" />
@@ -151,14 +155,15 @@
         <option value="$PROJECT_DIR$/main/templates/main/login.html" />
         <option value="$PROJECT_DIR$/evaluator/urls.py" />
         <option value="$PROJECT_DIR$/main/urls.py" />
+        <option value="$PROJECT_DIR$/main/views.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="12" />
-    <option name="y" value="-9" />
-    <option name="width" value="781" />
-    <option name="height" value="873" />
+    <option name="x" value="-1" />
+    <option name="y" value="-22" />
+    <option name="width" value="1602" />
+    <option name="height" value="899" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -245,7 +250,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-22" width="1602" height="923" extended-state="0" />
+    <frame x="-1" y="-22" width="1602" height="899" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17945465" />
@@ -307,16 +312,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2745">
-          <caret line="184" column="46" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main/templates/main/evaluatorhome.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -327,16 +322,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15000">
-          <caret line="1252" column="63" selection-start-line="1252" selection-start-column="63" selection-end-line="1252" selection-end-column="63" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -425,11 +410,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/templates/registration/login.html">
+    <entry file="file://$PROJECT_DIR$/main/templates/main/adminhome.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="68" selection-start-line="19" selection-start-column="68" selection-end-line="19" selection-end-column="68" />
-        </state>
+        <state relative-caret-position="-94" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main/templates/main/registerCo.html">
@@ -439,12 +422,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/main/templates/registration/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="68" selection-start-line="19" selection-start-column="68" selection-end-line="19" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="606">
-          <caret line="123" column="107" selection-start-line="123" selection-start-column="107" selection-end-line="123" selection-end-column="107" />
+        <state relative-caret-position="105">
+          <caret line="7" column="41" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="41" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="837">
+          <caret line="184" column="46" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="350" column="37" selection-start-line="350" selection-start-column="37" selection-end-line="350" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
           </folding>
         </state>
       </provider>

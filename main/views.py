@@ -337,7 +337,6 @@ def evaluatorhome(request):
             for f in flags:
                 if f.measure == me:
                     flag.append(f.student_name)
-
         student_count = len(x)
         eval_student = y
         if student_count==0:
