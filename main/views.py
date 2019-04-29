@@ -1485,6 +1485,8 @@ def generate_outcome_report(request, outcome_id):
     evaluated_student_count = 0
     number_of_pass_cases = 0
     measure = None
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
+
     for measure in measures:
         evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
         number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
@@ -1492,11 +1494,13 @@ def generate_outcome_report(request, outcome_id):
         print(data)
     if measure is None:
         context = {'outcome': outcome, 'measures': measures, 'evaluated_student_count': evaluated_student_count,
-                   'number_of_pass_cases': number_of_pass_cases,'mymeasure':measure}
+                   'number_of_pass_cases': number_of_pass_cases,'mymeasure':measure, 'msgs':msgs}
     else:
+
         context = {'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
                    'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id,
-                   'count':measures.count()+1,'mymeasure':measure}
+                   'count':measures.count()+1,'mymeasure':measure, 'msgs':msgs}
+
     return render(request, 'main/outcome_report.html', context)
 
 def admin_instructions(request):
@@ -1510,6 +1514,8 @@ def generate_cycle_report(request, cycle_id):
     me = []
     count = 0
     measures = None
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
+
 
     for outcome in outcomes:
         measures = Measure.objects.filter(outcome=outcome)
@@ -1520,7 +1526,7 @@ def generate_cycle_report(request, cycle_id):
             me.append([evaluated_student_count, number_of_pass_cases,  outcome.title, measure.measureTitle,  measure.statusPercent, measure.status, Measure.objects.filter(outcome=outcome).count(), outcome.id])
     print(me)
     context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
-    'count':range(len(me)), 'data':me}
+    'count':range(len(me)), 'data':me, 'msgs':msgs}
     return render(request, 'main/cycle_report.html', context)
 
 def super_admin_home(request):

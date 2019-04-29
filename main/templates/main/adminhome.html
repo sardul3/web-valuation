@@ -18,6 +18,7 @@ hr {
 }
 
 
+
 </style>
 
 {%block body_block%}
@@ -132,7 +133,7 @@ hr {
                    {%for measure in measures%}
                      {%if measure.outcome == outcome%}
                      <div class = "row ">
-                       <div class = "col col-lg-12 d-flex justify-content-between">
+                       <div class = "col col-lg-12 d-flex justify-content-between" style="cursor: pointer;">
                            <span class = "badge badge-info mb-2 p-2 " data-toggle="modal" data-target="#exampleModalCenter{{measure.id}}">
                            {{measure.cutoff_percentage}} % of the students need to get
                            {%if measure.cutoff_score%}
