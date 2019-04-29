@@ -1496,6 +1496,10 @@ def admin_instructions(request):
     return render(request, 'main/admin_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})
 
+def superadmin_instructions(request):
+    return render(request, 'main/superadmin_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})
+
 def generate_cycle_report(request, cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
     outcomes = Outcome.objects.filter(cycle=cycle)
