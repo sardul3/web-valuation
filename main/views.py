@@ -232,9 +232,11 @@ def outcomes(request):
 def rubrics(request):
     cordinator = CoOrdinator.objects.get(email=request.user.email);
     rubrics = Rubric.objects.filter(coordinator = cordinator)
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
+
 
     context = {'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/rubrics.html', context)
 
 @user_passes_test(admin_test)
@@ -242,9 +244,10 @@ def cycles(request):
     cordinator = CoOrdinator.objects.get(email=request.user.email);
     cycles = Cycle.objects.filter(coordinator=cordinator)
 
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/cycles.html', context)
 
 
@@ -263,9 +266,9 @@ def evaluatorhome(request):
 
             messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
 
-            context = {'now': 'active'}
+            context = {'now': 'active', 'cordinator':InvitedCo.objects.all()}
             return render(request, 'main/invite.html', context)
-        context = {'now': 'active'}
+        context = {'now': 'active', 'cordinator':InvitedCo.objects.all()}
         return render(request, 'main/invite.html', context)
 
     if request.user.is_staff:
@@ -308,9 +311,11 @@ def evaluatorhome(request):
                     if (eval == eval_more):
                         evaluator_list.append(eval)
 
+        msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
+
         context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
-                   'notification_count': Notification.objects.filter(read=False).count(),
+                   'notification_count': Notification.objects.filter(read=False).count(), 'msgs':msgs,
                    'notifications': Notification.objects.filter(read=False).order_by('-created_at'), 'cycles': cyc,'mycyc':mycyc,'courses':courses
                    }
         return render(request, 'main/adminhome.html', context)
@@ -562,9 +567,12 @@ def dashboard(request):
                 if (eval == eval_more):
                     evaluator_list.append(eval)
     print(evaluator_list)
+
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
     context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
             'notification_count' : Notification.objects.filter(read=False).count(),
-            'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses
+            'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses,
+            'msgs':msgs
             }
     return render(request, 'main/adminhome.html', context)
 
@@ -601,11 +609,12 @@ def cycle(request, cycle_id):
 
     for outcome in outcomes:
         Outcome.objects.filter(id=outcome.id).update(status=outcome_test(outcome.id))
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles, 'all_outcomes': all_outcomes,
                 'courses':courses,'notification_count' : Notification.objects.filter(read=False).count(),
-                'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+                'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/cycle.html', context)
 
 @user_passes_test(admin_test)
@@ -710,12 +719,14 @@ def outcome_detail(request, outcome_id):
                 else:
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
 
+    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
-    context = {'evaluator': Evaluator.objects.all(),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+
+    context = {'evaluator': Evaluator.objects.filter(coordinator=cordinator),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False).count(),
-                'notifications' : Notification.objects.filter(read=False).order_by('-created_at')}
+                'notifications' : Notification.objects.filter(read=False).order_by('-created_at'), 'msgs':msgs}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -1252,10 +1263,12 @@ def view_rubric_data(request, measure_id):
 def past_assessments(request):
     evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email).order_by('-id')
     email = request.user.email
-    evaluator = Evaluator.objects.filter(email=email)[0]
-    if evaluator == None:
+    evaluator = Evaluator.objects.filter(email=email)
+    if len(evaluator)==0:
         messages.add_message(request, messages.SUCCESS, 'No past assessments')
-
+        return render(request, 'main/past_assessments.html', {})
+    else:
+        evaluator = evaluator[0]
     scores = custom_students.objects.filter(evaluator=evaluator, graded=True).order_by('-id')
     print(scores)
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
@@ -1385,6 +1398,15 @@ def broadcast(request):
 
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
+def broadcast_super(request):
+    send_to = request.POST.getlist('evaluator')
+    message = request.POST.get('message')
+    for x in send_to:
+        broadcast = Broadcast.objects.create(sender=request.user.username, receiver=x,message=message, sent_at=datetime.today())
+
+    return HttpResponseRedirect(reverse_lazy('main:super_admin_home'))
+
+
 def create_curriculum(request):
     cordinator = CoOrdinator.objects.get(email=request.user.email);
     title = request.POST.get('title')
@@ -1406,12 +1428,16 @@ def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
     notification.update(read=True)
     print(request.build_absolute_uri())
+    url = request.POST.get("url")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def delete_notifications(request):
     notification = Notification.objects.all()
     notification.update(read = True)
     print(request.build_absolute_uri())
+    url = request.POST.get("urls")
+    return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def upload_test_score_evaluator(request, measure_id):
@@ -1508,16 +1534,16 @@ def super_admin_home(request):
 
         messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
 
-        context= {'now':'active'}
+        context= {'now':'active','cordinator':InvitedCo.objects.all()}
         return render(request, 'main/invite.html', context)
-    context= {'now':'active'}
+    context= {'now':'active','cordinator':InvitedCo.objects.all()}
     return render(request, 'main/invite.html',context)
 
 
 def super_admin_past(request):
     myinvitees = InvitedCo.objects.all()
     invitees = Invited_Coordinator.objects.filter(invited_by=request.user.username)
-    context = {'past':'active', 'invitees':invitees,'myinvitees':myinvitees}
+    context = {'past':'active', 'invitees':invitees,'myinvitees':myinvitees,'cordinator':InvitedCo.objects.all()}
     return render(request, 'main/invite_status.html', context)
 
 def outcome_test(outcome_id):
@@ -1528,3 +1554,6 @@ def outcome_test(outcome_id):
         if measure.status == 'failing':
             flag = False
     return flag
+
+def admin_footer(request):
+    return render(request, 'main/admin_footer.html')
