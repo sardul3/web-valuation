@@ -1714,7 +1714,12 @@ def generate_cycle_report(request, cycle_id):
     else:
         num = 0
     context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
-    'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': num}
+    'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': num,
+    'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' )
+
+    }
+
     return render(request, 'main/cycle_report.html', context)
 
 @user_passes_test(super_admin_test)
