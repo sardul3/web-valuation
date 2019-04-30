@@ -313,7 +313,12 @@ hr.not(.style15) {
          average
          {%endif%}
             or higher
-        on {{measure.tool_type}}
+        on {{measure.tool_type}}:
+        {%if measure.rubric%}
+          {{measure.rubric}}
+        {%elif measure.test_score%}
+          {{measure.test_score}}
+        {%endif%}
         </span>
 </div>
 
