@@ -1734,8 +1734,7 @@ def admin_footer(request):
 
 def evaluator_instructions(request):
     return render(request, 'main/evaluator_instructions.html', {'alerts':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'),
-    'alerts_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()
-})
+    'alerts_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()})
 
 def logs(request):
     logs = Log.objects.filter(read=False).order_by('-created_at')
