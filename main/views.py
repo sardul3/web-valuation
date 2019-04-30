@@ -703,6 +703,9 @@ def migrate_outcome(request, cycle_id):
         outcome = Outcome.objects.get(id = outcomes)
         outcome.cycle.add(to_cycle)
 
+        for m in Measure.objects.all():
+            if m.outcome == outcome:
+                Measure.objects.filter(id=m.id).update(current=True)
         text = request.user.username + " ( " + request.user.email + " ) " + 'migrated outcome, '+ outcome.title + ' to the cycle, ' + str(to_cycle.year) +  " " + str(to_cycle.semester)
         Log.objects.create(message=text, created_at=datetime.today())
 
