@@ -1688,9 +1688,12 @@ def generate_cycle_report(request, cycle_id):
             number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
             count = count + 1
             me.append([evaluated_student_count, number_of_pass_cases,  outcome.title, measure.measureTitle,  measure.statusPercent, measure.status, Measure.objects.filter(outcome=outcome).count(), outcome.id])
-    print(me)
+    if(measures):
+        num = measures.count()
+    else:
+        num = 0
     context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
-    'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': measures.count()}
+    'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': num}
     return render(request, 'main/cycle_report.html', context)
 
 def super_admin_home(request):
