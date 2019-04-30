@@ -1277,13 +1277,8 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
             else:
                 maximum=len(mysc)
-            for cat in Category.objects.filter(rubric=rub):
-                if cat.index_y==max_col-1:
-                    if cat.index_x==x+1:
-
-
-                        myscore = float(cat.categoryTitle)*int(myscore)/100.0
-                        myscore = myscore*int(maximum)
+            myscore = float(super_header[x])*int(myscore)/100.0
+            myscore = myscore*int(maximum)
         scores.append(myscore)
         total += float(myscore)
         count = count +1
