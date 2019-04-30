@@ -636,7 +636,7 @@ def cycle(request, cycle_id):
     courses = Course.objects.filter(coordinator=cordinator)
     more_co = CoOrdinator.objects.filter(department=cordinator.department)
     for co in more_co:
-        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+        outcomes = outcomes | Outcome.objects.filter(coordinator=co).filter(cycle=cycle_id)
         measures = measures | Measure.objects.filter(coordinator=co)
         rubrics = rubrics | Rubric.objects.filter(coordinator=co)
         evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
@@ -754,7 +754,6 @@ def outcome_detail(request, outcome_id):
     custom_student = None
     more_co = CoOrdinator.objects.filter(department=cordinator.department)
     for co in more_co:
-        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
         measures = measures | Measure.objects.filter(coordinator=co)
         rubrics = rubrics | Rubric.objects.filter(coordinator=co)
         evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
