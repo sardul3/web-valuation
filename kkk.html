@@ -1,0 +1,29 @@
+def download(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="students.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Sanjiv', 'Senior'])
+    writer.writerow(['Sagar', 'Sophomore'])
+    writer.writerow(['Nick', 'Freshman'])
+    writer.writerow(['AJ', 'Junior'])
+    writer.writerow(['Alexa', 'Sophomore'])
+
+
+    return response
+
+def download_test(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="test.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Sanjiv', 88])
+    writer.writerow(['Sagar', 77])
+    writer.writerow(['Nick', 85])
+    writer.writerow(['AJ', 88])
+    writer.writerow(['Alexa', 85])
+
+
+    return response
