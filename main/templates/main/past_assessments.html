@@ -23,7 +23,7 @@
   </thead>
   <tbody>
     {%for cust in cust_stu%}
-    {% if cust.graded %}
+    {% if cust.graded and cust.type == 'Rubric'  %}
     <tr style="background-color: #e5e8ff;">
       <td> {{cust.student_name}}</td>
       <td> {{cust.measure.measureTitle}}</td>

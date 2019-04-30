@@ -3,6 +3,22 @@
 
 {%block body_block %}
 <style>
+  html::before {
+    background: url("../static/assets/images/backgroundimg.jpg") no-repeat center center fixed;
+    content: '';
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    -webkit-filter: blur(1px);
+    -moz-filter: blur(1px);
+    -o-filter: blur(1px);
+    -ms-filter: blur(1px);
+    filter: blur(1px);
+  }
   #main_content{
     border: 3px solid black;
     margin-top: 5%;

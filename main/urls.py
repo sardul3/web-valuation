@@ -10,6 +10,10 @@ urlpatterns = [
     path('logs', views.logs, name='logs'),
     path('clear_log', views.clear_log, name="clear_log"),
 
+    path('download', views.download, name="download"),
+    path('download_test', views.download_test, name="download_test"),
+
+
     path('footer', views.admin_footer, name='admin_footer'),
 
     path('evaluator_instructions', views.evaluator_instructions, name = 'evaluator_instructions'),

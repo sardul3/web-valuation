@@ -343,6 +343,7 @@ hr.not(.style15) {
           <label for="exampleFormControlTextarea1">Upload a csv file</label>
 
           <small id="emailHelp" class="form-text text-muted">upload a csv file with students name and their classification on individual lines</small>
+          <a href = "{%url 'main:download'%}"> see example </a>
 
           <form action="{% url 'main:upload_student' outcome_id measure.id%}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -985,6 +986,8 @@ hr.not(.style15) {
               <div class="form-group">
                 <label for="exampleInputEmail1">Upload Scores</label>
                 <small id="emailHelp" class="form-text text-muted">inside the csv file, place students name followed by their score </small>
+                <a href = "{%url 'main:download_test'%}"> see example </a>
+
               </div>
 
                 <input type="file" name="csv_file" />
