@@ -598,7 +598,7 @@ def dashboard(request):
             for eval_more in mymea.evaluator.all():
                 if (eval == eval_more):
                     evaluator_list.append(eval)
-    print(evaluator_list)
+    evaluator_list = Evaluator.objects.filter(dept = dept)
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
     context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
