@@ -19,9 +19,12 @@
         <label for="exampleFormControlSelect1">Evaluate a student</label>
              <select class="form-control" name = "student_to_be_evaluated">
                    {% for student in evaluated_flag %}
+                    {%if student.evaluator.email == request.user.email%}
+                    {{student.evaluator}}
                       {%if student.graded %}
                       {%else%}
-                        <option value = "{{student.id}}">{{student.student_name}}</option>
+                        <option value = "{{student.id}}">{{student.student_name}} </option>
+                      {%endif%}
                       {%endif%}
                   {%endfor%}
               </select>

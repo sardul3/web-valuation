@@ -29,7 +29,7 @@
 <div class = "container-fluid">
   <div class = "container" id = "main_content">
 
-      <h1 class="text-center">Admin Instructions</h1>
+      <h1 class="text-center">Coordinator Instructions</h1>
       <br>
       <h4>Cycles</h4>
         <button class="accordion">What is a Cycle</button>
@@ -88,7 +88,7 @@
                 <ol>
                   <li>Select <b>'Visit'</b> by the desired running cycle</li>
                   <li>A page for the cycle will be presented. The outcomes and their data associated with that cycle will be viewable</li>
-                  <li>Visit the admin istruction sections 'Create Outcomes', 'Create Measures',  and 'Create Rubrics' to learn how to create data to add to a running cycle</li>
+                  <li>Visit the coordinator istruction sections 'Create Outcomes', 'Create Measures',  and 'Create Rubrics' to learn how to create data to add to a running cycle</li>
                   </ol>
                   </li>
                   <li>The cycle that was worked in most recently during the last session will be the cycle that the data displayed on the dashboard and the actions performed in the rubric and outcome tabs in the next session will be associated with. Unless another running cycle is selected during the next session</li>
@@ -102,12 +102,12 @@
           <ul>
             <li>If the does not have any outcomes
           <ol>
-            <li>Find <b>'Running Cycles'</b> on admin dashboard</li>
+            <li>Find <b>'Running Cycles'</b> on coordinator dashboard</li>
             <li>Select <b>'Visit'</b> by the desired cycle</li>
             <li>Add the outcomes<br><ol><li>To create new outcomes individually: Select the <b>'+'</b> to add/create outcomes</li>
             <li>To add all of the outcomes from a previous cycle: Select <b>'Migrate'</b><ul><li>The migrated outcomes contain the rubrics and measures associated with them in the previous cycle </li>
             <li>It will not contain the students, evaluators, scores from the previous cycle</li>
-            <li>Migrating outcomes from a previous cycle prevents the admin from having to create new outcomes everytime a cycle is started</li>
+            <li>Migrating outcomes from a previous cycle prevents the coordinator from having to create new outcomes everytime a cycle is started</li>
             <li>Once migrated, undesired outcomes can be deleted and new ones can be added; this does not affect the cycle the outcomes were migrated from</li></ul></li></ol></li>
           </ol></li>
           </ul>
@@ -198,7 +198,7 @@
           <li>A cycle could have just been created and outcomes need to be created for it</li>
           <ol><li>Select <b>'+'</b> by the 'Outcomes' heading</li></ol>
           <li>The cycle for the new outcome must be accessed before the outcome can be created</li>
-          <ol><li>Find 'Running Cycles' on the admin dashboard</li>
+          <ol><li>Find 'Running Cycles' on the coordinator dashboard</li>
           <li>Select <b>'Visit'</b> by the desired cycle</li>
           <li>Select <b>'+'</b> by the 'Outcomes' heading</li></ol>
         </ul>
@@ -350,6 +350,131 @@
         </ol>
      </p>
     </div>
+
+    <button class="accordion">Add Students to Measure</button>
+<div class="panel">
+    <button class="accordion">Add Students Individually</button>
+    <div class="panel">
+      <p>
+        <ol>
+          <li>Access the measure the students' scores will be associated with</li>
+          <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>
+          <li>Select the <b>'+'</b> next to the 'Students' heading</li>
+          <li>Fill in the student's name in the <i>name</i> field </li>
+          <li>Select <b>'Add'</b></li>
+        </ol>
+     </p>
+    </div>
+    <button class="accordion">Add Student Group via File Upload</button>
+    <div class="panel">
+      <p>
+        <ol>
+          <li>Access the measure the students' scores will be associated with</li>
+          <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>
+          <li>Select the <b>'+'</b> next to the 'Students' heading</li>
+          <li>Select <b>'Choose File'</b></li>
+          <ul><li>Make sure the file follows the correct format</li>
+          <li>The formatting example can be found by selecting <b>'download example file'</b></li></ul>
+          <li>Once the file has been located, elect <b>'Upload'</b></li>
+        </ol>
+     </p>
+    </div>
+</div>
+<button class="accordion">Add Students to Evaluator</button>
+<div class="panel">
+  <p>
+    <h5>Before students can be assigned to evaluators, the students must be added to the measure and the evaluators must be registered</h5>
+    <ol>
+      <li>Access the measure the students' scores will be associated with</li>
+      <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>
+      <li>Select the <b>'Assign Students to Evaluators'</b></li>
+      <li>Select the email of the evaluator that the student will be assigned to</li>
+      <li>Select the name of the student that will be assigned to the selected evaluator</li>
+      <li>Select <b>'Assign'</b></li>
+    </ol>
+ </p>
+</div>
+<button class="accordion">Add Test Scores</button>
+<div class="panel">
+<button class="accordion">Multiple Scores File Upload</button>
+<div class="panel">
+  <p>
+    <ol>
+      <li>Access the measure the scores will be added to</li>
+      <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>
+      <li>Select <b>'Upload Test Scores'</b></li>
+      <li>Fill in the <i>Full Marks</i> field with the total number of points the exam is worth</li>
+      <li>Select <b>'Choose File'</b></li>
+      <ul><li>Make sure the file follows the correct format</li>
+      <li>The formatting example can be found by selecting <b>'download example file'</b></li></ul>
+      <li>Once the file has been located, select <b>'Upload'</b></li>
+    </ol>
+ </p>
+</div>
+<button class="accordion">Individual Score Input</button>
+<div class="panel">
+  <p>
+    <ol>
+      <li>Access the measure the scores will be added to</li>
+      <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>
+      <li>Loacate the field to add individial scores</li>
+      <li>Fill in the <i>Name of the test</i> field with the name of the test</li>
+      <li>Fill in the <i>Name of student</i> field with the name of the student that received the score being recorded</li>
+      <li>Fill in the <i>Marks obtained</i> field with the number of points the student received</li>
+      <li>Select <b>'Add Score'</b></li>
+    </ol>
+ </p>
+</div>
+</div>
+<button class="accordion">Check Progress</button>
+<div class="panel">
+<button class="accordion">Cycle Progress</button>
+<div class="panel">
+  <p>
+    <h5>A cycle's progress is represented by a report that displays all of the outcomes, measures, evaluations, number of students meeting the criteria, and the results (pass/fail) for each outcome </h5>
+    <ol>
+      <li>Select <b>'Visit'</b> by the desired cycle</li>
+      <li>Select <b>'View Report'</b></li>
+    </ol>
+ </p>
+</div>
+<button class="accordion">Outcome Progress</button>
+<div class="panel">
+  <p>
+    <h5>An outcomes's progress is represented by a progress bar for each measure associated with the outcome that are reaching their target statement</h5>
+    <ol>
+      <li>Locate the list of outcomes on the coordinator dashboard</li>
+      <li>The list of measures, their progress, and whether they are passing or failing can be observed</li>
+    </ol>
+ </p>
+</div>
+<button class="accordion">Measure Progress</button>
+<div class="panel">
+<p>
+  <h5>A measure's progress is represented by a progress bar that presents the number of students that have met the measure's target</h5>
+  <ol>
+    <li>Locate the list of outcomes on the coordinator dashboard</li>
+    <li>Select the outcome the measure is associated with</li>
+    <li>A list of measures, their statuses, and whether they are passing or failing can then be viewed</li>
+  </ol>
+  <ol>
+    <li>Access the desired measure</li>
+    <ul><li>Check out <b>'Access Measure'</b> under the Measures heading</li></ul>
+    <li>The measure's progress is located under the measure's target statement</li>
+  </ol>
+</p>
+</div>
+<button class="accordion">Evaluator Progress</button>
+<div class="panel">
+<p>
+  <h5>An evaluator's progress is represented by a progress bar that presents the number of evaluations completed out of the assigned evaluations</h5>
+  <ol>
+    <li>Locate the list of evaluators on the coordinator dashboard</li>
+    <li>The progress of each evaluator can then be viewed</li>
+  </ol>
+</p>
+</div>
+</div>
     <br>
     <br>
     <h4>Rubrics</h4>
@@ -357,7 +482,7 @@
     <div class="panel">
       <p>
         <ol>
-          <li>Select <b>'Rubrics'</b> on the admin dashboard</li>
+          <li>Select <b>'Rubrics'</b> on the coordinator dashboard</li>
           <li>Select <b>'+'</b> to add a new rubric</li>
           <li>Enter the number of rows</li>
           <ul><li>The number of rows should includ a row for the grading values, and a row for each criterion</li>
@@ -432,7 +557,7 @@
     <div class="panel">
       <p>
         <ul>
-        <li>A message that is sent from the admin to an evaluator</li>
+        <li>A message that is sent from the coordinator to an evaluator</li>
         <li>Broadcasts can be sent to notify evaluators of schedule change with their evaluation, evaluation urgencies, if an evaluation has been cancelled, etc</li>
       </ul>
      </p>
@@ -441,7 +566,7 @@
     <div class="panel">
       <p>
         <ol>
-          <li>Select the message icon on the admin dashboard</li>
+          <li>Select the message icon on the coordinator dashboard</li>
           <li>Select the evaluator to message from the list of evaluator names</li>
           <li>Type the message in the message box</li>
           <li>Select <b>'Send'</b></li>
@@ -451,7 +576,7 @@
           <div class="modal-dialog">
             <div class="modal-content text-center">
               <div class="modal-body">
-                <h5>Select the message icon on the admin dashboard</h5>
+                <h5>Select the message icon on the coordinator dashboard</h5>
                 <img src = "{% static 'assets/images/navBar.png' %}" class="img-fluid">
                 <hr/>
                 <h5>Select the evaluator to message from the list of evaluator names</h5>
@@ -478,7 +603,7 @@
     <button class="accordion">What is Curriculum Mapping</button>
     <div class="panel">
       <p>
-        Curriculum mapping enables an admin to track the classes an outcome is associated with. Mapping an outcome to classes allows the admin
+        Curriculum mapping enables an coordinator to track the classes an outcome is associated with. Mapping an outcome to classes allows the coordinator
         to determine whether specific classes are/aren't satisfying their requirements
      </p>
     </div>
@@ -493,6 +618,7 @@
         <li>Fill in the number of credit hours</li>
         <li>Select <b>'Create'</b></li>
         </ol>
+
      </p>
     </div>
     <button class="accordion">Add Curriculum to Outcome</button>

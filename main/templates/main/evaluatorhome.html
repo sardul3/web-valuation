@@ -24,7 +24,7 @@
         <h4 class = "breadcrumb-item"> Hi {{ user.username }}</h4>
         <h4 class = "breadcrumb-item"> Evaluator View </h4>
     </ol>
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
     <p> <a class = "btn btn-dark btn-lg" href="{%url 'main:dashboard'%}"> Act as Admin</a> </p>
     {% endif %}
 
@@ -57,7 +57,9 @@
   <div class="col col-lg-9 col-md-12 col-sm-12 col-xs-12 col-12" >
 
     <div class="tab-content speech-bubble" id="nav-tabContent">
+
       {%for measure in measures%}
+
 
           {%if forloop.first %}
                 <div class="tab-pane fade show measure_section active" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
@@ -71,6 +73,10 @@
             {%else%}
                 {{measure.test_score}}
             {%endif%}
+
+
+
+
             </em>
           </h4>
 
@@ -91,7 +97,7 @@
 
 
         <ul class="list-group mb-2" style = "overflow-y:scroll; height: 40vh;">
-          <li class="list-group-item sticky-top active d-flex justify-content-between"> <h4>Students</h4>
+          <li class="list-group-item active d-flex justify-content-between" style="z-index:0;"> <h4>Students</h4>
 
           </li>
             {% for student in flag %}
@@ -185,46 +191,21 @@
   </div>
 
 
-    {%empty%}
+  {%empty%}
+
+
     <div class="jumbotron jumbotron-fluid">
       <div class="container">
         <h1 class="display-4">No Evaluations Assigned</h1>
         <p class="lead">Please contact the coordinator for more queries</p>
       </div>
 </div>
+
     {%endfor%}
-
 </div>
 
     </div>
 
-    <div class="container">
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="margin-bottom: 1vh;">Help</button>
-
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Evaluator Help</h4>
-        </div>
-        <div class="modal-body">
-          <h5>Perform Evaluation </h5>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-</div>
 
   </div>
 

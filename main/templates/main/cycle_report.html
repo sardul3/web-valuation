@@ -24,7 +24,7 @@ margin-bottom: 10px;
 <div class="container">
 
 
-<h2 class="card-header"><center>2013-2015 Computer Science Assessment Cycle- Summary Of Results</center></h2>
+<h2 class="card-header"><center> Assessment Cycle- Summary Of Results</center></h2>
 <div class="table-responsive">
   {%if outcomes%}
 <table class="table table-bordered table-hover table-sm">
@@ -38,12 +38,14 @@ margin-bottom: 10px;
     <th class="align-middle">Use of Results/Actions Taken</th>
   </tr>
 {%for outcome in outcomes%}
+<tr>
+    <td class="align-middle" rowspan="{{num}}"><strong>{{outcome}}</strong></td>
 
 
 {%for d in data%}
   {%if d.7 == outcome.id%}
-<tr>
-      <td> {{d.2}} </td>
+
+      <!-- <td> {{d.2}} </td> -->
       <td>{{d.3}}</td>
       <td >{{d.0}} </td>
       <td >{{d.1}} </td>
@@ -53,6 +55,7 @@ margin-bottom: 10px;
 
   {%endif%}
 {%endfor%}
+
 {%endfor%}
 {%else%}
 

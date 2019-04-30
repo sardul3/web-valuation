@@ -1,4 +1,4 @@
-{% extends  'base.html' %}
+{% extends  'main/adminbase.html' %}
 {%load static%}
 {% block body_block %}
 <style>
@@ -71,7 +71,8 @@
 
           <h5 class="card-title  d-flex justify-content-between ">Students that Passed <span class="badge badge-primary">{{above_threshold}} </span></h5>
 
-          <h5 class="card-title">Percentage Passed</h5>
+          <hr/>
+          <h5 class="card-title text-center">Students Passed</h5>
 
           <div id="bar{{measure.id}}" class = "mb-2 text-center" style = "margin-inline-start: 20%;">
             <div>
@@ -89,14 +90,12 @@
         </div>
       </div>
 
-      <div class="card bg-light mb-3" style="max-width: 18rem;">
+      <div class="card bg-light mb-3">
         <div class="card-header">Stats</div>
         <div class="card-body">
-          <h5 class="card-title">Class Average</h5>
-          <p class="card-text">{{test_average|floatformat:1}}</p>
+        <h5 class="card-title  d-flex justify-content-between ">Class Average<span class="badge badge-primary">{{test_average|floatformat:1}}</span></h5>
 
-          <h5 class="card-title">Students above average</h5>
-          <p class="card-text">{{above_test_average}}</p>
+          <h5 class="card-title d-flex justify-content-between">Students above average <span class="badge badge-primary">{{above_test_average}}</span></h5>
         </div>
       </div>
 

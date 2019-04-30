@@ -1,4 +1,4 @@
-{% extends  'base.html' %}
+{% extends  'main/adminbase.html' %}
 {%load static%}
 {% block body_block %}
 <style>
@@ -6,6 +6,7 @@
     font-size: 1rem;
   }
 </style>
+<script type="text/javascript" src="{%static 'js/'%}radialprogress.js"></script>
 
 <div class  = "container-fluid " id = "main_content" style = "margin-top: 15px;padding:15px;">
 <div class = "row">
@@ -84,28 +85,29 @@
           <div class="card bg-light mb-3" >
             <div class="card-header">Stats</div>
             <div class="card-body">
-              <h5 class="card-title">Total students</h5>
-              <p class="card-text">{{student_count}}</p>
+              <h5 class="card-title  d-flex justify-content-between">Total students<span class="badge badge-primary"> {{student_count}}</span></h5>
 
-              <h5 class="card-title">Students Evaluated</h5>
-              <p class="card-text">{{evaluated_student_count}}</p>
+              <h5 class="card-title  d-flex justify-content-between">Students Evaluated <span class="badge badge-primary">{{evaluated_student_count}}</span></h5>
 
-              <h5 class="card-title">Students passed</h5>
-              <p class="card-text">{{number_of_pass_cases}} / {{percent_pass_cases|floatformat:2}}% passed the measure</p>
+              <hr/>
+              <h5 class="card-title text-center">Students Passed</h5>
+
+              <div id="bar{{measure.id}}" class = "mb-2 text-center" style = "margin-inline-start: 20%;">
+                <div>
+                  <div id="example6" style="font-size:1.2vw; display:inline-block;"></div>
+                </div>
+              </div>
+              <script type="text/javascript">
+                var bar=new RadialProgress(document.getElementById('bar{{measure.id}}'), {progress:0, colorBg:"rgb(219,217,214)",colorFg:"#7a2831",colorText:"",thick:7,animationSpeed:0.7}  );
+                bar.setValue({{percent_pass_cases}}/100);
+                bar.draw(true);
+
+              </script>
+
 
             </div>
           </div>
 
-          <div class="card bg-light mb-3">
-            <div class="card-header">Stats</div>
-            <div class="card-body">
-              <h5 class="card-title">Class Average</h5>
-              <p class="card-text">{{rubric_average|floatformat:1}}</p>
-
-              <h5 class="card-title">Students above average</h5>
-              <p class="card-text">{{above_rubric_average}}</p>
-            </div>
-          </div>
 
         </div>
 

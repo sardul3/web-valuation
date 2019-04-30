@@ -1,16 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'main/adminbase.html' %}
 {%load static%}
 
 
 
 {%block body_block%}
 <style>
-#main_content{
-	/* max-width: 25%; */
-	/* border: 3px solid black;
-	padding: 2%;*/
-	margin-top: 10%;
-}
+
 @media (max-width: 576px) {
 	#main_content{
 		margin-top: 25%;
@@ -24,7 +19,7 @@
 	    $('[data-toggle="popover"]').popover();
 	});
 </script>
-<div class = "container-fluid card border-dark p-3" id = "main_content" style="width: 20rem;">
+<div class = "container-fluid card border-dark p-3" id = "main_content" style="width: 21rem;">
 
 <div class="row align-self-center justify-content-center" style="width: 20rem;">
 	<h1 class = "text-center">Create Rubrics</h1>

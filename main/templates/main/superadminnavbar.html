@@ -57,6 +57,11 @@
         <a class="nav-link" href="{%url 'main:super_admin_past'%}">View Invite status</a>
       </li>
 
+      <li class="nav-item {{log}}" >
+        <a class="nav-link" href="{%url 'main:logs'%}">Logs</a>
+      </li>
+
+
       <li class="nav-item {{msg}}" >
       <a id="noti_Button" data-toggle="modal" data-target="#exampleModalCenterSendBro" >
         <span style="font-size: 2rem; color: #7a2831;">
@@ -65,6 +70,13 @@
       </a>
     </li>
 
+    <li class="nav-item {{help}}" >
+      <a id="noti_Button" class = "nav-link" href="{% url 'main:superadmin_instructions'%}">
+        <span style="font-size: 2rem; color: #7a2831;">
+          <i data-toogle="tooltip" title="User Manual" class="fas fa-info-circle"></i>
+       </span>
+      </a>
+     </li>
 
 
 <li class="nav-item {{logout}}">

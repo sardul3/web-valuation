@@ -1,0 +1,90 @@
+{% extends  'main/superadminbase.html' %}
+{%load static%}
+{%block body_block%}
+
+<style>
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+.active, .accordion:hover {
+  background-color: maroon;
+  color: white;
+}
+.panel {
+  padding: 0 18px;
+  display: none;
+  background-color: ivory;
+  overflow: hidden;
+}
+</style>
+<div class = "container-fluid">
+  <div class = "container" id = "main_content">
+    
+      <h1 class="text-center">Instructions</h1>
+      <br>
+      <h4>Coordinators</h4>
+        <button class="accordion">Who are Coordinators</button>
+        <div class="panel">
+          <p>
+            <h6>Coordinators are the designated person in charge of each program's assesments. They create the outcomes, measures, and rubrics
+              that make up the assesment process, and invite evaluators to perform the assesments.</h6>
+          </p>
+        </div>
+        <button class="accordion">Invite Coordinators</button>
+        <div class="panel">
+          <p>
+              <ol>
+                <li>Select <b>'Invite Coordinators' </b></li>
+                <li>Enter the email for the potential coordinator</li>
+                <li>Input the department name</li>
+                <li>Select <b>'Invite'</b></li>
+                <ul><li>The coordinator will receive an email containing a link to the login page</li>
+                <li>They must register with the same email address used to invite them</li></ul>
+                </ol>
+          </p>
+        </div>
+        <button class="accordion">How to Send a Broadcast Message</button>
+            <div class="panel">
+              <p>
+                <ol>
+                  <li>Select the message icon on the navigation bar</li>
+                  <li>Select the coordinator to message from the list of coordinator names</li>
+                  <li>Type the message in the message box</li>
+                  <li>Select <b>'Send'</b></li>
+                </ol>
+           </p>
+          </div>
+</div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
+
+
+
+{%endblock%}

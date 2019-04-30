@@ -2,10 +2,15 @@ from django.db import models
 from django.contrib.auth.models import  User
 
 
+
+class Department(models.Model):
+    dept_name = models.CharField(max_length=400,null=True)
+
 class CoOrdinator(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=200)
     department = models.CharField(max_length=200)
+    dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
 
 class Evaluator(models.Model):
     name = models.CharField(max_length=100)
@@ -13,6 +18,9 @@ class Evaluator(models.Model):
     invited_by = models.CharField(max_length=200, default="Admin")
     perc_completed = models.FloatField(null=True,blank=True,default=0.0)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
+    dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
+
+
     def __str__(self):
         return self.name
 
@@ -40,6 +48,8 @@ class Cycle(models.Model):
     endDate = models.DateField(default=None, null=True)
     isCurrent = models.BooleanField(default=True)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
+    dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
+
     def __str_(self):
         return self.year
 
@@ -52,6 +62,8 @@ class Rubric(models.Model):
     assigned_to = models.ManyToManyField(Evaluator)
     ascending = models.BooleanField(null=True, default=True)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
+    dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.title
@@ -72,6 +84,8 @@ class Course(models.Model):
     description = models.CharField(max_length=200)
     credit_hours = models.PositiveIntegerField(default=3)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
+    dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
+
 
 class Outcome(models.Model):
     title = models.CharField(max_length=200, default='', null=True)
@@ -80,6 +94,8 @@ class Outcome(models.Model):
     cycle = models.ManyToManyField(Cycle)
     course = models.ManyToManyField(Course)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
+    dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.title
@@ -133,6 +149,9 @@ class Measure(models.Model):
     student = models.ManyToManyField(Student)
     evaluator = models.ManyToManyField(Evaluator)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
+    dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
+
+    current = models.BooleanField(default=True)
 
     def __str__(self):
         return self.measureTitle
@@ -153,6 +172,7 @@ class evaluate_rubric(models.Model):
 class evaluation_flag(models.Model):
     student_name = models.CharField(max_length=200)
     measure = models.ForeignKey(Measure, on_delete=models.CASCADE)
+    by = models.CharField(max_length=200, null=True)
 
 class custom_students(models.Model):
     student_name = models.CharField(max_length=200)
@@ -179,7 +199,14 @@ class Notification(models.Model):
     message = models.CharField(max_length=400)
     created_at = models.DateTimeField()
     read = models.BooleanField(default=False)
+    to = models.CharField(max_length=200, default='no one')
+
+class Log(models.Model):
+    message = models.CharField(max_length=400)
+    created_at = models.DateTimeField()
+    read = models.BooleanField(default=False)
 
 class InvitedCo(models.Model):
     email = models.CharField(max_length=200)
     pending = models.BooleanField(default=True)
+    dept = models.ForeignKey(Department,null=True,on_delete=models.CASCADE)
