@@ -152,6 +152,10 @@ def homepage(request):
 
     email_address = request.user.email
     measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+    for m in measure:
+        print(m)
+        for o in m.outcome.all():
+            print(o)
     # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
 
     x = []
@@ -331,7 +335,21 @@ def evaluatorhome(request):
         flag = []
 
         email_address = request.user.email
+        cycle_filter = []
         measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+        for m in measure:
+            print(m)
+            for o in Outcome.objects.all():
+                if m.outcome == o:
+                    print(o)
+                    x = (o.cycle.values())
+                    for val in x:
+                        print(val)
+                        if val['isCurrent'] == True:
+                            cycle_filter.append(val['id'])
+        print(cycle_filter)
+
+
         # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
 
         x = []
@@ -865,7 +883,7 @@ def registerCo(request):
             print(inv)
             inv.pending = False
             inv.save()
-            text = inv.username + " ( " + inv.email + " ) " + 'accepted your invitation'
+            text = inv.name + " ( " + inv.email + " ) " + 'accepted your invitation'
             Log.objects.create(message=text, created_at=datetime.today())
             return redirect('/')
         else:
@@ -1596,7 +1614,7 @@ def admin_instructions(request):
 
 def superadmin_instructions(request):
     return render(request, 'main/superadmin_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),
-    'notifications' : Notification.objects.filter(read=False).order_by('-created_at' )})
+    'notifications' : Notification.objects.filter(read=False).order_by('-created_at' ),'cordinator':InvitedCo.objects.all()})
 
 def generate_cycle_report(request, cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
@@ -1678,12 +1696,12 @@ def evaluator_instructions(request):
 def logs(request):
     logs = Log.objects.filter(read=False).order_by('-created_at')
     logs_count = logs.count()
-    context = {"logs":logs, 'log':'active', 'logs_count':logs_count}
+    context = {"logs":logs, 'log':'active', 'logs_count':logs_count, 'cordinator':InvitedCo.objects.all()}
     return render(request, 'main/logs.html', context)
 
 def clear_log(request):
     Log.objects.filter(read=False).update(read=True)
     logs = Log.objects.filter(read=False).order_by('-created_at')
-    context = {"logs":logs, 'log':'active'}
+    context = {"logs":logs, 'log':'active', }
 
     return render(request, 'main/logs.html', context)
