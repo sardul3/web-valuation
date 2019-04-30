@@ -336,18 +336,18 @@ def evaluatorhome(request):
 
         email_address = request.user.email
         cycle_filter = []
-        measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+        measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address), current=True )
         for m in measure:
-            print(m)
-            for o in Outcome.objects.all():
-                if m.outcome == o:
-                    print(o)
-                    x = (o.cycle.values())
-                    for val in x:
-                        print(val)
-                        if val['isCurrent'] == True:
-                            cycle_filter.append(val['id'])
-        print(cycle_filter)
+            if m.rubric or m.test_score:
+                print(m)
+                for o in Outcome.objects.all():
+                    if m.outcome == o:
+                        print(o)
+                        x = (o.cycle.values())
+                        for val in x:
+                            print(val)
+                            if val['isCurrent'] == True:
+                                cycle_filter.append(val['id'])
 
 
         # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
@@ -403,7 +403,7 @@ def evaluatorhome(request):
         for st in cust_student_list:
             print(st.student_name, st.evaluator.email)
         context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
-        , 'now':'active','alerts':alerts, 'alerts_count':alerts_count}
+        , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'cycle_filter':len(cycle_filter)}
 
         return render(request, 'main/evaluatorhome.html', context)
 
@@ -647,7 +647,20 @@ def cycle(request, cycle_id):
 @user_passes_test(admin_test)
 def end_cycle(request, cycle_id):
     cycle = Cycle.objects.filter(id=cycle_id).update(isCurrent=False, endDate=datetime.today())
+
     cycle_d = Cycle.objects.get(id=cycle_id)
+
+    measures = Measure.objects.all()
+    outcomes = Outcome.objects.all()
+    for oc in outcomes:
+        for cyc in oc.cycle.all():
+            print(oc)
+            if cyc == cycle_d:
+                for me in measures:
+                    if me.outcome==oc:
+                        Measure.objects.filter(id=me.id).update(current=False)
+
+
     text = request.user.username + " ( " + request.user.email + " ) " + 'ended the cycle, ' + str(cycle_d.year) + ' ' + cycle_d.semester
     Log.objects.create(message=text, created_at=datetime.today())
 
@@ -1147,7 +1160,7 @@ def add_evaluator(request, outcome_id, measure_id):
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        email_send.send()
+        # email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
         text = request.user.username + " ( " + request.user.email + " ) " + 'added evaluators to measure, ' + measure.measureTitle
@@ -1169,7 +1182,7 @@ def add_preexisting_evaluator(request, outcome_id, measure_id):
 
             email = evaluator.email
             email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        email_send.send()
+        # email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
         text = request.user.username + " ( " + request.user.email + " ) " + 'added evaluators to measure, ' + measure.measureTitle
@@ -1320,7 +1333,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
 def remove_rubric_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
-    measure.update(rubric=None, statusPercent=0.0)
+    measure.update(rubric=None, statusPercent=0.0, current=False)
     custom_students.objects.filter(measure__in=measure, graded=True).update(current=False)
 
 
@@ -1330,7 +1343,7 @@ def remove_rubric_association(request, measure_id, outcome_id):
 
 def remove_test_association(request, measure_id, outcome_id):
     measure = Measure.objects.filter(id = measure_id)
-    measure.update(test_score=None, statusPercent=0.0)
+    measure.update(test_score=None, statusPercent=0.0, current=False)
     custom_students.objects.filter(measure__in=measure, graded=True).update(current=False)
 
     messages.add_message(request, messages.SUCCESS, 'Removed test association')
@@ -1645,7 +1658,7 @@ def super_admin_home(request):
         co.save()
         email = co.email
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        email_send.send()
+        # email_send.send()
 
         for eval in evaluators:
             if eval.email == invited_Coordinator:
