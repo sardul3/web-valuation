@@ -138,6 +138,8 @@ def rubric_data(measure_id):
 def admin_test(user):
     return user.is_staff
 
+def super_admin_test(user):
+    return user.is_superuser
 
 def homepage(request):
     rubrics = Rubric.objects.all()
@@ -1202,8 +1204,8 @@ def add_evaluator(request, outcome_id, measure_id):
 
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
-        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        # email_send.send()
+        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
         text = request.user.username + " ( " + request.user.email + " ) " + 'added evaluators to measure, ' + measure.measureTitle
@@ -1224,8 +1226,8 @@ def add_preexisting_evaluator(request, outcome_id, measure_id):
             measure.evaluator.add(evaluator)
 
             email = evaluator.email
-            email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        # email_send.send()
+            email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
         text = request.user.username + " ( " + request.user.email + " ) " + 'added evaluators to measure, ' + measure.measureTitle
@@ -1703,6 +1705,7 @@ def generate_cycle_report(request, cycle_id):
     'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': num}
     return render(request, 'main/cycle_report.html', context)
 
+@user_passes_test(super_admin_test)
 def super_admin_home(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -1720,8 +1723,8 @@ def super_admin_home(request):
         co = InvitedCo(email=email, pending=True, dept=department)
         co.save()
         email = co.email
-        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
-        # email_send.send()
+        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/registerCo \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send.send()
 
         for eval in evaluators:
             if eval.email == invited_Coordinator:
@@ -1734,10 +1737,10 @@ def super_admin_home(request):
     context= {'now':'active','cordinator':InvitedCo.objects.all()}
     return render(request, 'main/invite.html',context)
 
-
+@user_passes_test(super_admin_test)
 def super_admin_past(request):
-    myinvitees = InvitedCo.objects.all()
-    invitees = Invited_Coordinator.objects.filter(invited_by=request.user.username)
+    myinvitees = InvitedCo.objects.all().order_by('-id')
+    invitees = Invited_Coordinator.objects.filter(invited_by=request.user.username).order_by('id')
     context = {'past':'active', 'invitees':invitees,'myinvitees':myinvitees,'cordinator':InvitedCo.objects.all()}
     return render(request, 'main/invite_status.html', context)
 
@@ -1763,6 +1766,7 @@ def evaluator_instructions(request):
     return render(request, 'main/evaluator_instructions.html', {'alerts':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'),
     'alerts_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()})
 
+@user_passes_test(super_admin_test)
 def logs(request):
     logs = Log.objects.filter(read=False).order_by('-created_at')
     logs_count = logs.count()
