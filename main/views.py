@@ -1698,7 +1698,7 @@ def generate_cycle_report(request, cycle_id):
             count = count + 1
             me.append([evaluated_student_count, number_of_pass_cases,  outcome.title, measure.measureTitle,  measure.statusPercent, measure.status, Measure.objects.filter(outcome=outcome).count(), outcome.id])
     if(measures):
-        num = measures.count()
+        num = measures.count()+1
     else:
         num = 0
     context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
