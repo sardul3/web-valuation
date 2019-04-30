@@ -18,6 +18,7 @@ from django.db.models import Avg, Count, Min, Sum
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
+from itertools import chain
 
 
 
@@ -280,6 +281,12 @@ def evaluatorhome(request):
         outcomes = Outcome.objects.filter(coordinator=cordinator)
         measures = Measure.objects.filter(coordinator=cordinator)
         cycles = Cycle.objects.filter(coordinator=cordinator)
+        more_co = CoOrdinator.objects.filter(department=cordinator.department)
+        for co in more_co:
+            outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+            measures = measures | Measure.objects.filter(coordinator=co)
+            cycles = cycles | Cycle.objects.filter(coordinator=co)
+
         data = dict()
         for measure in measures:
             evaluations = evaluate_rubric.objects.filter(measure=measure).count()
@@ -627,6 +634,13 @@ def cycle(request, cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
     prev= Cycle.objects.filter(isCurrent=False)
     courses = Course.objects.filter(coordinator=cordinator)
+    more_co = CoOrdinator.objects.filter(department=cordinator.department)
+    for co in more_co:
+        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+        measures = measures | Measure.objects.filter(coordinator=co)
+        rubrics = rubrics | Rubric.objects.filter(coordinator=co)
+        evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
+        courses = courses | Course.objects.filter(coordinator=co)
     prev_cycles = []
     for cy in prev:
         if cy.coordinator==cordinator:
@@ -754,6 +768,13 @@ def outcome_detail(request, outcome_id):
     test_data = {}
     data = {}
     custom_student = None
+    more_co = CoOrdinator.objects.filter(department=cordinator.department)
+    for co in more_co:
+        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+        measures = measures | Measure.objects.filter(coordinator=co)
+        rubrics = rubrics | Rubric.objects.filter(coordinator=co)
+        evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
+
 
     for measure in measures:
         students = measure.student.all()
@@ -1021,17 +1042,19 @@ def test_rubric(request):
             cols+=1
         if ascending=="descending":
             isAscending = False
-        if isAscending:
-            cols_ = range(0,cols)
-        else:
-            if isWeighted:
-                cols_ = range(cols-1,-1,-1)
-                colminus=0
-                col_index = cols-1
+
+        cols_ = range(0, cols)
+        mylist = []
+        for x in range(cols):
+            if isAscending:
+                mylist.append(x)
             else:
-                col_index = cols
-                cols_ = range(cols,0,-1)
-        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':cols_,'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus,'isAsc':isAscending,'col_ind':col_index})
+                if isWeighted:
+                    myval = cols-x-1
+                else:
+                    myval = cols - x
+                mylist.append(myval)
+        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':cols_,'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus,'isAsc':isAscending,'col_ind':col_index,'mylist':mylist})
     return render(request, 'main/test_rubric.html')
 
 
@@ -1233,6 +1256,7 @@ def view_test_score(request, test_score_test, measure_id):
 
     return render(request, 'main/test_scores.html', context)
 
+
 def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     student_id = int(request.POST.getlist('student_to_be_evaluated')[0])
     print(student_id)
@@ -1293,8 +1317,13 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
             else:
                 maximum=len(mysc)
-            myscore = float(super_header[x])*int(myscore)/100.0
-            myscore = myscore*int(maximum)
+            for cat in Category.objects.filter(rubric=rub):
+                if cat.index_y==max_col-1:
+                    if cat.index_x==x+1:
+
+
+                        myscore = float(cat.categoryTitle)*int(myscore)/100.0
+                        myscore = myscore*int(maximum)
         scores.append(myscore)
         total += float(myscore)
         count = count +1
@@ -1316,17 +1345,15 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     print(perc_evaluated)
     eval.perc_completed = perc_evaluated
 
-    custom_students.objects.filter(id=student_id).update(graded=True, grade=avg, evaluator=eval)
-    # student_real.graded=True
-    # student_real.grade = avg
-    # student_real.evaluator = eval
-    # student_real.save()
-    flag = evaluation_flag(student_name=student_name, measure=measure, by = eval.email)
+    student_real.graded=True
+    student_real.grade = avg
+    student_real.evaluator = eval
+    student_real.save()
+    flag = evaluation_flag(student_name=student_name, measure=measure)
     flag.save()
 
     msg = student_real.evaluator.name + ' evaluated '+ student_real.student_name
-    Notification.objects.create(message=msg, created_at = datetime.today(), to = eval.invited_by)
-
+    Notification.objects.create(message=msg, created_at = datetime.today())
 
 
     messages.add_message(request, messages.SUCCESS, 'Student was evaluated successfully')
@@ -1633,7 +1660,7 @@ def generate_cycle_report(request, cycle_id):
     data = dict()
     me = []
     count = 0
-    num = 0
+    num=0
     measures = None
     outcome = None
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
