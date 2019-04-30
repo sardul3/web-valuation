@@ -1617,11 +1617,7 @@ def generate_cycle_report(request, cycle_id):
     data = dict()
     me = []
     count = 0
-<<<<<<< HEAD
     num=0
-=======
-    num = 0
->>>>>>> 50c05d8044359721e20121c33ee349f756b70258
     measures = None
     outcome = None
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
