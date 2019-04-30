@@ -1538,6 +1538,7 @@ def assign_evaluator(request, measure_id, outcome_id):
 
         custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator, type=measure.tool_type)
         custom_student.save()
+    messages.add_message(request, messages.SUCCESS, 'Assigned evaluator a task')
 
     text = request.user.username + " ( " + request.user.email + " ) " + 'assigned some tasks to the evaluator, ' + evaluator_email
     Log.objects.create(message=text, created_at=datetime.today())
@@ -1554,9 +1555,10 @@ def assign_evaluatorToTest(request, measure_id, outcome_id):
     measure.evaluator.add(evaluator)
 
     for student in students:
-
         custom_student = custom_students(student_name = student, measure=measure, evaluator=evaluator, type=measure.tool_type)
         custom_student.save()
+    messages.add_message(request, messages.SUCCESS, 'Evaluator assigned to test')
+
 
     text = request.user.username + " ( " + request.user.email + " ) " + 'assigned some tasks to the evaluator, ' + evaluator_email
     Log.objects.create(message=text, created_at=datetime.today())
@@ -1568,6 +1570,7 @@ def broadcast(request):
     message = request.POST.get('message')
     for x in send_to:
         broadcast = Broadcast.objects.create(sender=request.user.username, receiver=x,message=message, sent_at=datetime.today())
+    messages.add_message(request, messages.SUCCESS, 'Message sent')
 
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
@@ -1576,6 +1579,8 @@ def broadcast_super(request):
     message = request.POST.get('message')
     for x in send_to:
         broadcast = Broadcast.objects.create(sender=request.user.username, receiver=x,message=message, sent_at=datetime.today())
+    messages.add_message(request, messages.SUCCESS, 'Message sent')
+
 
     return HttpResponseRedirect(reverse_lazy('main:super_admin_home'))
 
@@ -1587,6 +1592,8 @@ def create_curriculum(request):
     description = request.POST.get('description')
     credit_hours = request.POST.get('credit_hours')
     Course.objects.create(title=title, description=description, credit_hours=credit_hours,coordinator=cordinator,dept=dept)
+    messages.add_message(request, messages.SUCCESS, 'course object created')
+
     url = request.POST.get("url1")
     print("Url is",url)
     return redirect(url)
@@ -1595,6 +1602,7 @@ def create_curriculum(request):
 def mark_read(request, alert_id):
     alert = Broadcast.objects.filter(id=alert_id).order_by('-sent_at')
     alert.update(read=True)
+    messages.add_message(request, messages.SUCCESS, 'Message mark read')
 
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
 
@@ -1602,6 +1610,8 @@ def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
     notification.update(read=True)
     print(request.build_absolute_uri())
+    messages.add_message(request, messages.SUCCESS, 'Notifications removed with success')
+
     url = request.POST.get("url")
     return redirect(url)
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
@@ -1609,6 +1619,8 @@ def delete_notification(request, notification_id):
 def delete_notifications(request):
     notification = Notification.objects.all()
     notification.update(read = True)
+    messages.add_message(request, messages.SUCCESS, 'Notifications removed with success')
+
     print(request.build_absolute_uri())
     url = request.POST.get("urls")
     return redirect(url)
@@ -1777,6 +1789,7 @@ def clear_log(request):
     Log.objects.filter(read=False).update(read=True)
     logs = Log.objects.filter(read=False).order_by('-created_at')
     context = {"logs":logs, 'log':'active', }
+    messages.add_message(request, messages.SUCCESS, 'Removed all the logs')
 
     return render(request, 'main/logs.html', context)
 
