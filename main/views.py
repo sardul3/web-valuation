@@ -18,6 +18,7 @@ from django.db.models import Avg, Count, Min, Sum
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
+from itertools import chain
 
 
 
@@ -280,6 +281,12 @@ def evaluatorhome(request):
         outcomes = Outcome.objects.filter(coordinator=cordinator)
         measures = Measure.objects.filter(coordinator=cordinator)
         cycles = Cycle.objects.filter(coordinator=cordinator)
+        more_co = CoOrdinator.objects.filter(department=cordinator.department)
+        for co in more_co:
+            outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+            measures = measures | Measure.objects.filter(coordinator=co)
+            cycles = cycles | Cycle.objects.filter(coordinator=cordinator)
+
         data = dict()
         for measure in measures:
             evaluations = evaluate_rubric.objects.filter(measure=measure).count()
