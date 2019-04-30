@@ -1,3 +1,5 @@
+<!--superadminnavbar.html displays the superadmin nav bar -->
+
 <style>
     ul li a {
         color:#FFF;
@@ -50,9 +52,14 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
     <ul class="navbar-nav w-100 mr-auto mt-2 mt-lg-0 justify-content-around">
 
+      <!--nvite coordinator-->
+
       <li class="nav-item {{now}}" >
         <a class="nav-link" href="{%url 'main:super_admin_home'%}" >Invite Coordinators</a>
       </li>
+
+      <!--invite status-->
+
       <li class="nav-item {{past}}" >
         <a class="nav-link" href="{%url 'main:super_admin_past'%}">View Invite status</a>
       </li>
@@ -87,11 +94,17 @@
 </button>
 <div class="modal-body">
   <div class = "card border-dark mb-3">
+
+    <!--send broadcast-->
+
     <h3 class = "card-header title text-center"> Send a broadcast </h3>
     <div class="container p-2">
       <form action = "{%url 'main:broadcast_super'%}" method = 'POST'>
         {%csrf_token%}
       <div class="form-group">
+
+        <!--Select coordinator-->
+
         <label for="exampleFormControlSelect2">Select a Coordinator</label>
         <select multiple class="form-control" id="exampleFormControlSelect2" name = "evaluator">
           {%for ev in cordinator%}

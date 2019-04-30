@@ -1,3 +1,6 @@
+<!--outcomes.html displays the list of outcomes on the home page. When clicked the measeures for
+each outcome and their progress are visible -->
+
 {% extends  'main/adminbase.html' %}
 {%load static%}
 {% block body_block%}
@@ -44,6 +47,8 @@
             <div id="collapseOne{{outcome.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
               <div class="card-body justify-content-between">
                 <ul class="list-group ">
+
+                  <!--Display list of outcomes -->
                   {%for measure in measures%}
                     {%if measure.outcome == outcome%}
                     <div class = "row ">
@@ -73,6 +78,7 @@
                                     <span aria-hidden="true">&times;</span>
                                   </button>
                                 </div>
+                                <!--Display measures and their progress -->
                                 <div class="modal-body">
                                   <div class="card bg-light mb-3">
                                     <div class="card-header">{{measure}}</div>

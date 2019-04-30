@@ -1,3 +1,6 @@
+<!--evaluatorhome.html displays the evaluator dashboard. The dashboard contains a list of assigned evaluations,
+messages from the coordinator, and a progress circle representing the evaluators completed evaluations.  -->
+
 {% extends  'main/evaluatorbase.html' %}
 {% load static %}
 {% block body_block %}
@@ -25,8 +28,12 @@
         <h4 class = "breadcrumb-item"> Evaluator View </h4>
     </ol>
     {% if user.is_superuser %}
+
+    <!--Switch to admin view, if admin-->
     <p> <a class = "btn btn-dark btn-lg" href="{%url 'main:dashboard'%}"> Act as Admin</a> </p>
     {% endif %}
+
+    <!--List of assigned evaluations -->
 
     <div>
       <h3 class = "d-flex justify-content-between mb-3 "> Evaluations </h3>
@@ -127,10 +134,7 @@
               <input type = "submit" class = "btn btn-primary" value = "Add test scores">  </input>
             </form>
 
-            <!-- <form action = "{%url 'main:upload_test_score_evaluator' measure.id%}" class = "text-center">
-              <p> or </p>
-              <input type = "submit" class = "btn btn-primary" value = "Upload Scores">  </input>
-            </form> -->
+            <!--Section to add test scores -->
             <div class = 'text-center'>
               <h2> or </h2>
 
@@ -184,6 +188,7 @@
 
   </div>
 
+<!--Display if no evaluations -->
 
     {%empty%}
     <div class="jumbotron jumbotron-fluid">
@@ -198,6 +203,7 @@
 
     </div>
 
+<!--Help modal -->
     <div class="container">
   <!-- Trigger the modal with a button -->
   <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" style="margin-bottom: 1vh;">Help</button>

@@ -1,3 +1,5 @@
+<!--evaluatorbase.html contains the template for the evaluator view -->
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -27,6 +29,9 @@
 </head>
 
 <body>
+
+  <!--Display message icon-->
+
   {% if messages %}
                 {% for message in messages %}
                 <div class="messages alert alert-{{message.tags}}" role = "alert" id="alert-msg">

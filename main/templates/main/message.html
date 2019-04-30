@@ -1,3 +1,5 @@
+<!--message.html displays messages. If the evaluator or coordinator has messages, display them -->
+
 {% if messages %}
   {% for message in messages %}
     <div class="messages alert alert-{{message.tags}}" role = "alert" id="alert-msg">
