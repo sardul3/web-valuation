@@ -35,28 +35,31 @@ margin-bottom: 10px;
     <th class="align-middle">Number meeting Criteria</th>
     <th class="align-middle">Percentage Meeting Criteria</th>
     <th class="align-middle">Results</th>
-    <th class="align-middle">Use of Results/Actions Taken</th>
+    <!-- <th class="align-middle">Use of Results/Actions Taken</th> -->
   </tr>
-{%for outcome in outcomes%}
+<!-- {%for outcome in outcomes%} -->
 <tr>
-    <td class="align-middle" rowspan="{{num}}"><strong>{{outcome}}</strong></td>
+    <!-- <td class="align-middle" rowspan="{{num}}"><strong>{{outcome}}</strong></td> -->
 
 
 {%for d in data%}
   {%if d.7 == outcome.id%}
 
-      <!-- <td> {{d.2}} </td> -->
+      <td class="align-middle"> <strong>{{d.2}} </strong></td>
       <td>{{d.3}}</td>
       <td >{{d.0}} </td>
       <td >{{d.1}} </td>
       <td>{{d.4|floatformat:2}} </td>
       <td>{{d.5}}</td>
-</tr>
 
   {%endif%}
-{%endfor%}
+  </tr>
+
 
 {%endfor%}
+
+
+<!-- {%endfor%} -->
 {%else%}
 
 <br/>
@@ -68,9 +71,10 @@ margin-bottom: 10px;
 </div>
 
 
-{%endif%}
+
 
 </table>
+{%endif%}
 </div>
 </div>
 
