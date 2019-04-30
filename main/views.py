@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import( Rubric, Student, Measure, Category, evaluate_rubric,
         Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,
         custom_students, Broadcast, Course, Notification, category_score,
-        CoOrdinator, Invited_Coordinator,InvitedCo, Log)
+        CoOrdinator, Invited_Coordinator,InvitedCo, Log, Department)
 from django.contrib import messages
 from .forms import RegisterForm, CoOrdinatorRegisterForm
 import csv
@@ -217,9 +217,10 @@ def homepage(request):
 @user_passes_test(admin_test)
 def outcomes(request):
     coordinator = CoOrdinator.objects.get(request.user.email)
-    outcomes = Outcome.objects.filter(coordinator = coordinator);
-    measures = Measure.objects.all(coordinator = coordinator)
-    cycles = Cycle.objects.all(coordinator = coordinator)
+    dept = coordinator.dept
+    outcomes = Outcome.objects.filter(dept=dept);
+    measures = Measure.objects.all(dept=dept)
+    cycles = Cycle.objects.all(dept=dept)
     data = dict()
     for measure in measures:
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
@@ -235,8 +236,9 @@ def outcomes(request):
     return render(request, 'main/outcomes.html', context)
 
 def rubrics(request):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
-    rubrics = Rubric.objects.filter(coordinator = cordinator)
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept=cordinator.dept
+    rubrics = Rubric.objects.filter(dept=dept)
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     print(Notification.objects.filter(read=False, to=request.user.email))
@@ -246,8 +248,9 @@ def rubrics(request):
 
 @user_passes_test(admin_test)
 def cycles(request):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
-    cycles = Cycle.objects.filter(coordinator=cordinator)
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
+    cycles = Cycle.objects.filter(dept=dept)
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
@@ -277,21 +280,13 @@ def evaluatorhome(request):
         return render(request, 'main/invite.html', context)
 
     if request.user.is_staff:
-        cordinator = CoOrdinator.objects.get(email=request.user.email);
-        outcomes = Outcome.objects.filter(coordinator=cordinator)
-        measures = Measure.objects.filter(coordinator=cordinator)
-        cycles = Cycle.objects.filter(coordinator=cordinator)
-        eval_a = Evaluator.objects.filter(coordinator=cordinator)
-        courses = Course.objects.filter(coordinator=cordinator)
-
-        more_co = CoOrdinator.objects.filter(department=cordinator.department)
-
-        for co in more_co:
-            outcomes = outcomes | Outcome.objects.filter(coordinator=co)
-            measures = measures | Measure.objects.filter(coordinator=co)
-            cycles = cycles | Cycle.objects.filter(coordinator=co)
-            eval_a = eval_a | Evaluator.objects.filter(coordinator=co)
-            courses = courses | Course.objects.filter(coordinator=co)
+        cordinator = CoOrdinator.objects.get(email=request.user.email)
+        dept = cordinator.dept
+        outcomes = Outcome.objects.filter(dept=dept)
+        measures = Measure.objects.filter(dept=dept)
+        cycles = Cycle.objects.filter(dept=dept)
+        eval_a = Evaluator.objects.filter(dept=dept)
+        courses = Course.objects.filter(dept=dept)
 
 
         data = dict()
@@ -303,18 +298,18 @@ def evaluatorhome(request):
                 elif measure.tool_type == 'Test score':
                     data.update({measure.id: test_score_data(measure.test_score, measure.id)})
 
-        cyc = Cycle.objects.filter(coordinator=cordinator)
+        cyc = Cycle.objects.filter(dept=dept)
         mycyc = 0
         for cycles in cyc:
             if (cycles.isCurrent):
                 mycyc = cycles
-        outcome_a = Outcome.objects.filter(coordinator=cordinator)
+        outcome_a = Outcome.objects.filter(dept=dept)
         outcome_list = []
         for oc in outcome_a:
             for v in oc.cycle.all():
                 if (v == mycyc):
                     outcome_list.append(oc)
-        measure_a = Measure.objects.filter(coordinator=cordinator)
+        measure_a = Measure.objects.filter(dept=dept)
         measure_list = []
         for me in measure_a:
             for o in outcome_list:
@@ -563,21 +558,14 @@ def add_test_score_evaluator(request,measure_id):
 
 @user_passes_test(admin_test)
 def dashboard(request):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
-    outcomes = Outcome.objects.filter(coordinator=cordinator)
-    measures = Measure.objects.filter(coordinator=cordinator)
-    cycles = Cycle.objects.filter(coordinator=cordinator)
-    eval_a = Evaluator.objects.filter(coordinator=cordinator)
-    courses = Course.objects.filter(coordinator=cordinator)
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
+    outcomes = Outcome.objects.filter(dept=dept)
+    measures = Measure.objects.filter(dept=dept)
+    cycles = Cycle.objects.filter(dept=dept)
+    eval_a = Evaluator.objects.filter(dept=dept)
+    courses = Course.objects.filter(dept=dept)
 
-    more_co = CoOrdinator.objects.filter(department=cordinator.department)
-
-    for co in more_co:
-        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
-        measures = measures | Measure.objects.filter(coordinator=co)
-        cycles = cycles | Cycle.objects.filter(coordinator=co)
-        eval_a = eval_a | Evaluator.objects.filter(coordinator=co)
-        courses = courses | Course.objects.filter(coordinator=co)
 
 
     data = dict()
@@ -589,18 +577,18 @@ def dashboard(request):
             elif measure.tool_type == 'Test score':
                 data.update({measure.id: test_score_data(measure.test_score, measure.id)})
 
-    cyc = Cycle.objects.filter(coordinator=cordinator)
+    cyc = Cycle.objects.filter(dept=dept)
     mycyc = 0
     for cycles in cyc:
         if (cycles.isCurrent):
             mycyc = cycles
-    outcome_a = Outcome.objects.filter(coordinator=cordinator)
+    outcome_a = Outcome.objects.filter(dept=dept)
     outcome_list = []
     for oc in outcome_a:
         for v in oc.cycle.all():
             if (v == mycyc):
                 outcome_list.append(oc)
-    measure_a = Measure.objects.filter(coordinator=cordinator)
+    measure_a = Measure.objects.filter(dept=dept)
     measure_list = []
     for me in measure_a:
         for o in outcome_list:
@@ -624,12 +612,13 @@ def dashboard(request):
 
 @login_required
 def newCycle(request):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
     year = request.POST.get('year')
     semester = request.POST.get('semester')
     today = datetime.today()
 
-    cycle = Cycle(year=year, semester=semester, startDate=today, coordinator=cordinator)
+    cycle = Cycle(year=year, semester=semester, startDate=today, coordinator=cordinator, dept=dept)
     cycle.save()
     messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
 
@@ -643,25 +632,19 @@ def newCycle(request):
 @user_passes_test(admin_test)
 def cycle(request, cycle_id):
     cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
     outcomes = Outcome.objects.filter(cycle=cycle_id)
-    evaluators = Evaluator.objects.filter(coordinator=cordinator)
-    measures = Measure.objects.filter(coordinator=cordinator)
-    rubrics = Rubric.objects.filter(coordinator=cordinator)
+    evaluators = Evaluator.objects.filter(dept=dept)
+    measures = Measure.objects.filter(dept=dept)
+    rubrics = Rubric.objects.filter(dept=dept)
     cycle = Cycle.objects.get(id=cycle_id)
     prev= Cycle.objects.filter(isCurrent=False)
-    courses = Course.objects.filter(coordinator=cordinator)
-    more_co = CoOrdinator.objects.filter(department=cordinator.department)
-    for co in more_co:
-        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
-        measures = measures | Measure.objects.filter(coordinator=co)
-        rubrics = rubrics | Rubric.objects.filter(coordinator=co)
-        evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
-        courses = courses | Course.objects.filter(coordinator=co)
+    courses = Course.objects.filter(dept=dept)
     prev_cycles = []
     for cy in prev:
         if cy.coordinator==cordinator:
             prev_cycles.append(cy)
-    all_outcomes = Outcome.objects.filter(coordinator=cordinator)
+    all_outcomes = Outcome.objects.filter(dept=dept)
 
 
     for outcome in outcomes:
@@ -699,7 +682,8 @@ def end_cycle(request, cycle_id):
     return HttpResponseRedirect(reverse_lazy('main:dashboard'))
 
 def migrate_cycle(request, cycle_id):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
     from_cycle_id = request.POST.get('cycle_migrate')
     from_cycle = Cycle.objects.get(id=from_cycle_id)
     outcomes = Outcome.objects.filter(cycle=from_cycle)
@@ -713,7 +697,7 @@ def migrate_cycle(request, cycle_id):
         for mea in measures:
             new_measure = Measure(measureTitle= mea.measureTitle,
                       cutoff_score= mea.cutoff_score,cutoff_percentage= mea.cutoff_percentage,
-                      outcome=new_outcome, tool_type=mea.tool_type, cutoff_type=mea.cutoff_type,coordinator=cordinator)
+                      outcome=new_outcome, tool_type=mea.tool_type, cutoff_type=mea.cutoff_type,coordinator=cordinator,dept=dept)
             new_measure.save()
             if mea.tool_type=='Rubric':
                 Measure.objects.filter(id=new_measure.id).update(rubric=mea.rubric)
@@ -769,28 +753,22 @@ def reactivate_cycle(request, cycle_id):
 
 
 def outcome_detail(request, outcome_id):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
     outcome = Outcome.objects.get(id=outcome_id)
     cycle_id = None
     for cyc in outcome.cycle.all():
         cycle_id = cyc.id
     print(cycle_id)
     measures = Measure.objects.filter(outcome=outcome)
-    all_measures = Measure.objects.filter(coordinator=cordinator)
-    rubrics = Rubric.objects.filter(coordinator=cordinator)
+    all_measures = Measure.objects.filter(dept=dept)
+    rubrics = Rubric.objects.filter(dept=dept)
     students = None
-    evaluators = Evaluator.objects.filter(coordinator=cordinator)
+    evaluators = Evaluator.objects.filter(dept=dept)
     num_of_evaluations = []
     test_data = {}
     data = {}
     custom_student = None
-    more_co = CoOrdinator.objects.filter(department=cordinator.department)
-    for co in more_co:
-        measures = measures | Measure.objects.filter(coordinator=co)
-        rubrics = rubrics | Rubric.objects.filter(coordinator=co)
-        evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
-
-
     for measure in measures:
         students = measure.student.all()
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
@@ -820,7 +798,7 @@ def outcome_detail(request, outcome_id):
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
 
-    context = {'evaluator': Evaluator.objects.filter(coordinator=cordinator),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+    context = {'evaluator': Evaluator.objects.filter(dept=dept),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
@@ -927,7 +905,8 @@ def registerCo(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             dept = form.cleaned_data.get('department')
-            co = CoOrdinator(name=username, email=email, department=dept)
+            myinvited = InvitedCo.objects.filter(email=email)[0]
+            co = CoOrdinator(name=username, email=email, department=dept, dept=myinvited.dept)
             co.save()
             messages.success(request, 'Account created')
             inv = InvitedCo.objects.filter(email=email)[0]
@@ -948,10 +927,11 @@ def registerCo(request):
 
 
 def add_learning_outcome(request, cycle_id):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
     title = request.POST.get('outcome_title')
     desc = request.POST.get('outcome_desc')
-    outcome = Outcome(title=title, desc=desc,coordinator=cordinator)
+    outcome = Outcome(title=title, desc=desc,coordinator=cordinator,dept=dept)
     outcome.save()
 
     course_id = request.POST.getlist('course')
@@ -992,7 +972,8 @@ def update_measure(request, measure_id):
     return render(request, 'main/cycle.html')
 
 def new_measure(request, outcome_id):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept = cordinator.dept
     measure_title = request.POST.get('measure_title')
     cutoff_score = request.POST.get('cutoff_score')
     cutoff_percent = request.POST.get('cutoff_percent')
@@ -1002,7 +983,7 @@ def new_measure(request, outcome_id):
     outcome_found = Outcome.objects.get(id=outcome_id)
     measure = Measure(measureTitle= measure_title,
                       cutoff_score= cutoff_score,cutoff_percentage= cutoff_percent,
-                      outcome=outcome_found, tool_type=tool_type, cutoff_type=cutoff_type,coordinator=cordinator)
+                      outcome=outcome_found, tool_type=tool_type, cutoff_type=cutoff_type,coordinator=cordinator,dept=dept)
     measure.save()
 
     messages.add_message(request, messages.SUCCESS, 'New measure is added to the outcome')
@@ -1075,13 +1056,14 @@ def test_rubric(request):
 
 def created_test_rubric(request):
     if request.method == 'POST':
-        cordinator = CoOrdinator.objects.get(email=request.user.email);
+        cordinator = CoOrdinator.objects.get(email=request.user.email)
+        dept=cordinator.dept
         row_num = int(request.POST.get('row_num'))
         row_col = int(request.POST.get('col_num'))
         rubric_title = request.POST.get("rubric_title")
         isWeighted = request.POST.get("isWeighted")
         isAscending = request.POST.get("isAscending")
-        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted,ascending=isAscending,coordinator=cordinator)
+        rubric_new = Rubric(title=rubric_title, max_row=row_num, max_col=row_col,isWeighted=isWeighted,ascending=isAscending,coordinator=cordinator,dept=dept)
         rubric_new.save()
         for x in range(row_num):
             for y in range(row_col):
@@ -1188,9 +1170,9 @@ def upload_student(request, outcome_id, measure_id):
 def add_evaluator(request, outcome_id, measure_id):
     cordinator = CoOrdinator.objects.get(email=request.user.email);
     measure = Measure.objects.get(id=measure_id)
-
+    dept = cordinator.dept
     if request.method == 'POST':
-        evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'),coordinator=cordinator, invited_by=cordinator.email)
+        evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'),coordinator=cordinator, invited_by=cordinator.email,dept=dept)
         evaluator.save()
 
         # evaluator_list = request.POST.getlist('evaluators')
@@ -1573,11 +1555,12 @@ def broadcast_super(request):
 
 
 def create_curriculum(request):
-    cordinator = CoOrdinator.objects.get(email=request.user.email);
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    dept=cordinator.dept
     title = request.POST.get('title')
     description = request.POST.get('description')
     credit_hours = request.POST.get('credit_hours')
-    Course.objects.create(title=title, description=description, credit_hours=credit_hours,coordinator=cordinator)
+    Course.objects.create(title=title, description=description, credit_hours=credit_hours,coordinator=cordinator,dept=dept)
     url = request.POST.get("url1")
     print("Url is",url)
     return redirect(url)
@@ -1701,8 +1684,16 @@ def super_admin_home(request):
         email = request.POST.get('email')
         department = request.POST.get('department')
         invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
+        flag = False
+        for ob in Department.objects.all():
+            if(ob.dept_name==department):
+                flag=True
+        if flag:
+            department = Department.objects.filter(dept_name=department)[0]
+        else:
+            department = Department.objects.create(dept_name=department)
         evaluators = Evaluator.objects.all()
-        co = InvitedCo(email=email, pending=True)
+        co = InvitedCo(email=email, pending=True, dept=department)
         co.save()
         email = co.email
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://protected-savannah-47137.herokuapp.com/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
