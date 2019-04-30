@@ -325,7 +325,7 @@ def evaluatorhome(request):
                         evaluator_list.append(eval)
 
         msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
-
+        evaluator_list = Evaluator.objects.filter(dept = dept)
         context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
                    'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(), 'msgs':msgs,
