@@ -281,11 +281,18 @@ def evaluatorhome(request):
         outcomes = Outcome.objects.filter(coordinator=cordinator)
         measures = Measure.objects.filter(coordinator=cordinator)
         cycles = Cycle.objects.filter(coordinator=cordinator)
+        eval_a = Evaluator.objects.filter(coordinator=cordinator)
+        courses = Course.objects.filter(coordinator=cordinator)
+
         more_co = CoOrdinator.objects.filter(department=cordinator.department)
+
         for co in more_co:
             outcomes = outcomes | Outcome.objects.filter(coordinator=co)
             measures = measures | Measure.objects.filter(coordinator=co)
             cycles = cycles | Cycle.objects.filter(coordinator=co)
+            eval_a = eval_a | Evaluator.objects.filter(coordinator=co)
+            courses = courses | Course.objects.filter(coordinator=co)
+
 
         data = dict()
         for measure in measures:
@@ -313,9 +320,7 @@ def evaluatorhome(request):
             for o in outcome_list:
                 if (me.outcome == o):
                     measure_list.append(me)
-        eval_a = Evaluator.objects.filter(coordinator=cordinator)
         evaluator_list = []
-        courses = Course.objects.filter(coordinator=cordinator)
         for eval in eval_a:
             for mymea in measure_list:
                 for eval_more in mymea.evaluator.all():
@@ -562,6 +567,19 @@ def dashboard(request):
     outcomes = Outcome.objects.filter(coordinator=cordinator)
     measures = Measure.objects.filter(coordinator=cordinator)
     cycles = Cycle.objects.filter(coordinator=cordinator)
+    eval_a = Evaluator.objects.filter(coordinator=cordinator)
+    courses = Course.objects.filter(coordinator=cordinator)
+
+    more_co = CoOrdinator.objects.filter(department=cordinator.department)
+
+    for co in more_co:
+        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+        measures = measures | Measure.objects.filter(coordinator=co)
+        cycles = cycles | Cycle.objects.filter(coordinator=co)
+        eval_a = eval_a | Evaluator.objects.filter(coordinator=co)
+        courses = courses | Course.objects.filter(coordinator=co)
+
+
     data = dict()
     for measure in measures:
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
@@ -588,8 +606,6 @@ def dashboard(request):
         for o in outcome_list:
             if (me.outcome == o):
                 measure_list.append(me)
-    eval_a = Evaluator.objects.filter(coordinator=cordinator)
-    courses = Course.objects.filter(coordinator=cordinator)
     evaluator_list = []
     for eval in eval_a:
         for mymea in measure_list:
