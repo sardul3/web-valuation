@@ -57,7 +57,9 @@
   <div class="col col-lg-9 col-md-12 col-sm-12 col-xs-12 col-12" >
 
     <div class="tab-content speech-bubble" id="nav-tabContent">
+
       {%for measure in measures%}
+
 
           {%if forloop.first %}
                 <div class="tab-pane fade show measure_section active" id="list-home{{measure.id}}" role="tabpanel" aria-labelledby="list-home-list">
@@ -71,6 +73,10 @@
             {%else%}
                 {{measure.test_score}}
             {%endif%}
+
+
+
+
             </em>
           </h4>
 
@@ -185,15 +191,17 @@
   </div>
 
 
-    {%empty%}
+  {%empty%}
+
+
     <div class="jumbotron jumbotron-fluid">
       <div class="container">
         <h1 class="display-4">No Evaluations Assigned</h1>
         <p class="lead">Please contact the coordinator for more queries</p>
       </div>
 </div>
-    {%endfor%}
 
+    {%endfor%}
 </div>
 
     </div>

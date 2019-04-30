@@ -133,6 +133,7 @@ class Measure(models.Model):
     student = models.ManyToManyField(Student)
     evaluator = models.ManyToManyField(Evaluator)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
+    current = models.BooleanField(default=True)
 
     def __str__(self):
         return self.measureTitle
