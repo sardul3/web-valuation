@@ -285,7 +285,7 @@ def evaluatorhome(request):
         for co in more_co:
             outcomes = outcomes | Outcome.objects.filter(coordinator=co)
             measures = measures | Measure.objects.filter(coordinator=co)
-            cycles = cycles | Cycle.objects.filter(coordinator=cordinator)
+            cycles = cycles | Cycle.objects.filter(coordinator=co)
 
         data = dict()
         for measure in measures:
@@ -634,6 +634,13 @@ def cycle(request, cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
     prev= Cycle.objects.filter(isCurrent=False)
     courses = Course.objects.filter(coordinator=cordinator)
+    more_co = CoOrdinator.objects.filter(department=cordinator.department)
+    for co in more_co:
+        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+        measures = measures | Measure.objects.filter(coordinator=co)
+        rubrics = rubrics | Rubric.objects.filter(coordinator=co)
+        evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
+        courses = courses | Course.objects.filter(coordinator=co)
     prev_cycles = []
     for cy in prev:
         if cy.coordinator==cordinator:
@@ -745,6 +752,13 @@ def outcome_detail(request, outcome_id):
     test_data = {}
     data = {}
     custom_student = None
+    more_co = CoOrdinator.objects.filter(department=cordinator.department)
+    for co in more_co:
+        outcomes = outcomes | Outcome.objects.filter(coordinator=co)
+        measures = measures | Measure.objects.filter(coordinator=co)
+        rubrics = rubrics | Rubric.objects.filter(coordinator=co)
+        evaluators = evaluators | Evaluator.objects.filter(coordinator=co)
+
 
     for measure in measures:
         students = measure.student.all()
