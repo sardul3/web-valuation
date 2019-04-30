@@ -1,9 +1,12 @@
+<!--edit_rubric.html displays the page the coordinator is directed to upon selecting to
+edit a rubric. It Dispalys the selected rubric with editable text fields. -->
+
 {%load static%}
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Create Rubrics</title>
+	<title>Edit Rubrics</title>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- CSS cdn to connect bootstrap -->
@@ -15,21 +18,26 @@
 	<script type="text/javascript" src = "{%static 'js/script.js'%}"></script>
 
 <style>
+/*Customize text input fields*/
+
 textarea{
 	font-size: 1rem;
 	height: 200%;
 }
+
+/*Customize the main content container*/
+
 #main_content{
 	border: 3px solid black;
 	padding: 2%;
 	margin-top: 4%;
 }
 
+/*Customize table data*/
+
   td {
       font-size: 1rem;
   }
-
-
 
 </style>
 </head>
@@ -49,6 +57,8 @@ textarea{
 				</div>
 			</div>
 				<br />
+
+				<!--Display the the rubric with editable text areas-->
         <table class = "table table-bordered table-responsive table-hover">
 
       {% for x in rows%}
@@ -79,6 +89,8 @@ textarea{
 			  </table>
       <input type = "hidden" value = "{{row_num}}" name = "row_num">
       <input type = "hidden" value = "{{col_num}}" name = "col_num">
+
+			<!--Button to update changes-->
 
       <button class = "btn btn-primary btn=lg" type = "submit"> Update </button>
 

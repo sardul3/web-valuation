@@ -1,3 +1,7 @@
+<!--edit_test_select.html provides the evaluator with the ability to update already
+submitted test scores.
+-->
+
 {% extends  'main/evaluatorbase.html' %}
 {% load static %}
 {% block body_block %}
@@ -8,12 +12,16 @@
   <form class="ml-2" action = "{%url 'main:add_test_score_evaluator' measure.id%}" method = "POST">
     {%csrf_token%}
 
+    <!--Option to select the student whose score needs editing-->
+
         <label for="exampleFormControlSelect1">Select a student</label>
              <select class="form-control" name = "student_to_be_evaluated">
                         <option value = "{{student.id}}">{{student.student_name}}</option>
               </select>
     <br/>
     <h1> {{test_score.test}}</h1>
+
+    <!--Section to update the score -->
 
       <h3 class = 'text-center'> Update score </h3>
         <div class="form-group mb-2 ">
@@ -33,6 +41,9 @@
 
             >
        </div>
+
+       <!--Confirm update -->
+
         <button type="submit" class="btn btn-primary  mb-2">Add Score</button>
       </form>
 

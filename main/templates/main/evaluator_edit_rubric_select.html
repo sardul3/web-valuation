@@ -1,3 +1,6 @@
+<!--evaluator_edit_rubric_select.html provides the evalator with the ability to edit
+scores for a rubric that have already been submitted.-->
+
 {% extends  'main/evaluatorbase.html' %}
 {% load static %}
 {% block body_block %}
@@ -21,6 +24,8 @@
                         <option value = "{{mystudent.id}}">{{mystudent.student_name}}</option>
               </select>
     <br/>
+
+    <!--Display the rubric that has been selected-->
     <h1> {{rubric.title}} </h1>
     <div class = "table-responsive">
     <table class = "table table-bordered  table-hover">
@@ -43,6 +48,9 @@
         <td>
             {% load index %}
           <div class="form-group">
+
+            <!--Option to select new values -->
+
               <select class="form-control rubric_select" id="exampleFormControlSelect1" name = "cat_field">
                   {% for val in super_cat %}
                   {% if val == data|index:x %}
@@ -60,6 +68,7 @@
         </table>
         </div>
         <div class = "text-center">
+          <!--Confirm update-->
           <button type = "submit" class = "btn btn-primary btn-lg mt-3"> Update </button>
         </div>
         </form>

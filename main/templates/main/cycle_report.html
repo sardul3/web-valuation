@@ -1,19 +1,34 @@
+<!--cycle_report.html is where the report for a cycle can be reviewed. The report includes
+the outcomes, measures, number of evaluations performed, number of students meeting the
+target statement, the results, and the actions taken to improve the results.
+ -->
+
 {% extends  'main/adminbase.html' %}
 {%load static%}
 {% block body_block %}
 <style media="screen">
+
+  /*Cutomize table header*/
+
   th{
     text-align:center;
     vertical-align: middle;
   }
+
+  /*Customize card header; the header of the report */
+
   .card-header {
     background: #800029;
 margin-bottom: 10px;
 }
+
+/*customize header 2*/
+
   h2{
     margin-top: 10px;
   }
 
+  /*Customize the report cells*/
   textarea{
   	font-size: 1rem;
   	height: 200%;
@@ -23,6 +38,7 @@ margin-bottom: 10px;
 
 <div class="container">
 
+  <!--Section to display the assesment summary-->
 
 <h2 class="card-header"><center>2013-2015 Computer Science Assessment Cycle- Summary Of Results</center></h2>
 <div class="table-responsive">
@@ -57,6 +73,7 @@ margin-bottom: 10px;
 {%else%}
 
 <br/>
+<!--Display this jumbotron if there is not enough data to perform calculations -->
 <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
   <div class="container">
     <h1 class="display-5">Not enough data to generate report</h1>

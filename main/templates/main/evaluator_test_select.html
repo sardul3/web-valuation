@@ -1,3 +1,6 @@
+<!--evaluator_test_select.html displays the form to add student grades to an evaluation.
+grades can be uploaded individually or in groups via .csv file -->
+
 {% extends  'main/evaluatorbase.html' %}
 {% load static %}
 {% block body_block %}
@@ -6,6 +9,8 @@
 <div class = "container" id = "main_content">
   <form class="ml-2" action = "{%url 'main:add_test_score_evaluator' measure.id%}" method = "POST">
     {%csrf_token%}
+
+    <!--Select the student whose score will be added -->
 
         <label for="exampleFormControlSelect1">Select a student</label>
              <select class="form-control" name = "student_to_be_evaluated">
@@ -20,6 +25,8 @@
               </select>
     <br/>
     <h1> {{test_score.test}}</h1>
+
+    <!--Section to add individual scores-->
 
       <h3 class = 'text-center'> Add individual scores </h3>
         <div class="form-group mb-2 ">
