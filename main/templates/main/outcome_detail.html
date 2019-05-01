@@ -468,7 +468,7 @@ hr.not(.style15) {
             </button>
             </li>
           {%for eval in measure.evaluator.all%}
-              <li class="list-group-item d-flex  justify-content-between">{{eval.email}}
+              <li class="list-group-item d-flex  justify-content-between">{{eval.name}}
               <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
                 <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
               </a>
@@ -526,7 +526,7 @@ hr.not(.style15) {
 
                     <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="evaluators" required>
                       {%for ev in evaluator%}
-                          <option value="{{ev.id}}">{{ev.email}}</option>
+                          <option value="{{ev.id}}">{{ev.name}}</option>
                     {%endfor%}
                     </select>
                   </div>
@@ -560,7 +560,7 @@ hr.not(.style15) {
                         <label for="exampleFormControlSelect1">Select Evaluator</label>
                         <select class="form-control" id="exampleFormControlSelect1" name = "evaluator_email" required>
                           {%for ev in measure.evaluator.all%}
-                          <option value="{{ev.email}}">{{ev.email}}</option>
+                          <option value="{{ev.email}}">{{ev.name}}</option>
                           {%endfor%}
                         </select>
                       </div>
@@ -857,7 +857,7 @@ hr.not(.style15) {
 
             <select multiple class="form-control  form-control-lg" id="exampleFormControlSelect2" name="evaluators" required>
               {%for ev in evaluator%}
-                  <option value="{{ev.id}}">{{ev.email}}</option>
+                  <option value="{{ev.id}}">{{ev.name}}</option>
             {%endfor%}
             </select>
           </div>
@@ -933,7 +933,7 @@ hr.not(.style15) {
                     <label for="exampleFormControlSelect1">Select Evaluator</label>
                     <select class="form-control" id="exampleFormControlSelect1" name = "evaluator_email" required>
                       {%for ev in evaluators%}
-                      <option value="{{ev.email}}">{{ev.email}}</option>
+                      <option value="{{ev.email}}">{{ev.name}}</option>
                       {%endfor%}
                     </select>
                   </div>

@@ -1727,6 +1727,7 @@ def super_admin_home(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         department = request.POST.get('department')
+        name = request.POST.get('name')
         invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
         flag = False
         for ob in Department.objects.all():
@@ -1737,7 +1738,7 @@ def super_admin_home(request):
         else:
             department = Department.objects.create(dept_name=department)
         evaluators = Evaluator.objects.all()
-        co = InvitedCo(email=email, pending=True, dept=department)
+        co = InvitedCo(email=email, pending=True, dept=department, name=name)
         co.save()
         email = co.email
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/registerCo \nYou have been assigned some evaluations\n\n -Admin', to=[email])

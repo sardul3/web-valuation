@@ -210,3 +210,4 @@ class InvitedCo(models.Model):
     email = models.CharField(max_length=200)
     pending = models.BooleanField(default=True)
     dept = models.ForeignKey(Department,null=True,on_delete=models.CASCADE)
+    name = models.CharField(null=True,max_length=400)

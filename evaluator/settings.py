@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 's&6yn%1ge24q8=kgp)p%e0+%+1b^9$+-=y+qjarjpq!#*%v%hj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com','protected-savannah-47137.herokuapp.com', 'evapp-wolfteam.herokuapp.com']
 
