@@ -3,6 +3,9 @@
 {% block body_block %}
 
 <style>
+  a{
+    color:white;
+  }
   a:hover{
     color: white;
   }
@@ -12,7 +15,7 @@
       <li class="list-group-item  list-group-item-action active  d-flex justify-content-between"><span> <h4>Logs</h4> </span>
         <a href = "{%url 'main:clear_log'%}">clear all</a>
       </li>
-      <ul class="list-group" style = "overflow-y:auto; height: 80vh;">
+      <ul class="list-group" style = "overflow-y:scroll; height: 80vmax;  overflow-y: scroll; -webkit-overflow-scrolling: touch;">
 
       {%for log in logs%}
         <a href= "#" class="list-group-item list-group-item-action d-flex justify-content-between"><span>{{log.message}}</span>
