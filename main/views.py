@@ -646,7 +646,14 @@ def cycle(request, cycle_id):
 
 
     for outcome in outcomes:
-        Outcome.objects.filter(id=outcome.id).update(status=outcome_test(outcome.id))
+        flag, pending_flag = outcome_test(outcome.id)
+        if not pending_flag:
+            Outcome.objects.filter(id=outcome.id).update(status=flag)
+            if flag:
+                Outcome.objects.filter(id=outcome.id).update(status_help='passing')
+            else:
+                Outcome.objects.filter(id=outcome.id).update(status_help='failing')
+
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
@@ -1766,10 +1773,13 @@ def outcome_test(outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome = outcome)
     flag = True
+    pending_flag = True
     for measure in measures:
         if measure.status == 'failing':
             flag = False
-    return flag
+        if not measure.status == 'pending':
+            pending_flag = False
+    return (flag,pending_flag)
 
 def cycle_report_test(cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
