@@ -9,17 +9,20 @@
   a:hover{
     color: white;
   }
-  span{
-    overflow: visible;
-    color:black;
+  span {
+      overflow: visible;
+      color: black;
+      height: auto;
+      padding: initial;
+      font-size: medium;
   }
 </style>
 <div class = "container">
   <div class = "container-fluid">
-      <li class="list-group-item  list-group-item-action active  d-flex justify-content-between"> <h4>Logs</h4> 
+      <li class="list-group-item  list-group-item-action active  d-flex justify-content-between"> <h4>Logs</h4>
         <a href = "{%url 'main:clear_log'%}">clear all</a>
       </li>
-      <ul class="list-group" style = "overflow-y:scroll; height: 80vh;">
+      <ul class="list-group" style = "overflow-y:auto; height: 80vh;">
 
       {%for log in logs%}
         <a href= "#" class="list-group-item d-flex justify-content-between"><span>{{log.message}}</span>
