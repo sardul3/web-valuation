@@ -13,7 +13,7 @@
         <a href = "{%url 'main:clear_log'%}">clear all</a>
       </li>
 
-      <ul class="list-group" style = "overflow-y:auto; height: 80vh;">
+      <ul class="list-group" style = "overflow-y:scroll; height: 80vh;">
       {%for log in logs%}
         <li class="list-group-item list-group-item-action d-flex justify-content-between" style="    padding-bottom: 3%;  word-break: unset;  overflow: visible;"><span>{{log.message}}</span>
 
