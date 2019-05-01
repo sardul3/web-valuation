@@ -598,7 +598,6 @@ hr.not(.style15) {
 
 
           <div class = "col col-lg-4 md-12 sm-12 xs-12">
-          <ul class="list-group" style="overflow-y:auto; height: 40vh">
             <li class="list-group-item d-flex justify-content-between card-header align-items-center"> <h4>Students</h4>
 
           <div class = "d-flex justify-content-between">
@@ -612,6 +611,8 @@ hr.not(.style15) {
           </div>
 
             </li>
+            <ul class="list-group" style="overflow-y:auto; height: 40vh">
+
               {% for student in measure.student.all %}
                     <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
                       <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
@@ -784,7 +785,6 @@ hr.not(.style15) {
 
 
 <div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
-  <ul class="list-group" style="overflow-y:auto; height: 40vh">
     <li class="list-group-item d-flex justify-content-between card-header  align-items-center"> <h4>Students</h4>
 
   <div class = "d-flex justify-content-between">
@@ -798,6 +798,8 @@ hr.not(.style15) {
   </div>
 
     </li>
+    <ul class="list-group" style="overflow-y:auto; height: 40vh">
+
       {% for student in measure.student.all %}
             <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
               <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
