@@ -7,21 +7,15 @@
     color: white;
   }
 </style>
-
-<script>
-  let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-</script>
-
 <div class = "container">
   <div class = "container-fluid">
+    <ul class="list-group" style = "height: 80vh;">
       <li class="list-group-item  list-group-item-action active  d-flex justify-content-between"><span> <h4>Logs</h4> </span>
         <a href = "{%url 'main:clear_log'%}">clear all</a>
       </li>
-      <ul class="list-group" style = "overflow-y:auto; height: 80vh;  height: calc(var(--vh, 1vh) * 100);
-">
       {%for log in logs%}
-        <a href= "#" class="list-group-item d-flex justify-content-between"><span style="overflow:visible; display:block;">{{log.message}}</span>
+        <a href= "#" class="list-group-item d-flex justify-content-between"><span>{{log.message}}</span>
+
            {{log.created_at|timesince}} ago
          </a>
   {%empty%}
