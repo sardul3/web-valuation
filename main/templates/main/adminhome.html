@@ -174,7 +174,7 @@ hr {
                                             <div class = "d-flex justify-content-between"> <h5>Total evaluators </h5> <span class="badge badge-primary" style="padding: 10px;"> {{v.evaluator_count}} </span> </div><br>
                                             <div class = "d-flex justify-content-between"><h5> Total students evaluated </h5><span class="badge badge-primary" style="padding: 10px;">{{v.evaluated_student_count}}</span> </div> <br>
                                             <div class = "d-flex justify-content-between"> <h5>Percentage passed</h5> <span class="badge badge-primary" style="padding: 10px;"> {{v.percent_pass_cases|floatformat:2}}%</span> </div> <br>
-                                            <div class = "d-flex justify-content-between"> <h5>Status </h5> {% if v.passed%}<span class="badge badge-success" style="padding: 10px;"> passed </span> {%else%} <span class="badge badge-danger" style="padding: 10px;"> failed </span> {%endif%} </div> <br>
+                                            <div class = "d-flex justify-content-between"> <h5>Status </h5> {% if measure.status == 'passing'%}<span class="badge badge-success" style="padding: 10px;"> passed </span> {%else%} <span class="badge badge-danger" style="padding: 10px;"> failed </span> {%endif%} </div> <br>
 
 
                                              {%endif%}
