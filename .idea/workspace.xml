@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="15eb8ac5-b517-4c29-a46b-e1fbe16a6bd5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/adminhome.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/adminhome.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/cycle.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/cycle.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/outcome_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/outcome_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -50,8 +46,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="648" column="53" selection-start-line="648" selection-start-column="53" selection-end-line="648" selection-end-column="53" />
+            <state relative-caret-position="171">
+              <caret line="1357" column="19" selection-start-line="1357" selection-start-column="19" selection-end-line="1357" selection-end-column="19" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -134,7 +130,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>outcome_detail</find>
       <find>home</find>
       <find>perc_com</find>
       <find>isAsc</find>
@@ -161,9 +156,10 @@
       <find>dashboard</find>
       <find>status</find>
       <find>status_help</find>
-      <find>measure</find>
       <find>.status</find>
       <find>outcome_test</find>
+      <find>super_cat</find>
+      <find>measure</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -502,6 +498,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/main/templates/main/cycle.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="452">
+          <caret line="146" column="96" selection-start-line="146" selection-start-column="96" selection-end-line="146" selection-end-column="96" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
@@ -512,17 +515,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/templates/main/cycle.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="452">
-          <caret line="146" column="96" selection-start-line="146" selection-start-column="96" selection-end-line="146" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="648" column="53" selection-start-line="648" selection-start-column="53" selection-end-line="648" selection-end-column="53" />
+        <state relative-caret-position="171">
+          <caret line="1357" column="19" selection-start-line="1357" selection-start-column="19" selection-end-line="1357" selection-end-column="19" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>

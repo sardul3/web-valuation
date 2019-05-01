@@ -1348,16 +1348,16 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
             for cat in Category.objects.filter(rubric=rub):
                 if cat.index_y==max_col-1:
                     if cat.index_x==x+1:
-
-
                         myscore = float(cat.categoryTitle)*int(myscore)/100.0
-                        myscore = myscore*int(maximum)
+                        print(myscore)
         scores.append(myscore)
         total += float(myscore)
-        count = count +1
+        count = count + 1
         custom_cat.save()
-
-    avg = total/count
+    if rub.isWeighted:
+        avg = total
+    else:
+        avg = total/count
     evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
                 student=student_name, measure=measure, evaluated_by = request.user.email)
 
