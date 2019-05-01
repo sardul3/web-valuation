@@ -6,6 +6,25 @@
   a:hover{
     color: white;
   }
+  .ulclass {
+	 position: absolute;
+	 overflow: scroll;
+	 margin: 0;
+	 padding: 0;
+	 border: 2px solid #ccc;
+	 font-size: 16px;
+	 font-family: Arial, sans-serif;
+	 -webkit-overflow-scrolling: touch;
+}
+ .liclass {
+	 padding: 10px 20px;
+	 border-bottom: 1px solid #ccc;
+}
+
+ .liclass:nth-child(even) {
+	 background: #f8f8f8;
+}
+
 </style>
 <div class = "container">
   <div class = "container-fluid">
@@ -13,9 +32,9 @@
         <a href = "{%url 'main:clear_log'%}">clear all</a>
       </li>
 
-      <ul class="list-group" style = "overflow-y:scroll; height: 80vh;">
+      <ul class="list-group ulclass" style = "overflow-y:scroll; height: 80vh;">
       {%for log in logs%}
-        <li class="list-group-item d-flex justify-content-between" style=" padding-bottom: 3%;  word-break: unset;  overflow: visible;"><span>{{log.message}}</span>
+        <li class="list-group-item d-flex justify-content-between liclass"><span>{{log.message}}</span>
 
            {{log.created_at|timesince}} ago
          </li>
