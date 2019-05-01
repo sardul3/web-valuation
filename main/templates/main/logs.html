@@ -12,10 +12,10 @@
 </style>
 <div class = "container">
   <div class = "container-fluid">
-    <ul class="list-group" style = "overflow-y:auto; height: 80vh;">
-      <li class="list-group-item  list-group-item-action active  d-flex justify-content-between"><span> <h4>Logs</h4> </span>
+    <div class="list-group" style = "overflow-y:auto; height: 80vh;">
+      <a href = "#" class="list-group-item  list-group-item-action active  d-flex justify-content-between"><span> <h4>Logs</h4> </span>
         <a href = "{%url 'main:clear_log'%}">clear all</a>
-      </li>
+      </a>
       {%for log in logs%}
         <a href= "#" class="list-group-item list-group-item-action d-flex justify-content-between" style = "height: max-content;"><span>{{log.message}}</span>
 
@@ -23,12 +23,10 @@
          </a>
   {%empty%}
   <a href= "#" class="list-group-item list-group-item-action text-center" style="padding:20px;"><span >No activity to log. <br/> Please check back later</span>
-
-
    </a>
 
   {%endfor%}
-</ul>
+</div>
 
 
 
