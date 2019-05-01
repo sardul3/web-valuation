@@ -325,7 +325,7 @@ def evaluatorhome(request):
                         evaluator_list.append(eval)
 
         msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
-
+        evaluator_list = Evaluator.objects.filter(dept = dept)
         context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
                    'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(), 'msgs':msgs,
@@ -646,7 +646,14 @@ def cycle(request, cycle_id):
 
 
     for outcome in outcomes:
-        Outcome.objects.filter(id=outcome.id).update(status=outcome_test(outcome.id))
+        flag, pending_flag = outcome_test(outcome.id)
+        if not pending_flag:
+            Outcome.objects.filter(id=outcome.id).update(status=flag)
+            if flag:
+                Outcome.objects.filter(id=outcome.id).update(status_help='passing')
+            else:
+                Outcome.objects.filter(id=outcome.id).update(status_help='failing')
+
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
@@ -1341,16 +1348,16 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
             for cat in Category.objects.filter(rubric=rub):
                 if cat.index_y==max_col-1:
                     if cat.index_x==x+1:
-
-
                         myscore = float(cat.categoryTitle)*int(myscore)/100.0
-                        myscore = myscore*int(maximum)
+                        print(myscore)
         scores.append(myscore)
         total += float(myscore)
-        count = count +1
+        count = count + 1
         custom_cat.save()
-
-    avg = total/count
+    if rub.isWeighted:
+        avg = total
+    else:
+        avg = total/count
     evaluated = evaluate_rubric(rubric=rubric_name, grade_score=avg,
                 student=student_name, measure=measure, evaluated_by = request.user.email)
 
@@ -1727,6 +1734,7 @@ def super_admin_home(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         department = request.POST.get('department')
+        name = request.POST.get('name')
         invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
         flag = False
         for ob in Department.objects.all():
@@ -1737,10 +1745,10 @@ def super_admin_home(request):
         else:
             department = Department.objects.create(dept_name=department)
         evaluators = Evaluator.objects.all()
-        co = InvitedCo(email=email, pending=True, dept=department)
+        co = InvitedCo(email=email, pending=True, dept=department, name=name)
         co.save()
         email = co.email
-        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/registerCo \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, You have been invited as a coordinator. Please go to: \nhttps://evapp-wolfteam.herokuapp.com/registerCo \n Please sign up to continue.\n\n -Admin', to=[email])
         email_send.send()
 
         for eval in evaluators:
@@ -1765,10 +1773,13 @@ def outcome_test(outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome = outcome)
     flag = True
+    pending_flag = True
     for measure in measures:
         if measure.status == 'failing':
             flag = False
-    return flag
+        if not measure.status == 'pending':
+            pending_flag = False
+    return (flag,pending_flag)
 
 def cycle_report_test(cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)

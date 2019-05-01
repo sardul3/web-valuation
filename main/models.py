@@ -91,6 +91,7 @@ class Outcome(models.Model):
     title = models.CharField(max_length=200, default='', null=True)
     desc = models.CharField(max_length=600, null=True)
     status = models.BooleanField(default=True)
+    status_help = models.CharField(max_length=200, null=True, default="pending")
     cycle = models.ManyToManyField(Cycle)
     course = models.ManyToManyField(Course)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
@@ -137,7 +138,7 @@ class Measure(models.Model):
                     ('passed', 'passed'),
                     ('failed', 'failed')
                     )
-    status = models.CharField(max_length=100, choices=STATUS_TYPES, default='failing')
+    status = models.CharField(max_length=100, choices=STATUS_TYPES, default='pending')
     statusPercent = models.FloatField(default=0.0)
     evaluationPercent = models.FloatField(default=0.0)
     measureTitle = models.CharField(max_length=200, default='', null=True)
@@ -210,3 +211,4 @@ class InvitedCo(models.Model):
     email = models.CharField(max_length=200)
     pending = models.BooleanField(default=True)
     dept = models.ForeignKey(Department,null=True,on_delete=models.CASCADE)
+    name = models.CharField(null=True,max_length=400)

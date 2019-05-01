@@ -139,10 +139,12 @@ background: #f5efe6;
       <div class=" d-flex w-100 justify-content-between">
           <a href="{%url 'main:outcome_detail' outcome.id%}" class="list-group-item list-group-item-action">
               <h5 class="mb-1 p-1">{{outcome.title}}
-              {%if outcome.status == False%}
+              {%if outcome.status_help == "failing" %}
                 <div class="badge badge-pill badge-danger" style="font-size:initial;">failing</div>
-              {%else%}
+              {%elif outcome.status_help == "passing" %}
                 <div class="badge badge-pill badge-success" style="font-size:initial;">passing</div>
+                  {% else %}
+                  <div class="badge badge-pill badge-warning" style="font-size:initial;">pending</div>
               {%endif%}
               </h5>
           </a>
