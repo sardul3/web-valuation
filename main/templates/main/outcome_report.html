@@ -11,19 +11,12 @@
   }
   .card-header {
     background: #800029;
-margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 </style>
 
 <div class="container">
-
-
-<h2 class="card-header" ><center>Outcome Report</center></h2>
-
-
-
-
-
+  <h2 class="card-header" ><center>Outcome Report</center></h2>
 {% if mymeasure is None %}
     <div class="jumbotron jumbotron-fluid" style="  background-color: rgb(252, 243, 229);">
       <div class="container">
@@ -31,7 +24,7 @@ margin-bottom: 10px;
         <p class="lead"> Please add some measures </p>
       </div>
     </div>
-    {% else %}
+{% else %}
 
     <ul class="list-group list-group-horizontal-sm mb-2">
       <li class="list-group-item active">Associated classes </li>
@@ -53,16 +46,13 @@ margin-bottom: 10px;
 
   <tr>
       <td class="align-middle" rowspan="{{count}}"><strong>{{outcome}}</strong></td>
-  <!-- </tr> -->
 {%for k,m in data.items%}
-
-  <!-- <tr> -->
+  <tr>
       <td>{{m.2}}</td>
       <td >{{m.0}} </td>
       <td >{{m.1}} </td>
       <td>{{m.3|floatformat:2}} </td>
       <td>{{m.4}}</td>
-
   </tr>
 {%endfor%}
 

@@ -941,7 +941,7 @@ def registerCo(request):
             print(inv)
             inv.pending = False
             inv.save()
-            text = inv.email + 'accepted your invitation'
+            text = inv.email + ' accepted your invitation'
             Log.objects.create(message=text, created_at=datetime.today(), subject=inv.dept, cor=inv.email)
             return redirect('/')
         else:
@@ -1658,7 +1658,6 @@ def generate_outcome_report(request, outcome_id):
     evaluated_student_count = 0
     number_of_pass_cases = 0
     measure = None
-    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     for measure in measures:
         evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
@@ -1667,12 +1666,14 @@ def generate_outcome_report(request, outcome_id):
         print(data)
     if measure is None:
         context = {'cordinator':cordinator,'outcome': outcome, 'measures': measures, 'evaluated_student_count': evaluated_student_count,
-                   'number_of_pass_cases': number_of_pass_cases,'mymeasure':measure, 'msgs':msgs}
+                   'number_of_pass_cases': number_of_pass_cases,'mymeasure':measure,
+                       'msgs':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()}
     else:
 
         context = {'cordinator':cordinator,'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
                    'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id,
-                   'count':measures.count()+1,'mymeasure':measure, 'msgs':msgs}
+                   'count':measures.count()+1,'mymeasure':measure,
+                       'msgs':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()}
 
     return render(request, 'main/outcome_report.html', context)
 
@@ -1697,7 +1698,6 @@ def generate_cycle_report(request, cycle_id):
     num=0
     measures = None
     outcome = None
-    msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
 
     for outcome in outcomes:
@@ -1712,9 +1712,11 @@ def generate_cycle_report(request, cycle_id):
     else:
         num = 0
     context ={'cordinator':cordinator,'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
-    'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': num,
+    'count':range(len(me)), 'data':me, 'outcome': outcome, 'num': num,
     'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
-    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' )
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'),
+        'msgs':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()
+
 
     }
 
