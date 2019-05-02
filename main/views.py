@@ -200,8 +200,8 @@ def homepage(request):
 
 
     context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
-            , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'msgs_count': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count(),
-            'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()}
+            , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
+            'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
 
     return render(request, 'main/evaluatorhome.html', context)
 
@@ -231,7 +231,7 @@ def rubrics(request):
     dept=cordinator.dept
     rubrics = Rubric.objects.filter(dept=dept)
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
-    msgs_count = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()
+    msgs_count = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()
 
 
     print(Notification.objects.filter(read=False, to=request.user.email))
@@ -248,7 +248,7 @@ def cycles(request):
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
     context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
-    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs,'msgs_count': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()}
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs,'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()}
     return render(request, 'main/cycles.html', context)
 
 
@@ -316,7 +316,7 @@ def evaluatorhome(request):
                         evaluator_list.append(eval)
 
         msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
-        msgs_count = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()
+        msgs_count = Broadcast.objects.filter(receiver=request.user.email, read = False).order_by('-sent_at').count()
         evaluator_list = Evaluator.objects.filter(dept = dept)
         context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
@@ -551,7 +551,7 @@ def dashboard(request):
     context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
             'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
             'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses,
-            'msgs':msgs,'msgs_count': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()
+            'msgs':msgs,'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()
             }
     return render(request, 'main/adminhome.html', context)
 
@@ -607,7 +607,7 @@ def cycle(request, cycle_id):
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles, 'all_outcomes': all_outcomes,
                 'courses':courses,'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
                 'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs
-                ,'msgs_count': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()}
+                ,'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()}
     return render(request, 'main/cycle.html', context)
 
 @user_passes_test(admin_test)
@@ -772,7 +772,7 @@ def outcome_detail(request, outcome_id):
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
                 'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs,
-                'msgs_count': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()}
+                'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()}
     return render(request, 'main/outcome_detail.html', context)
 
 def upload(request, measure_id, outcome_id):
@@ -1224,7 +1224,7 @@ def view_test_score(request, test_score_test, measure_id):
     context = test_score_data(test_score_test, measure_id)
     context.update({'msgs': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'),  'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(),
      'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'),
-     'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()})
+     'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read= False).order_by('-sent_at').count()})
 
     return render(request, 'main/test_scores.html', context)
 
@@ -1366,7 +1366,7 @@ def view_rubric_data(request, measure_id):
     context = rubric_data(measure_id)
     context.update({'msgs': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'),  'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(),
      'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'),
-     'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()})
+     'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()})
 
     return render(request, 'main/rubric_scores.html', context)
 
@@ -1528,9 +1528,12 @@ def create_curriculum(request):
 def mark_read(request, alert_id):
     alert = Broadcast.objects.filter(id=alert_id).order_by('-sent_at')
     alert.update(read=True)
+    print(alert)
     messages.add_message(request, messages.SUCCESS, 'Message mark read')
 
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
+
+
 
 def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
@@ -1611,7 +1614,7 @@ def generate_outcome_report(request, outcome_id):
 def admin_instructions(request):
     return render(request, 'main/admin_instructions.html', {'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
     'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ),
-    'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at').count()})
+    'msgs':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()})
 
 def superadmin_instructions(request):
     return render(request, 'main/superadmin_instructions.html', {'notification_count' : Notification.objects.filter(read=False).count(),

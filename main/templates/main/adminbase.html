@@ -334,6 +334,10 @@ color: #646469;
       <div class="message-container">
       <!-- loop -->
       {%for msg in msgs%}
+        {%if msg.read == False%}
+      <form action = "{% url 'main:mark_read' msg.id%}" method="POST">
+        {%csrf_token%}
+
         <div class="message">
           <div class="message-meta">
             <p>{{msg.sender}}</p>
@@ -341,8 +345,16 @@ color: #646469;
           </div>
           <div class="message-content">
             <p>{{msg.message}}</p>
+            <div class = "text-right">
+              <button class = "btn" type='submit' style="font-size: 1.5em; color: #7a2831;">
+                <i class="far fa-check-circle"></i>
+              </button>
+           </div>
+
           </div>
         </div>
+        </form>
+        {%endif%}
         {%endfor%}
       <!-- end loop -->
       </div>
