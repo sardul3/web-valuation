@@ -20,12 +20,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
 from itertools import chain
 
-
-
-
 def test_score_data(test_score_test, measure_id):
     measure = Measure.objects.get(id=measure_id)
-    # test_score = Test_score.objects.filter(test=test_score_test)
     test_score = custom_students.objects.filter(measure=measure, graded=True, current=True)
     total_students = custom_students.objects.filter(measure=measure, current=True).count()
 
@@ -92,7 +88,6 @@ def rubric_data(measure_id):
     student_count = custom_students.objects.filter(measure=measure, current=True).count()
     evaluated_student_count = custom_students.objects.filter(measure=measure, grade__isnull = False, current=True).count()
 
-
     number_of_pass_cases = custom_students.objects.filter(measure=measure,grade__gte = measure.cutoff_score, current=True).count()
 
     if evaluated_student_count>0:
@@ -101,9 +96,6 @@ def rubric_data(measure_id):
     else:
         percent_pass_cases=0
 
-
-
-    # evaluated_list = evaluate_rubric.objects.filter(measure = measure, rubric=measure.rubric)
     evaluated_list = custom_students.objects.filter(measure=measure, graded=True, current=True).order_by('student_name')
     ev_cats = category_score.objects.filter(student__in = evaluated_list)
 
@@ -159,7 +151,6 @@ def homepage(request):
         print(m)
         for o in m.outcome.all():
             print(o)
-    # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
 
     x = []
     y = 0
@@ -199,11 +190,8 @@ def homepage(request):
                         if cu.measure == mea and cu.evaluator.email==request.user.email:
                             total+=1
                             if cu.graded:
-                                #print(cu.student_name)
                                 graded+=1
 
-                #print("Graded",graded)
-                #print("Total",total)
                 if graded==0:
                     mea.evaluationPercent=0.0
                 else:
@@ -362,9 +350,6 @@ def evaluatorhome(request):
                             if val['isCurrent'] == True:
                                 cycle_filter.append(val['id'])
 
-
-        # measure = custom_students.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
-
         x = []
         y = 0
         for me in measure:
@@ -420,41 +405,6 @@ def evaluatorhome(request):
 
 
 @login_required
-def grade(request):
-    rubrics = Rubric.objects.filter()[0]
-    measures = Measure.objects.filter()
-    students = Student.objects.all()
-    evaluations = evaluate_rubric.objects.all()
-    categories = Category.objects.all()
-    context = {'rubric':rubrics, 'students': students, 'measures':measures, 'evaluations':evaluations
-            , 'row_num' : range(rubrics.max_row), 'row_col':range(rubrics.max_col), 'categories':categories}
-
-    if request.method == 'POST':
-        rubrics = Rubric.objects.all()
-        measures = Measure.objects.all()
-        students = Student.objects.all()
-        evaluated_student = request.POST.get('student_dd',None)
-        evaluated_rubric = request.POST.get('rubric_dd',None)
-        decimal_place = request.POST.get('decimal_dd', None)
-
-        scores = []
-        sum = 0
-        for i in range(len(measures)):
-            score = request.POST.get('score'+str(i+1))
-            sum+=int(score)
-            average = sum/len(measures)
-            average = round(average,int(decimal_place))
-
-        evaluation = evaluate_rubric(rubric=evaluated_rubric, grade_score=average, student=evaluated_student)
-        evaluation.save()
-
-        context = {'rubrics':rubrics, 'students': students, 'measures':measures,
-                    'avg':average, 'evaluations':evaluations }
-
-        return render(request, 'main/evaluatorhome.html', context)
-
-    return render(request, 'main/evaluator_rubric_select.html',context)
-
 def evaluator_rubric_select(request, measure_id):
     measures = Measure.objects.get(id=measure_id)
     students = measures.student.all()
@@ -486,12 +436,7 @@ def evaluator_rubric_select(request, measure_id):
     cat_index = range(1, maximum_rows)
     if rubric.isWeighted:
         cat_index=range(1,maximum_rows-1)
-    """
-    if not rubric.isWeighted:
-        cat_index =  range(1,maximum_rows)
-    else:
-        cat_index = range(1,maximum_rows-1)
-    """
+
     super_cat=[]
     for cat in categories:
         if cat.rubric==rubric:
@@ -567,8 +512,6 @@ def dashboard(request):
     cycles = Cycle.objects.filter(dept=dept)
     eval_a = Evaluator.objects.filter(dept=dept)
     courses = Course.objects.filter(dept=dept)
-
-
 
     data = dict()
     for measure in measures:
@@ -837,7 +780,6 @@ def upload(request, measure_id, outcome_id):
         measure = Measure.objects.filter(id=measure_id)
         test_name = request.POST.get('test_title')
         max_points = request.POST.get('max_points')
-
 
         total_points = 0
 
@@ -1210,11 +1152,6 @@ def add_evaluator(request, outcome_id, measure_id):
             evaluator = Evaluator(name = request.POST.get('evaluator_name'), email=request.POST.get('evaluator_email'),coordinator=cordinator, invited_by=cordinator.email,dept=dept)
             evaluator.save()
 
-        # evaluator_list = request.POST.getlist('evaluators')
-        # print(evaluator_list)
-        # for ev in evaluator_list:
-        #     measure.evaluator.add(ev)
-
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
         email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
@@ -1312,10 +1249,6 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
     header = range(1,rub.max_col)
     if rub.isWeighted:
         cat_index = range(1,maximum_rows-1)
-    """if not rub.isWeighted:
-        cat_index = range(1, maximum_rows)
-    else:
-        cat_index = range(1, maximum_rows - 1)"""
     super_cat = []
     for cat in categories:
         if cat.rubric == rub:
@@ -1328,7 +1261,6 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
             if cat.index_x in header and cat.index_y==0:
                 super_header.append(cat.categoryTitle)
 
-    print("This is superheader",super_header)
     myvals = category_score.objects.filter(student=student_real)
     for vals in myvals:
         vals.delete()
@@ -1428,8 +1360,6 @@ def remove_evaluator_access(request, evaluator_id, measure_id, outcome_id):
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
 
-
-
 def view_rubric_data(request, measure_id):
     measure = Measure.objects.get(id=measure_id)
 
@@ -1476,18 +1406,6 @@ def view_score(request,evaluation_id):
 
 
 def edit_evaluation_student(request,cust_id):
-    """evaluation_found = evaluate_rubric.objects.get(id=evaluation_id)
-    measure = evaluation_found.measure
-    measure_id = measure.id
-    email_eval = Evaluator.objects.filter(email=evaluation_found.evaluated_by)[0]
-    mystudent=0
-    for stu in custom_students.objects.all():
-
-
-        if(stu.measure==measure and stu.student_name==evaluation_found.student and stu.evaluator==email_eval):
-            mystudent=stu
-            mystudent.graded=False
-     """
     mystudent = custom_students.objects.get(id=cust_id)
     measure = mystudent.measure
     measure_id = measure.id
@@ -1520,12 +1438,6 @@ def edit_evaluation_student(request,cust_id):
     cat_index = range(1, maximum_rows)
     if rubric.isWeighted:
         cat_index=range(1,maximum_rows-1)
-    """
-    if not rubric.isWeighted:
-        cat_index =  range(1,maximum_rows)
-    else:
-        cat_index = range(1,maximum_rows-1)
-    """
     super_cat = []
     for cat in categories:
         if cat.rubric == rubric:
@@ -1536,7 +1448,6 @@ def edit_evaluation_student(request,cust_id):
         , 'row_num': range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag': final_cust,
                'super_cat': super_cat}
 
-    # evaluation_found.delete()
     return render(request,'main/evaluator_edit_rubric_select.html',context)
 
 
@@ -1796,8 +1707,6 @@ def cycle_report_test(cycle_id):
     print(outcomes)
     return outcomes == None
 
-def admin_footer(request):
-    return render(request, 'main/admin_footer.html')
 
 def evaluator_instructions(request):
     return render(request, 'main/evaluator_instructions.html', {'alerts':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'),
