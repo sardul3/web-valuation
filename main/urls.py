@@ -8,6 +8,9 @@ urlpatterns = [
     path('department_view/<int:cordinator_id>', views.department_view, name="department_view"),
     path('dept_log/<int:dept_id>', views.dept_log, name="dept_log"),
 
+    path('print_report/<str:test_score>/<int:measure_id>', views.print_report, name = 'print_report'),
+    path('print_report_rubric/<int:measure_id>', views.print_report_rubric, name = 'print_report_rubric'),
+
 
     path('invite', views.super_admin_home, name='super_admin_home'),
     path('invite_status', views.super_admin_past, name='super_admin_past'),

@@ -19,6 +19,7 @@ from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
 from itertools import chain
+import csv
 
 def test_score_data(test_score_test, measure_id):
     measure = Measure.objects.get(id=measure_id)
@@ -75,6 +76,33 @@ def test_score_data(test_score_test, measure_id):
 
     return data
 
+def status(measure_id, score):
+    measure = Measure.objects.get(id=measure_id)
+    if measure.cutoff_score>score:
+        return 'Failed'
+    else:
+        return 'Passed'
+
+def print_report(request,test_score, measure_id):
+    print_data = test_score_data(test_score, measure_id)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="test_score.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Student Name', 'Grade', 'Evaluated by', 'Status'])
+
+
+    for score in print_data['test_score']:
+        if Evaluator.objects.filter(id=score.evaluator_id).exists():
+            ev_name = Evaluator.objects.get(id=score.evaluator_id).email
+        else:
+            ev_name = 'Evaluator'
+        writer.writerow([score.student_name, score.grade, ev_name , status(measure_id, score.grade) ])
+
+    return response
+
+
+
 def rubric_data(measure_id):
     measure = Measure.objects.get(id=measure_id)
 
@@ -125,6 +153,30 @@ def rubric_data(measure_id):
 
 
     return data
+
+
+def print_report_rubric(request, measure_id):
+    rubric_datas = rubric_data(measure_id)
+    print(rubric_datas['evaluated_list'])
+    name = Measure.objects.get(id=measure_id).measureTitle
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="rubric.csv"'
+
+    writer = csv.writer(response)
+    cat_arr = ['Student Name', 'Grade', 'Evaluated by', 'Status']
+    cat_scores = rubric_datas['ev_cats']
+
+    writer.writerow(cat_arr)
+
+    for score in rubric_datas['evaluated_list']:
+        if Evaluator.objects.filter(id=score.evaluator_id).exists():
+            ev_name = Evaluator.objects.get(id=score.evaluator_id).email
+        else:
+            ev_name = 'Evaluator'
+        writer.writerow([score.student_name, score.grade, ev_name , status(measure_id, score.grade) ])
+
+    return response
 
 
 def admin_test(user):
@@ -787,13 +839,19 @@ def upload(request, measure_id, outcome_id):
         datset = csvfile.read().decode("UTF-8")
         io_string = io.StringIO(datset)
 
+        email = request.user.email
+        for eval in Evaluator.objects.all():
+            if eval.email == email:
+                evaluator = eval
+            else:
+                evaluator = Evaluator.objects.create(email=email)
 
         for column in csv.reader(io_string, delimiter=",", quotechar="|"):
             total_points += int(column[1])
             student = Student.objects.create(name=column[0])
             student_score = Test_score(student=student, test=test_name, score=int(column[1]))
             student_score.save()
-            custom_students.objects.create(measure=Measure.objects.get(id=measure_id), student_name = column[0], grade=int(column[1]), graded=True )
+            custom_students.objects.create(measure=Measure.objects.get(id=measure_id), student_name = column[0], grade=int(column[1]), graded=True, evaluator = evaluator )
             measure.update(test_score=student_score)
 
         for m in measure:
@@ -1223,9 +1281,10 @@ def delete_outcome(request, outcome_id, cycle_id):
 
 def view_test_score(request, test_score_test, measure_id):
     cordinator = CoOrdinator.objects.get(email=request.user.email)
+    print_data = test_score_data(test_score_test, measure_id)
     context = test_score_data(test_score_test, measure_id)
     context.update({'cordinator':cordinator,'msgs': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'),  'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(),
-     'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'),
+     'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'print_data':print_data,
      'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read= False).order_by('-sent_at').count()})
 
     return render(request, 'main/test_scores.html', context)
@@ -1779,8 +1838,14 @@ def download_test(request, measure_id):
     response['Content-Disposition'] = 'attachment; filename="test.csv"'
 
     writer = csv.writer(response)
-    for student in students:
-        writer.writerow([student.name, ])
+    if students.count()>0:
+        for student in students:
+            writer.writerow([student.name, ])
+    else:
+        writer.writerow(['Alexa', 88])
+        writer.writerow(['Sagar', 45])
+        writer.writerow(['Nischal', 95])
+
 
 
     return response

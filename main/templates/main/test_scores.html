@@ -29,6 +29,7 @@
          </em>
           </button>
 
+<a href = "{%url 'main:print_report' measure.test_score measure.id%}"> Print </a>
           <div class = "d-flex justify-content-center">
           {%if passed%}
             <div  style = "background-color:green; height:30px; width: 30px; border-radius: 50%; margin-right: 5px;"></div><p> Measure Passed</p>
@@ -64,6 +65,14 @@
         </div>
       </div>
     <div class = "col col-lg-3 mt-5">
+      <div class = "text-center">
+        <a href = "{%url 'main:print_report' measure.test_score measure.id%}" style = 'text-decoration:none;'>
+        <span style="font-size: 2em; color: #bd955a; ">
+        <i class="fas fa-print"></i>
+        Download CSV </a>
+      </span>
+      </div>
+
       <div class="card bg-light mb-3">
         <div class="card-header">Stats</div>
         <div class="card-body  ">
