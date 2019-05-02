@@ -699,7 +699,7 @@ hr.not(.style15) {
           </button>
           </li>
         {%for eval in measure.evaluator.all%}
-            <li class="list-group-item d-flex  justify-content-between">{{eval.email}}
+            <li class="list-group-item d-flex  justify-content-between">{{eval.name}}
             <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
               <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
             </a>
@@ -997,7 +997,7 @@ hr.not(.style15) {
               <div class="form-group">
                 <label for="exampleInputEmail1">Upload Scores</label>
                 <small id="emailHelp" class="form-text text-muted">inside the csv file, place students name followed by their score </small>
-                <a href = "{%url 'main:download_test'%}"> see example </a>
+                <a href = "{%url 'main:download_test' measure.id%}"> see example </a>
 
               </div>
 

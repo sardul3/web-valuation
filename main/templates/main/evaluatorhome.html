@@ -163,7 +163,7 @@
                     {%if measure.test_score%}
                       value = "{{measure.test_score.test}}"
                     {%endif%}
-                    >
+                    required>
                   </div>
 
                   <div class="form-group">
@@ -176,7 +176,8 @@
                     <label for="exampleInputEmail1">Upload Scores</label>
                     <small id="emailHelp" class="form-text text-muted">place student and their scores per line</small>
                   </div>
-                  <a href="{%url 'main:download_test'%}"> view example </a>
+                  <a href="{%url 'main:download_test' measure.id%} "> view example </a>
+                  <br/>
 
                     <input type="file" name="csv_file" />
                     <button type="submit" class="btn btn-primary">Upload</button>

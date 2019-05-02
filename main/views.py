@@ -992,6 +992,8 @@ def add_test_to_measure(request, measure_id):
 def test_rubric(request):
     rows = 0
     cols = 0
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+
     if request.method == 'POST':
         rows = int(request.POST.get('rows'))
         cols = int(request.POST.get('cols'))
@@ -1019,8 +1021,8 @@ def test_rubric(request):
                 else:
                     myval = cols - x
                 mylist.append(myval)
-        return render(request, 'main/created_test_rubric.html', {'rows':range(rows), 'cols':cols_,'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus,'isAsc':isAscending,'col_ind':col_index,'mylist':mylist})
-    return render(request, 'main/test_rubric.html')
+        return render(request, 'main/created_test_rubric.html', {'cordinator':cordinator,'rows':range(rows), 'cols':cols_,'row_num':rows, 'col_num': cols,'isWeighted':isWeighted,'colmin':colminus,'isAsc':isAscending,'col_ind':col_index,'mylist':mylist})
+    return render(request, 'main/test_rubric.html', {'cordinator':cordinator})
 
 
 def created_test_rubric(request):
@@ -1561,7 +1563,7 @@ def upload_test_score_evaluator(request, measure_id):
 
     if request.method=='POST' and request.FILES:
         measure = Measure.objects.filter(id=measure_id)
-        evaluator = Evaluator.objects.get(email=request.user.email)
+        evaluator = Evaluator.objects.filter(email=request.user.email)[0]
         students = custom_students.objects.filter(measure__in = measure, evaluator = evaluator)
 
         test_name = request.POST.get('test_title')
@@ -1769,17 +1771,16 @@ def download(request):
 
     return response
 
-def download_test(request):
-    # Create the HttpResponse object with the appropriate CSV header.
+def download_test(request, measure_id):
+    measure = Measure.objects.get(id=measure_id)
+    students = measure.student.all()
+    print(students)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="test.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Sanjiv', 88])
-    writer.writerow(['Sagar', 77])
-    writer.writerow(['Nick', 85])
-    writer.writerow(['AJ', 88])
-    writer.writerow(['Alexa', 85])
+    for student in students:
+        writer.writerow([student.name, ])
 
 
     return response
