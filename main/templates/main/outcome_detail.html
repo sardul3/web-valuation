@@ -300,6 +300,9 @@ hr.not(.style15) {
                       </div>
                     </div>
                   </div>
+
+
+
          </h2>
 
         <p> {{measure.measureText}} </p>
@@ -473,10 +476,32 @@ hr.not(.style15) {
             </li>
           {%for eval in measure.evaluator.all%}
               <li class="list-group-item d-flex  justify-content-between">{{eval.name}}
-              <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
+              <button  type = 'button' class = "btn btn-sm btn-danger"  data-toggle="modal" data-target="#exampleModalCenterDeleteEval{{eval.id}}" style="font-size: 1em; color: white;">
                 <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
-              </a>
+              </button>
+              <div class="modal fade" id="exampleModalCenterDeleteEval{{eval.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Delete Evaluator from measure</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" method="POST">
+                      {%csrf_token%}
+                      <input type="hidden" id="url" name = "url" value={{request.path}}>
+                      <h3>Are you sure? </h3> <br/>
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                      </form>
+                      </div>
+                  </div>
+                </div>
+              </div>
+
                 </li>
+
 
             {%endfor%}
 
@@ -703,6 +728,7 @@ hr.not(.style15) {
             <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
               <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
             </a>
+            
               </li>
 
           {%endfor%}
