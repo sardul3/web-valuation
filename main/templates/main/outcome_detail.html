@@ -3,6 +3,11 @@
 {% load static %}
 {% block body_block %}
 <style>
+  @media only screen and (max-width: 475px) {
+    h4 {
+      font-size: 0.8rem !important;
+    }
+  }
 
 .button_main{
   padding:0 !important;
@@ -171,7 +176,7 @@ hr.not(.style15) {
   </div>
   <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" >
 
-    <h4 style="border: 2px solid #800029;color: ghostwhite;background: #BD955A;font-style: oblique;
+    <h4 id="descr" style="border: 2px solid #800029;color: ghostwhite;background: #BD955A;font-style: oblique;
                padding: 4px;border-radius: 12px;margin-bottom: 5px !important;">
        {{outcome.desc}}
       </h4>
@@ -728,7 +733,7 @@ hr.not(.style15) {
             <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
               <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
             </a>
-            
+
               </li>
 
           {%endfor%}
