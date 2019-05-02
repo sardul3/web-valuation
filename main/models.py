@@ -11,6 +11,7 @@ class CoOrdinator(models.Model):
     email = models.CharField(max_length=200)
     department = models.CharField(max_length=200)
     dept = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
+    last_online = models.DateTimeField(null=True)
 
 class Evaluator(models.Model):
     name = models.CharField(max_length=100)
@@ -206,6 +207,8 @@ class Log(models.Model):
     message = models.CharField(max_length=400)
     created_at = models.DateTimeField()
     read = models.BooleanField(default=False)
+    subject = models.CharField(max_length=300, null=True)
+    cor = models.CharField(max_length=200, null=True)
 
 class InvitedCo(models.Model):
     email = models.CharField(max_length=200)

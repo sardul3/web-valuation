@@ -1,10 +1,11 @@
 {% load static %}
 <style>
 
+
+
     ul li a {
         color:#FFF;
         text-decoration:none;
-        padding:6px 15px;
         cursor:pointer;
     }
     #clear1{
@@ -14,6 +15,7 @@
     ul li a:hover {
         text-decoration:none;
         cursor:pointer;
+
     }
 
     #noti_Container {
@@ -24,7 +26,7 @@
     #noti_Button {
         -moz-border-radius:50%;
         -webkit-border-radius:50%;
-        margin:-3px 10px 0 10px;
+        margin-top:-3px;
         cursor:pointer;
     }
 
@@ -53,10 +55,22 @@
         top:30px;
         left:0;
         background:#FFF;
-        border:solid 1px rgba(100, 100, 100, .20);
+        border:solid 1px red;
         -webkit-box-shadow:0 3px 8px rgba(0, 0, 0, .20);
         z-index: 0;
     }
+
+    #notifications2 {
+        background:#FFF;
+        border:solid 3px #7a2831;
+        -webkit-box-shadow:0 3px 8px rgba(0, 0, 0, .20);
+        z-index: 1;
+    }
+
+
+
+
+
     /* AN ARROW LIKE STRUCTURE JUST OVER THE NOTIFICATIONS WINDOW */
     #notifications:before {
         content: '';
@@ -106,6 +120,11 @@
         margin: 6px 0 0 1px;
         }
     }
+    .dropdown-item:hover{
+      background-color: #fbeaeb;
+    }
+
+
 
 </style>
 
@@ -186,7 +205,7 @@
 
 
          <li class="nav-item {{msg}}" >
-         <a id="noti_Button" data-toggle="modal" data-target="#exampleModalCenter" >
+         <a  data-toggle="modal" data-target="#exampleModalCenter" >
            <span style="font-size: 2rem; color: #7a2831;">
               <i data-toogle="tooltip" title="Send Broadcast" class="fas fa-envelope-open-text"></i>
             </span>
@@ -197,18 +216,27 @@
 
 
          <li class="nav-item {{help}}" >
-           <a id="noti_Button" class = "nav-link" href="{% url 'main:admin_instructions'%}">
+           <a  style= "margin-top:-5px;"  class = "nav-link" href="{% url 'main:admin_instructions'%}">
              <span style="font-size: 2rem; color: #7a2831;">
-               <i data-toogle="tooltip" title="User Manual" class="fas fa-info-circle"></i>
+               <i data-toogle="tooltip" title="User Manual" class="fas fa-info-circle" ></i>
             </span>
            </a>
           </li>
 
+          <li d="noti_Container" class="nav-item {{profile}}">
+            <a style= "margin-top:-5px;"  id="noti_Button2" class = "nav-link" class = "dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span style="font-size: 2rem; color: #7a2831;">
+                <i class="fas fa-user-circle"></i>
+              </span>
+            </a>
+            <div id="notifications2" class="dropdown-menu dropdown-menu-right">
+             <a style="color:black;" href = "{%url 'main:logout'%}"><button class="dropdown-item text-center" type="button">Log out </button></a>
+             <a style="color:black;" href = "{%url 'main:department_view' cordinator.id%}"><button class="dropdown-item text-center" type="button">View Department</button> </a>
+             <a style="color:black;" href = "#"><button class="dropdown-item text-center" type="button">Logged in as <strong>{{cordinator.name}}</strong></button> </a>
 
+           </div>
+          </li>
 
-        <li class="nav-item {{logout}}">
-          <a class = "nav-link" href="{%url 'main:logout'%}">Log Out</a>
-        </li>
 
 
 
@@ -289,6 +317,22 @@
             return false;
         });
 
+        $('#noti_Button2').click(function () {
+
+            // TOGGLE (SHOW OR HIDE) NOTIFICATION WINDOW.
+            $('#notifications2').fadeToggle('fast', 'linear', function () {
+                if ($('#notifications2').is(':hidden')) {
+                    $('#noti_Button2').css('background-color', '#FFF');
+                }
+                // CHANGE BACKGROUND COLOR OF THE BUTTON.
+                else $('#noti_Button2').css('background-color', '#FFF');
+            });
+
+
+            return false;
+        });
+
+
         // HIDE NOTIFICATIONS WHEN CLICKED ANYWHERE ON THE PAGE.
         $(document).click(function () {
             $('#notifications').hide();
@@ -304,6 +348,16 @@
             return true;       // DO NOTHING WHEN CONTAINER IS CLICKED.
         });
     });
+
+    $(document).click(function () {
+        $('#notifications2').hide();
+
+
+    $('#notifications2').click(function () {
+        return true;       // DO NOTHING WHEN CONTAINER IS CLICKED.
+    });
+});
+
 
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();

@@ -1,0 +1,57 @@
+{% extends  'main/adminbase.html' %}
+{% load static %}
+{% block body_block %}
+
+<style>
+  a:hover{
+    color: white;
+  }
+</style>
+<br>
+<br>
+<h4 class = "text-center">{{department_name}} Department </h4>
+<nav class="navbar sticky-top navbar-expand-lg  navbar-light ">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo04" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<div class="collapse navbar-collapse" id="navbarTogglerDemo04">
+  <ul class="navbar-nav w-100 mr-auto mt-2 mt-lg-0 justify-content-around">
+
+    <li class="nav-item {{list_dept}}" >
+      <a class="nav-link" href="{%url 'main:department_view' cordinator.id%}" >Other cordinators</a>
+    </li>
+
+    <li class="nav-item {{log_dept}}" >
+      <a class="nav-link" href="{%url 'main:dept_log' dept_id %}"> Activity Log</a>
+    </li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class = "container">
+  <div class = "container-fluid">
+    <ul class="list-group" style = "overflow-y:auto; height: 80vh;">
+      <li class="list-group-item  list-group-item-action active  d-flex justify-content-between"><span> <h4>Logs</h4> </span>
+        <a href = "{%url 'main:clear_log_cor'%}">clear all</a>
+      </li>
+      {%for log in logs%}
+        <a href= "#" class="list-group-item list-group-item-action d-flex justify-content-between"><span>{{log.message}}</span>
+
+
+           {{log.created_at|timesince}} ago
+         </a>
+  {%empty%}
+  <a href= "#" class="list-group-item list-group-item-action text-center" style="padding:20px;"><span >No activity to log. <br/> Please check back later</span>
+
+
+   </a>
+
+  {%endfor%}
+</ul>
+
+
+
+</div>
+</div>
+{%endblock%}

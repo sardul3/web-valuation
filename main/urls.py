@@ -5,10 +5,15 @@ from django.contrib.auth import views as auth_views
 app_name = 'main'
 
 urlpatterns = [
+    path('department_view/<int:cordinator_id>', views.department_view, name="department_view"),
+    path('dept_log/<int:dept_id>', views.dept_log, name="dept_log"),
+
+
     path('invite', views.super_admin_home, name='super_admin_home'),
     path('invite_status', views.super_admin_past, name='super_admin_past'),
     path('logs', views.logs, name='logs'),
     path('clear_log', views.clear_log, name="clear_log"),
+    path('clear_log_cor', views.clear_log_cor, name="clear_log_cor"),
     path('download', views.download, name="download"),
     path('download_test', views.download_test, name="download_test"),
     path('evaluator_instructions', views.evaluator_instructions, name = 'evaluator_instructions'),

@@ -1,7 +1,10 @@
 {% extends  'main/superadminbase.html' %}
 {% load static %}
 {% block body_block %}
+<div class = "row">
+  <div class = "col-md-12 col-sm-12 col-xs-12 col-12">
 <div class = "container card border-primary login bg-light" style="border: 2px solid brown !important; box-shadow: 5px 5px gray !important; width:40rem;margin-top:5%; padding:20px;">
+
   <h2 class = "text-center"> Invite Coordinators </h2>
 <form action = "{%url 'main:super_admin_home'%}" method="POST">
   {%csrf_token%}
@@ -20,5 +23,7 @@
   </div>
   <button type="submit" class="btn btn-primary">Invite</button>
 </form>
+</div>
+</div>
 </div>
 {%endblock%}

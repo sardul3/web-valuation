@@ -199,7 +199,7 @@ def homepage(request):
 
 
 
-    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
+    context = { 'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
             , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
             'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
 
@@ -221,7 +221,7 @@ def outcomes(request):
             elif measure.tool_type == 'Test score':
                 data.update({measure.id: test_score_data(measure.test_score, measure.id)})
 
-    context = {'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    context = {'cordinator':cordinator,'outcomes':outcomes, 'measures':measures, 'cycles':cycles, 'outcome': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
     'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ), 'data':data
 }
     return render(request, 'main/outcomes.html', context)
@@ -235,7 +235,7 @@ def rubrics(request):
 
 
     print(Notification.objects.filter(read=False, to=request.user.email))
-    context = {'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    context = {'cordinator':cordinator,'evaluator': Evaluator.objects.all(),'rubrics':rubrics, 'rubric': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
     'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs, 'msgs_count': msgs_count}
     return render(request, 'main/rubrics.html', context)
 
@@ -247,7 +247,7 @@ def cycles(request):
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
-    context = {'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    context = {'cordinator':cordinator,'cycles':cycles, 'cycle': 'active','notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
     'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs,'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()}
     return render(request, 'main/cycles.html', context)
 
@@ -318,7 +318,7 @@ def evaluatorhome(request):
         msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
         msgs_count = Broadcast.objects.filter(receiver=request.user.email, read = False).order_by('-sent_at').count()
         evaluator_list = Evaluator.objects.filter(dept = dept)
-        context = {'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
+        context = {'cordinator':CoOrdinator.objects.get(email=request.user.email),'evaluator': evaluator_list, 'dashboard': 'active', 'outcomes': outcomes, 'measures': measures,
                    'data': data,
                    'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(), 'msgs':msgs, 'msgs_count':msgs_count,
                    'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'cycles': cyc,'mycyc':mycyc,'courses':courses
@@ -548,7 +548,7 @@ def dashboard(request):
     evaluator_list = Evaluator.objects.filter(dept = dept)
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
-    context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data,
+    context = {'evaluator': evaluator_list, 'dashboard':'active', 'outcomes':outcomes, 'measures':measures, 'data':data, 'cordinator':cordinator,
             'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
             'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'cycles':cyc,'mycyc':mycyc,'courses':courses,
             'msgs':msgs,'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()
@@ -568,7 +568,7 @@ def newCycle(request):
     messages.add_message(request, messages.SUCCESS, 'Cycle created successfully')
 
     text = cordinator.name + " ( " + cordinator.email + " ) " + 'created a new cycle, ' + cycle.year + " " + cycle.semester
-    Log.objects.create(message=text, created_at=datetime.today())
+    Log.objects.create(message=text, created_at=datetime.today(), subject=cordinator.dept, cor=cordinator.email)
 
     url = request.POST.get("url")
     return redirect(url)
@@ -603,7 +603,7 @@ def cycle(request, cycle_id):
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
-    context = {'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
+    context = {'cordinator':cordinator,'evaluator': Evaluator.objects.all(),'cycle_id':cycle_id, 'outcomes': outcomes, 'evaluators': evaluators,
                 'measures': measures, 'rubrics': rubrics, 'cycle':cycle, 'prev_cycles':prev_cycles, 'all_outcomes': all_outcomes,
                 'courses':courses,'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
                 'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'), 'msgs':msgs
@@ -658,7 +658,7 @@ def migrate_cycle(request, cycle_id):
                 Measure.objects.filter(id=new_measure.id).update(test_score=mea.test_score)
 
     text = cordinator.name + " ( " + cordinator.email + " ) " + 'bulk migrated data from ' + str(from_cycle.year) + ' ' + str(from_cycle.semester) + ' to ' + str(to_cycle.year) + ' ' + str(to_cycle.semester)
-    Log.objects.create(message=text, created_at=datetime.today())
+    Log.objects.create(message=text, created_at=datetime.today(), subject = cordinator.dept, cor=cordinator.email)
 
 
     return HttpResponseRedirect(reverse('main:cycle', kwargs={'cycle_id':cycle_id}) )
@@ -767,7 +767,7 @@ def outcome_detail(request, outcome_id):
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
 
-    context = {'evaluator': Evaluator.objects.filter(dept=dept),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
+    context = {'cordinator':cordinator,'evaluator': Evaluator.objects.filter(dept=dept),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
                 'students': students, 'evaluators': evaluators, 'num_of_evaluations':num_of_evaluations, 'all_measures':all_measures,
                 'test_data':test_data, 'rubric_data':data, 'custom_student': custom_student, 'cycle_id':cycle_id,
                 'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
@@ -884,7 +884,7 @@ def registerCo(request):
             inv.pending = False
             inv.save()
             text = inv.email + 'accepted your invitation'
-            Log.objects.create(message=text, created_at=datetime.today())
+            Log.objects.create(message=text, created_at=datetime.today(), subject=inv.dept, cor=inv.email)
             return redirect('/')
         else:
             messages.add_message(request, messages.SUCCESS, 'Please check your credentials')
@@ -912,7 +912,7 @@ def add_learning_outcome(request, cycle_id):
     outcome.cycle.add(cycle_found)
 
     text = cordinator.name + " ( " + cordinator.email + " ) " + 'added a new learning outcome, '+ outcome.title + ' to the cycle, ' + str(cycle_found.year) + " " + str(cycle_found.semester)
-    Log.objects.create(message=text, created_at=datetime.today())
+    Log.objects.create(message=text, created_at=datetime.today(), subject=cordinator.dept, cor=cordinator.email)
 
 
     messages.add_message(request, messages.SUCCESS, 'Learning outcome created')
@@ -958,7 +958,7 @@ def new_measure(request, outcome_id):
     messages.add_message(request, messages.SUCCESS, 'New measure is added to the outcome')
 
     text = cordinator.name + " ( " + cordinator.email + " ) " + 'created a new measure, '+ measure.measureTitle
-    Log.objects.create(message=text, created_at=datetime.today())
+    Log.objects.create(message=text, created_at=datetime.today(), subject=cordinator.dept, cor=cordinator.email)
 
 
     url = request.POST.get("url")
@@ -1220,9 +1220,9 @@ def delete_outcome(request, outcome_id, cycle_id):
     return HttpResponseRedirect(reverse_lazy('main:cycle', kwargs={'cycle_id':cycle_id}))
 
 def view_test_score(request, test_score_test, measure_id):
-
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
     context = test_score_data(test_score_test, measure_id)
-    context.update({'msgs': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'),  'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(),
+    context.update({'cordinator':cordinator,'msgs': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'),  'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(),
      'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'),
      'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read= False).order_by('-sent_at').count()})
 
@@ -1362,9 +1362,10 @@ def remove_evaluator_access(request, evaluator_id, measure_id, outcome_id):
 
 def view_rubric_data(request, measure_id):
     measure = Measure.objects.get(id=measure_id)
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
 
     context = rubric_data(measure_id)
-    context.update({'msgs': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'),  'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(),
+    context.update({'cordinator':cordinator,'msgs': Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'),  'notification_count': Notification.objects.filter(read=False, to=request.user.email).count(),
      'notifications': Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at'),
      'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()})
 
@@ -1372,6 +1373,7 @@ def view_rubric_data(request, measure_id):
 
 def past_assessments(request):
     evaluations = evaluate_rubric.objects.filter(evaluated_by=request.user.email).order_by('-id')
+
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)
     if len(evaluator)==0:
@@ -1587,6 +1589,8 @@ def upload_test_score_evaluator(request, measure_id):
     return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
 
 def generate_outcome_report(request, outcome_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome=outcome)
     data = dict()
@@ -1601,19 +1605,20 @@ def generate_outcome_report(request, outcome_id):
         data.update({ measure.id: [evaluated_student_count, number_of_pass_cases, measure.measureTitle, measure.statusPercent, measure.status]})
         print(data)
     if measure is None:
-        context = {'outcome': outcome, 'measures': measures, 'evaluated_student_count': evaluated_student_count,
+        context = {'cordinator':cordinator,'outcome': outcome, 'measures': measures, 'evaluated_student_count': evaluated_student_count,
                    'number_of_pass_cases': number_of_pass_cases,'mymeasure':measure, 'msgs':msgs}
     else:
 
-        context = {'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
+        context = {'cordinator':cordinator,'outcome':outcome, 'measures':measures, 'evaluated_student_count':evaluated_student_count,
                    'number_of_pass_cases':number_of_pass_cases, 'data':data, 'measure_id':measure.id,
                    'count':measures.count()+1,'mymeasure':measure, 'msgs':msgs}
 
     return render(request, 'main/outcome_report.html', context)
 
 def admin_instructions(request):
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
     return render(request, 'main/admin_instructions.html', {'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
-    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ), 'cordinator':cordinator,
     'msgs':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at'), 'msgs_count':Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count()})
 
 def superadmin_instructions(request):
@@ -1621,6 +1626,8 @@ def superadmin_instructions(request):
     'notifications' : Notification.objects.filter(read=False).order_by('-created_at' ),'cordinator':InvitedCo.objects.all()})
 
 def generate_cycle_report(request, cycle_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+
     cycle = Cycle.objects.get(id=cycle_id)
     outcomes = Outcome.objects.filter(cycle=cycle)
     data = dict()
@@ -1643,7 +1650,7 @@ def generate_cycle_report(request, cycle_id):
         num = measures.count()
     else:
         num = 0
-    context ={'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
+    context ={'cordinator':cordinator,'outcomes':outcomes, 'measures':measures, 'cycle_id': cycle_id,
     'count':range(len(me)), 'data':me, 'msgs':msgs, 'outcome': outcome, 'num': num,
     'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
     'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' )
@@ -1730,6 +1737,23 @@ def clear_log(request):
 
     return render(request, 'main/logs.html', context)
 
+def clear_log_cor(request):
+    cordinator = CoOrdinator.objects.get(email = request.user.email)
+    dept = cordinator.dept
+    dept_id = dept.id
+
+    Log.objects.filter(read=False, subject=dept).update(read=True)
+    logs = Log.objects.filter(read=False).order_by('-created_at')
+    logs = Log.objects.filter(subject=dept,read=False)
+    context={'logs':logs, 'cordinator':cordinator, 'log_dept':'active', 'dept_id':dept_id,
+    'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ),
+     'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
+    'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'department_name':cordinator.department}
+
+    return render(request, 'main/dept_log.html', context)
+
+
 def download(request):
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type='text/csv')
@@ -1759,3 +1783,35 @@ def download_test(request):
 
 
     return response
+
+def department_view(request, cordinator_id):
+    cordinator = CoOrdinator.objects.get(id=cordinator_id)
+    dept = cordinator.dept
+    department_name = cordinator.department
+    print(dept)
+    cordinators = CoOrdinator.objects.filter(dept=dept)
+    print(cordinators)
+    for logs in Log.objects.filter(subject=dept):
+        for co in cordinators:
+            if(logs.cor==co.email):
+                CoOrdinator.objects.filter(id=co.id).update(last_online=logs.created_at)
+
+    context = {'cordinator':cordinator, 'dept_id':dept.id, 'list_dept':'active', 'cordinators':cordinators
+    , 'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ),
+     'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
+    'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'department_name':department_name}
+    return render(request, 'main/department_view.html', context)
+
+def dept_log(request, dept_id):
+    print(dept_id)
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    department_name = cordinator.department
+    department = Department.objects.get(id=dept_id)
+    logs = Log.objects.filter(subject=department, read=False)
+    context={'logs':logs, 'cordinator':cordinator, 'log_dept':'active', 'dept_id':dept_id,
+    'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ),
+     'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
+    'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'department_name':department_name}
+    return render(request, 'main/dept_log.html', context)
