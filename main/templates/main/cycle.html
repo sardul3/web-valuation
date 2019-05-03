@@ -391,15 +391,15 @@ background: #f5efe6;
             {%csrf_token%}
           <div class="form-group">
             <label for="exampleFormControlSelect2">Course Title</label>
-            <input class="form-control" type="text" name="title"></input>
+            <input class="form-control" type="text" name="title" required></input>
           </div>
           <div class="form-group">
-            <label for="exampleFormControlTextarea1">Description</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+            <label for="exampleFormControlTextarea1" >Description</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description" required></textarea>
           </div>
           <div class="form-group">
-            <label for="exampleFormControlTextarea1">Credit hours</label>
-            <input class="form-control" type="number" name="credit_hours"></input>
+            <label for="exampleFormControlTextarea1" >Credit hours</label>
+            <input class="form-control" type="number" name="credit_hours" required min=1></input>
           </div>
 
           <div class = "text-center">

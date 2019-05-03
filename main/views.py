@@ -1728,27 +1728,30 @@ def super_admin_home(request):
         email = request.POST.get('email')
         department = request.POST.get('department')
         name = request.POST.get('name')
-        invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
-        flag = False
-        for ob in Department.objects.all():
-            if(ob.dept_name==department):
-                flag=True
-        if flag:
-            department = Department.objects.filter(dept_name=department)[0]
+        if CoOrdinator.objects.filter(email=email).exists():
+            messages.add_message(request, messages.SUCCESS, 'Coordinator already exists')
         else:
-            department = Department.objects.create(dept_name=department)
-        evaluators = Evaluator.objects.all()
-        co = InvitedCo(email=email, pending=True, dept=department, name=name)
-        co.save()
-        email = co.email
-        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, You have been invited as a coordinator. Please go to: \nhttps://evapp-wolfteam.herokuapp.com/registerCo \n Please sign up to continue.\n\n -Admin', to=[email])
-        email_send.send()
+            invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
+            flag = False
+            for ob in Department.objects.all():
+                if(ob.dept_name==department):
+                    flag=True
+            if flag:
+                department = Department.objects.filter(dept_name=department)[0]
+            else:
+                department = Department.objects.create(dept_name=department)
+            evaluators = Evaluator.objects.all()
+            co = InvitedCo(email=email, pending=True, dept=department, name=name)
+            co.save()
+            email = co.email
+            email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, You have been invited as a coordinator. Please go to: \nhttps://evapp-wolfteam.herokuapp.com/registerCo \n Please sign up to continue.\n\n -Admin', to=[email])
+            email_send.send()
 
-        for eval in evaluators:
-            if eval.email == invited_Coordinator:
-                Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
+            for eval in evaluators:
+                if eval.email == invited_Coordinator:
+                    Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
 
-        messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
+            messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
 
         context= {'now':'active','cordinator':InvitedCo.objects.all()}
         return render(request, 'main/invite.html', context)
