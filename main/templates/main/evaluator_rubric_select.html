@@ -13,7 +13,7 @@
 </style>
 
 <div class = "container" id = "main_content">
-
+{%if flag_count > 0%}
     <form action = "{%url 'main:evaluate_single_student' rubric.max_row rubric.id measure_id%}" method = "POST">
       {%csrf_token%}
         <label for="exampleFormControlSelect1">Evaluate a student</label>
@@ -66,6 +66,20 @@
           <button type = "submit" class = "btn btn-primary btn-lg mt-3"> Evaluate </button>
         </div>
         </form>
+    {%else%}
+    <div class="jumbotron jumbotron-fluid" style="background-color: rgb(252, 243, 229);">
+      <div class="container">
+        <h1 class="display-4">No more students</h1>
+        <p class="lead">Congratulations, you have evaluated all the assigned students
+          <br/>
+          Go back to <a href = "{%url 'main:evaluatorhome'%}"> homepage </a>
+        </p>
+
+      </div>
+    </div>
+
+
+    {%endif%}
 </div>
 
 

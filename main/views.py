@@ -249,8 +249,6 @@ def homepage(request):
                 else:
                     mea.evaluationPercent = (graded/total)*100.0
 
-
-
     context = { 'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
             , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
             'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
@@ -449,7 +447,6 @@ def evaluatorhome(request):
             else:
                 mea.evaluationPercent = (graded/total)*100.0
 
-
         context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
         , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'cycle_filter':len(cycle_filter)}
 
@@ -496,11 +493,11 @@ def evaluator_rubric_select(request, measure_id):
                 super_cat.append(cat.categoryTitle)
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
     alerts_count = alerts.count()
-
+    print(len(final_cust))
 
     context = { 'measures':measures, 'students':students, 'measure_id':measure_id, 'rubric':rubric, 'categories':categories
                 ,'row_num':range(rubric.max_row), 'col_num': range(rubric.max_col), 'evaluated_flag':final_cust,'super_cat':super_cat,
-                'alerts':alerts, 'alerts_count':alerts_count}
+                'alerts':alerts, 'alerts_count':alerts_count, 'flag_count':len(final_cust)}
     return render(request, 'main/evaluator_rubric_select.html', context)
 
 
