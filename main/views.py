@@ -243,47 +243,44 @@ def homepage(request):
     else:
         perc = 100.0 * (eval_student / student_count)
 
-            student_count = len(x)
-            eval_student = y
-            if student_count==0:
-                perc=100.0
-            else:
-                perc =100.0* (eval_student/student_count)
+    eval = request.user.email
+    current_eval = 0
+    for myeval in Evaluator.objects.all():
+        if (myeval.email == eval):
+            current_eval = myeval
+    myeval.perc_completed = perc
+    myeval.save()
 
-            eval = request.user.email
-            current_eval = 0
-            for myeval in Evaluator.objects.all():
-                if(myeval.email==eval):
-                    current_eval = myeval
-            myeval.perc_completed = perc
-            myeval.save()
+    cust_student_list = []
+    for stu in custom_students.objects.all():
+        for evaluator in stu.measure.evaluator.all():
+            if (evaluator.email == email_address):
+                cust_student_list.append(stu)
+    for mea in measure:
+        total = 0.0
+        graded = 0
 
-            cust_student_list=[]
-            for stu in custom_students.objects.all():
-                for evaluator in stu.measure.evaluator.all():
-                    if(evaluator.email==email_address):
-                        cust_student_list.append(stu)
-            for mea in measure:
-                total=0.0
-                graded =0
+        for cu in cust_student_list:
+            if cu.evaluator is not None:
+                if cu.measure == mea and cu.evaluator.email == request.user.email:
+                    total += 1
+                    if cu.graded:
+                        # print(cu.student_name)
+                        graded += 1
 
-                for cu in cust_student_list:
-                    if cu.evaluator is not None:
-                        if cu.measure == mea and cu.evaluator.email==request.user.email:
-                            total+=1
-                            if cu.graded:
-                                graded+=1
+        # print("Graded",graded)
+        # print("Total",total)
+        if graded == 0:
+            mea.evaluationPercent = 0.0
+        else:
+            mea.evaluationPercent = (graded / total) * 100.0
 
-                if graded==0:
-                    mea.evaluationPercent=0.0
-                else:
-                    mea.evaluationPercent = (graded/total)*100.0
-
-    context = { 'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
-            , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
-            'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
+    context = {'rubrics': rubrics, 'students': students, 'evaluations': evaluations, 'measures': measure,
+               'percent': perc, 'flag': cust_student_list
+        , 'now': 'active', 'alerts': alerts, 'alerts_count': alerts_count, 'cycle_filter': len(cycle_filter)}
 
     return render(request, 'main/evaluatorhome.html', context)
+
 
 
 @user_passes_test(admin_test)
