@@ -484,7 +484,7 @@ hr.not(.style15) {
           {%for eval in measure.evaluator.all%}
               <li class="list-group-item d-flex  justify-content-between">
 
-              <a href = "{%url 'main:assignments' eval.id measure.id outcome_id%}" type = 'button' style="color:black;" >   {{eval.name}}
+              <a href = "{%url 'main:assignments' eval.id measure.id outcome_id%}" style="color:black;" >   {{eval.name}}
               </a>
 
               <button  type = 'button' class = "btn btn-sm btn-danger"  data-toggle="modal" data-target="#exampleModalCenterDeleteEval{{eval.id}}" style="font-size: 1em; color: white;">
@@ -754,7 +754,7 @@ hr.not(.style15) {
           </li>
         {%for eval in measure.evaluator.all%}
             <li class="list-group-item d-flex  justify-content-between">
-                <a href = "{%url 'main:assignments' eval.id measure.id outcome_id%}" type = 'button' style="color:black;" >{{eval.name}}</a>
+                <a href = "{%url 'main:assignments' eval.id measure.id outcome_id%}"  style="color:black;" >{{eval.name}}</a>
             <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
               <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
             </a>
