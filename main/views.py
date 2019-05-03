@@ -359,7 +359,7 @@ def evaluatorhome(request):
         eval_a = Evaluator.objects.filter(dept=dept)
         courses = Course.objects.filter(dept=dept)
 
-        for ev in Evaluator.objects.all():
+        for ev in Evaluator.objects.filter(dept=dept):
             perc_update(ev)
 
         data = dict()
@@ -592,7 +592,7 @@ def dashboard(request):
     eval_a = Evaluator.objects.filter(dept=dept)
     courses = Course.objects.filter(dept=dept)
 
-    for ev in Evaluator.objects.all():
+    for ev in Evaluator.objects.filter(dept=dept):
         perc_update(ev)
 
     data = dict()
