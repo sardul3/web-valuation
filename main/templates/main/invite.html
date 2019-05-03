@@ -18,12 +18,44 @@
     <small id="emailHelp" class="form-text text-muted">Coordinator will get an invitation link through this email</small>
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword1">Department</label>
-    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Department" name = "department" required>
+  <label for="exampleFormControlSelect1">Department</label>
+  <select class="form-control" id="exampleFormControlSelect1" name="department" required >
+    {%for department in departments%}
+    <option value={{department.dept_name}}>{{department.dept_name}}</option>
+    {%endfor%}
+  </select>
   </div>
+  <div class = "text-right">
+  <a data-toggle="modal" data-target="#exampleModalCenterNewDepartment"> create a department  </a>
+</div>
+
+  <br/>
   <button type="submit" class="btn btn-primary">Invite</button>
 </form>
 </div>
 </div>
 </div>
+<div class="modal fade" id="exampleModalCenterNewDepartment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle">Create a new Department</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form action = "{%url 'main:create_department'%}" method="POST">
+        {%csrf_token%}
+        <div class="form-group">
+   <label for="exampleInputEmail1">Department Name</label>
+   <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter department name" name="dept">
+    </div>
+      <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+        </div>
+    </div>
+  </div>
+</div>
+
 {%endblock%}

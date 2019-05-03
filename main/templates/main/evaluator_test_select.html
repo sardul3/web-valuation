@@ -4,6 +4,7 @@
 
 
 <div class = "container" id = "main_content">
+  {%if evaluations_count > 0%}
   <form class="ml-2" action = "{%url 'main:add_test_score_evaluator' measure.id%}" method = "POST">
     {%csrf_token%}
 
@@ -35,7 +36,20 @@
        </div>
         <button type="submit" class="btn btn-primary  mb-2">Add Score</button>
       </form>
+      {%else%}
+      <div class="jumbotron jumbotron-fluid" style="background-color: rgb(252, 243, 229);">
+        <div class="container">
+          <h1 class="display-4">No more students</h1>
+          <p class="lead">Congratulations, you have evaluated all the assigned students
+            <br/>
+            Go back to <a href = "{%url 'main:evaluatorhome'%}"> homepage </a>
+          </p>
 
+        </div>
+      </div>
+
+
+      {%endif%}
 
 
 

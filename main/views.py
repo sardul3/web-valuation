@@ -215,7 +215,7 @@ def homepage(request):
 
     email_address = request.user.email
     cycle_filter = []
-    measure = Measure.objects.filter(evaluator__in=Evaluator.objects.filter(email=email_address), current=True)
+    measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address), current=True )
     for m in measure:
         if m.rubric or m.test_score:
             print(m)
@@ -238,52 +238,49 @@ def homepage(request):
                 flag.append(f.student_name)
     student_count = len(x)
     eval_student = y
-    if student_count == 0:
-        perc = 100.0
+    if student_count==0:
+        perc=100.0
     else:
-        perc = 100.0 * (eval_student / student_count)
+        perc =100.0* (eval_student/student_count)
 
-            student_count = len(x)
-            eval_student = y
-            if student_count==0:
-                perc=100.0
-            else:
-                perc =100.0* (eval_student/student_count)
+    eval = request.user.email
+    current_eval = 0
+    for myeval in Evaluator.objects.all():
+        if(myeval.email==eval):
+            current_eval = myeval
+    myeval.perc_completed = perc
+    myeval.save()
 
-            eval = request.user.email
-            current_eval = 0
-            for myeval in Evaluator.objects.all():
-                if(myeval.email==eval):
-                    current_eval = myeval
-            myeval.perc_completed = perc
-            myeval.save()
+    cust_student_list=[]
+    for stu in custom_students.objects.all():
+        for evaluator in stu.measure.evaluator.all():
+            if(evaluator.email==email_address):
+                cust_student_list.append(stu)
+    for mea in measure:
+        total=0.0
+        graded =0
 
-            cust_student_list=[]
-            for stu in custom_students.objects.all():
-                for evaluator in stu.measure.evaluator.all():
-                    if(evaluator.email==email_address):
-                        cust_student_list.append(stu)
-            for mea in measure:
-                total=0.0
-                graded =0
+        for cu in cust_student_list:
+            if cu.evaluator is not None:
+                if cu.measure == mea and cu.evaluator.email==request.user.email:
+                    total+=1
+                    if cu.graded:
+                        #print(cu.student_name)
+                        graded+=1
 
-                for cu in cust_student_list:
-                    if cu.evaluator is not None:
-                        if cu.measure == mea and cu.evaluator.email==request.user.email:
-                            total+=1
-                            if cu.graded:
-                                graded+=1
+        #print("Graded",graded)
+        #print("Total",total)
+        if graded==0:
+            mea.evaluationPercent=0.0
+        else:
+            mea.evaluationPercent = (graded/total)*100.0
 
-                if graded==0:
-                    mea.evaluationPercent=0.0
-                else:
-                    mea.evaluationPercent = (graded/total)*100.0
-
-    context = { 'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
-            , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
-            'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
+    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
+    , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'cycle_filter':len(cycle_filter)}
 
     return render(request, 'main/evaluatorhome.html', context)
+
+
 
 
 @user_passes_test(admin_test)
@@ -348,9 +345,9 @@ def evaluatorhome(request):
 
             messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
 
-            context = {'now': 'active', 'cordinator':InvitedCo.objects.all()}
+            context = {'now': 'active', 'cordinator':InvitedCo.objects.all(), 'departments':Department.objects.all()}
             return render(request, 'main/invite.html', context)
-        context = {'now': 'active', 'cordinator':InvitedCo.objects.all()}
+        context = {'now': 'active', 'cordinator':InvitedCo.objects.all(),'departments':Department.objects.all()}
         return render(request, 'main/invite.html', context)
 
     if request.user.is_staff:
@@ -541,8 +538,9 @@ def evaluator_test_select(request, measure_id):
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)[0]
     evaluations = custom_students.objects.filter(evaluator=evaluator, measure=measures)
-
-    context = {'measure':measures, 'test':test, 'evaluations':evaluations, 'measure_id':measure_id}
+    evaluations_count = custom_students.objects.filter(evaluator=evaluator, measure=measures, graded=False).count()
+    print(evaluations_count)
+    context = {'measure':measures, 'test':test, 'evaluations':evaluations, 'measure_id':measure_id, 'evaluations_count':evaluations_count}
     return render(request, 'main/evaluator_test_select.html', context)
 
 
@@ -1785,10 +1783,12 @@ def super_admin_home(request):
                     Invited_Coordinator.objects.filter(email=email, department=department).update(accepted=True)
 
             messages.add_message(request, messages.SUCCESS, 'Coordinator was invited successfully')
+        print(Department.objects.all())
 
-        context= {'now':'active','cordinator':InvitedCo.objects.all()}
+        context= {'now':'active','cordinator':InvitedCo.objects.all(), 'departments':Department.objects.all()}
         return render(request, 'main/invite.html', context)
-    context= {'now':'active','cordinator':InvitedCo.objects.all()}
+    print(Department.objects.all())
+    context= {'now':'active','cordinator':InvitedCo.objects.all(), 'departments':Department.objects.all()}
     return render(request, 'main/invite.html',context)
 
 @user_passes_test(super_admin_test)
@@ -1946,3 +1946,9 @@ def delete_assignment(request, assignment_id, evaluator_id, measure_id, outcome_
     'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
 
     return render(request, 'main/assignments.html', context)
+
+def create_department(request):
+    dept_name = request.POST.get('dept')
+    Department.objects.create(dept_name=dept_name)
+
+    return HttpResponseRedirect(reverse_lazy('main:super_admin_home'))
