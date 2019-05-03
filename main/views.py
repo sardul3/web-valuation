@@ -179,6 +179,23 @@ def print_report_rubric(request, measure_id):
     return response
 
 
+def perc_update(eval):
+    student_count=0
+    evaluated_count=0
+    for st in custom_students.objects.filter(evaluator=eval):
+        if st.graded:
+            evaluated_count+=1
+        student_count+=1
+    if student_count==0:
+        eval.perc_completed=0
+    else:
+        perc = 100.0*(evaluated_count/student_count)
+        eval.perc_completed=perc
+    eval.save()
+    return
+
+
+
 def admin_test(user):
     return user.is_staff
 
@@ -193,16 +210,23 @@ def homepage(request):
     flags = evaluation_flag.objects.all()
     alerts = Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at')
     alerts_count = alerts.count()
-    perc = 0
-    cust_student_list = None
+
     flag = []
 
     email_address = request.user.email
-    measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address))
+    cycle_filter = []
+    measure = Measure.objects.filter(evaluator__in=Evaluator.objects.filter(email=email_address), current=True)
     for m in measure:
-        print(m)
-        for o in m.outcome.all():
-            print(o)
+        if m.rubric or m.test_score:
+            print(m)
+            for o in Outcome.objects.all():
+                if m.outcome == o:
+                    print(o)
+                    x = (o.cycle.values())
+                    for val in x:
+                        print(val)
+                        if val['isCurrent'] == True:
+                            cycle_filter.append(val['id'])
 
     x = []
     y = 0
@@ -212,50 +236,51 @@ def homepage(request):
         for f in flags:
             if f.measure == me:
                 flag.append(f.student_name)
+    student_count = len(x)
+    eval_student = y
+    if student_count == 0:
+        perc = 100.0
+    else:
+        perc = 100.0 * (eval_student / student_count)
 
-            student_count = len(x)
-            eval_student = y
-            if student_count==0:
-                perc=100.0
-            else:
-                perc =100.0* (eval_student/student_count)
+    eval = request.user.email
+    current_eval = 0
+    for myeval in Evaluator.objects.all():
+        if (myeval.email == eval):
+            current_eval = myeval
+    myeval.perc_completed = perc
+    myeval.save()
 
-            eval = request.user.email
-            current_eval = 0
-            for myeval in Evaluator.objects.all():
-                if(myeval.email==eval):
-                    current_eval = myeval
-            myeval.perc_completed = perc
-            myeval.save()
+    cust_student_list = []
+    for stu in custom_students.objects.all():
+        for evaluator in stu.measure.evaluator.all():
+            if (evaluator.email == email_address):
+                cust_student_list.append(stu)
+    for mea in measure:
+        total = 0.0
+        graded = 0
 
-            cust_student_list=[]
-            for stu in custom_students.objects.all():
-                for evaluator in stu.measure.evaluator.all():
-                    if(evaluator.email==email_address):
-                        cust_student_list.append(stu)
-            for mea in measure:
-                total=0.0
-                graded =0
+        for cu in cust_student_list:
+            if cu.evaluator is not None:
+                if cu.measure == mea and cu.evaluator.email == request.user.email:
+                    total += 1
+                    if cu.graded:
+                        # print(cu.student_name)
+                        graded += 1
 
-                for cu in cust_student_list:
-                    if cu.evaluator is not None:
-                        if cu.measure == mea and cu.evaluator.email==request.user.email:
-                            total+=1
-                            if cu.graded:
-                                graded+=1
+        # print("Graded",graded)
+        # print("Total",total)
+        if graded == 0:
+            mea.evaluationPercent = 0.0
+        else:
+            mea.evaluationPercent = (graded / total) * 100.0
 
-                if graded==0:
-                    mea.evaluationPercent=0.0
-                else:
-                    mea.evaluationPercent = (graded/total)*100.0
-
-
-
-    context = { 'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
-            , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
-            'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
+    context = {'rubrics': rubrics, 'students': students, 'evaluations': evaluations, 'measures': measure,
+               'percent': perc, 'flag': cust_student_list
+        , 'now': 'active', 'alerts': alerts, 'alerts_count': alerts_count, 'cycle_filter': len(cycle_filter)}
 
     return render(request, 'main/evaluatorhome.html', context)
+
 
 @user_passes_test(admin_test)
 def outcomes(request):
@@ -333,6 +358,8 @@ def evaluatorhome(request):
         eval_a = Evaluator.objects.filter(dept=dept)
         courses = Course.objects.filter(dept=dept)
 
+        for ev in Evaluator.objects.all():
+            perc_update(ev)
 
         data = dict()
         for measure in measures:
@@ -564,6 +591,9 @@ def dashboard(request):
     cycles = Cycle.objects.filter(dept=dept)
     eval_a = Evaluator.objects.filter(dept=dept)
     courses = Course.objects.filter(dept=dept)
+
+    for ev in Evaluator.objects.all():
+        perc_update(ev)
 
     data = dict()
     for measure in measures:
@@ -1386,7 +1416,7 @@ def evaluate_single_student(request, rubric_row, rubric_id, measure_id):
 
     messages.add_message(request, messages.SUCCESS, 'Student was evaluated successfully')
 
-    return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
+    return HttpResponseRedirect(reverse_lazy('main:homepage'))
 
 
 def remove_rubric_association(request, measure_id, outcome_id):
@@ -1594,7 +1624,7 @@ def mark_read(request, alert_id):
     print(alert)
     messages.add_message(request, messages.SUCCESS, 'Message mark read')
 
-    return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
+    return HttpResponseRedirect(reverse_lazy('main:homepage'))
 
 
 
@@ -1647,7 +1677,7 @@ def upload_test_score_evaluator(request, measure_id):
         number_of_students = Test_score.objects.filter(test=test_name).count()
         average = total_points / number_of_students
 
-    return HttpResponseRedirect(reverse_lazy('main:evaluatorhome'))
+    return HttpResponseRedirect(reverse_lazy('main:homepage'))
 
 def generate_outcome_report(request, outcome_id):
     cordinator = CoOrdinator.objects.get(email=request.user.email)
