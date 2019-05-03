@@ -1211,7 +1211,7 @@ def add_evaluator(request, outcome_id, measure_id):
 
         measure.evaluator.add(evaluator)
         email = request.POST.get('evaluator_email')
-        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+        email_send = EmailMessage('Regarding Measure Evaluation', 'Hi' + evaluator.name + ',\n' + ' please go to: \nhttps://evapp-wolfteam.herokuapp.com/register \nYou have been assigned some evaluations\n\n -'+ request.user.username, to=[email])
         email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
