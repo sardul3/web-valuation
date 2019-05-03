@@ -65,6 +65,7 @@ hr.not(.style15) {
 
 .progress {background: :#9eb5ce; border: 0px solid rgba(245, 245, 245, 1); border-radius: 5px; height: 20px; width:90%;}
 
+
 </style>
 
 
@@ -478,12 +479,18 @@ hr.not(.style15) {
             <button type="button" class="btn btn-light  ml-3" data-toggle="modal" data-target="#exampleModalCenterAddEv{{measure.id}}">
                  <i data-toggle="tooltip" title="Add Evaluators" class="fas fa-plus"></i>
             </button>
+
             </li>
           {%for eval in measure.evaluator.all%}
-              <li class="list-group-item d-flex  justify-content-between">{{eval.name}}
+              <li class="list-group-item d-flex  justify-content-between">
+
+              <a href = "{%url 'main:assignments' eval.id measure.id outcome_id%}" type = 'button' style="color:black;" >   {{eval.name}}
+              </a>
+
               <button  type = 'button' class = "btn btn-sm btn-danger"  data-toggle="modal" data-target="#exampleModalCenterDeleteEval{{eval.id}}" style="font-size: 1em; color: white;">
                 <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
               </button>
+
               <div class="modal fade" id="exampleModalCenterDeleteEval{{eval.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -504,6 +511,23 @@ hr.not(.style15) {
                   </div>
                 </div>
               </div>
+
+              <div class="modal fade" id="exampleModalCenterExpand{{eval.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Assignments for {{eval.name}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                  </div>
+                  </div>
+                </div>
+              </div>
+
 
                 </li>
 
@@ -729,7 +753,8 @@ hr.not(.style15) {
           </button>
           </li>
         {%for eval in measure.evaluator.all%}
-            <li class="list-group-item d-flex  justify-content-between">{{eval.name}}
+            <li class="list-group-item d-flex  justify-content-between">
+                <a href = "{%url 'main:assignments' eval.id measure.id outcome_id%}" type = 'button' style="color:black;" >{{eval.name}}</a>
             <a href = "{%url 'main:remove_evaluator_access' eval.id measure.id outcome_id%}" class = "btn btn-sm btn-danger" style="font-size: 1em; color: white;">
               <i data-toggle="tooltip" title="Remove Evaluator" class="fas fa-user-slash"></i>
             </a>

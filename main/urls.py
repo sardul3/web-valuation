@@ -11,6 +11,10 @@ urlpatterns = [
     path('print_report/<str:test_score>/<int:measure_id>', views.print_report, name = 'print_report'),
     path('print_report_rubric/<int:measure_id>', views.print_report_rubric, name = 'print_report_rubric'),
 
+    path('assignments/<int:evaluator_id>/<int:measure_id>/<int:outcome_id>', views.assignments, name = 'assignments'),
+    path('delete_assignment/<int:assignment_id>/<int:evaluator_id>/<int:measure_id>/<int:outcome_id>', views.delete_assignment, name = 'delete_assignment'),
+
+
 
     path('invite', views.super_admin_home, name='super_admin_home'),
     path('invite_status', views.super_admin_past, name='super_admin_past'),

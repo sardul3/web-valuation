@@ -1,0 +1,59 @@
+{% extends  'main/adminbase.html' %}
+{%load static%}
+
+
+
+{%block body_block%}
+<style>
+  .table td, .table th {
+      padding: .75rem;
+      vertical-align: top;
+      border-top: 1px solid #dee2e6;
+      text-align: center;
+  }
+</style>
+
+<div class = "container">
+  <a href = "{%url 'main:outcome_detail' outcome_id%}">
+  <span style="font-size:1.5rem">
+    <i class="fas fa-arrow-left"> Back to Outcome page</i>
+  </span>
+</a>
+<h3 class = "text-center"> Assignments for {{evaluator}} </h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Student</th>
+      <th scope="col">Status</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for assignment in assignments%}
+    <tr>
+      <td>{{assignment.student_name}}</td>
+      <td>
+        {%if assignment.graded%}
+        <span style="font-size:1.5rem; color: #7a2831;">
+          <i class="fas fa-check-circle"></i>
+        </span>
+        {%else%}
+        <span style="font-size:1.5rem; color: #7a2831; margin-left: -5px;">
+            <i class="fas fa-ellipsis-h"></i>
+          </span>
+        {%endif%}
+      </td>
+      <td>
+<a href = "{%url 'main:delete_assignment' assignment.id evaluator_id measure_id outcome_id%}">
+          <span style="font-size: 1.5rem; color:#7a2831;">
+            <i data-toggle="tooltip" title="Delete Assignment" class="far fa-trash-alt"></i>
+        </span>
+</a>
+      </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+</div>
+
+{%endblock%}

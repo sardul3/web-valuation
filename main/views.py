@@ -635,11 +635,11 @@ def cycle(request, cycle_id):
     measures = Measure.objects.filter(dept=dept)
     rubrics = Rubric.objects.filter(dept=dept)
     cycle = Cycle.objects.get(id=cycle_id)
-    prev= Cycle.objects.filter(isCurrent=False)
+    prev= Cycle.objects.all()
     courses = Course.objects.filter(dept=dept)
     prev_cycles = []
     for cy in prev:
-        if cy.coordinator==cordinator:
+        if cy.coordinator==cordinator and cy != cycle:
             prev_cycles.append(cy)
     all_outcomes = Outcome.objects.filter(dept=dept)
 
@@ -1886,3 +1886,30 @@ def dept_log(request, dept_id):
      'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
     'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at'), 'department_name':department_name}
     return render(request, 'main/dept_log.html', context)
+
+
+def assignments(request, evaluator_id, measure_id, outcome_id):
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    measure = Measure.objects.get(id=measure_id)
+    evaluator = Evaluator.objects.get(id=evaluator_id)
+    custom_st = custom_students.objects.filter(evaluator=evaluator, measure=measure)
+    context = {'cordinator':cordinator,'assignments':custom_st, 'evaluator':evaluator.name, 'measure_id':measure_id
+                , 'outcome_id':outcome_id, 'evaluator_id':evaluator_id,'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+                'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ),
+                 'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
+                'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
+    return render(request, 'main/assignments.html', context)
+
+def delete_assignment(request, assignment_id, evaluator_id, measure_id, outcome_id):
+    custom_students.objects.filter(id=assignment_id).delete()
+    cordinator = CoOrdinator.objects.get(email=request.user.email)
+    measure = Measure.objects.get(id=measure_id)
+    evaluator = Evaluator.objects.get(id=evaluator_id)
+    custom_st = custom_students.objects.filter(evaluator=evaluator, measure=measure)
+    context = {'cordinator':cordinator,'assignments':custom_st, 'evaluator':evaluator.name,
+    'measure_id':measure.id, 'outcome_id':outcome_id, 'evaluator_id':evaluator.id,'notification_count' : Notification.objects.filter(read=False, to=request.user.email).count(),
+    'notifications' : Notification.objects.filter(read=False, to=request.user.email).order_by('-created_at' ),
+     'msgs_count': Broadcast.objects.filter(receiver=request.user.email, read=False).order_by('-sent_at').count(),
+    'msgs':Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')}
+
+    return render(request, 'main/assignments.html', context)
