@@ -246,6 +246,7 @@ def homepage(request):
     eval = request.user.email
     current_eval = 0
     for myeval in Evaluator.objects.all():
+<<<<<<< HEAD
         if(myeval.email==eval):
             current_eval = myeval
     myeval.perc_completed = perc
@@ -277,12 +278,49 @@ def homepage(request):
 
     context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
     , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'cycle_filter':len(cycle_filter)}
+=======
+        if (myeval.email == eval):
+            current_eval = myeval
+    myeval.perc_completed = perc
+    myeval.save()
+
+    cust_student_list = []
+    for stu in custom_students.objects.all():
+        for evaluator in stu.measure.evaluator.all():
+            if (evaluator.email == email_address):
+                cust_student_list.append(stu)
+    for mea in measure:
+        total = 0.0
+        graded = 0
+
+        for cu in cust_student_list:
+            if cu.evaluator is not None:
+                if cu.measure == mea and cu.evaluator.email == request.user.email:
+                    total += 1
+                    if cu.graded:
+                        # print(cu.student_name)
+                        graded += 1
+
+        # print("Graded",graded)
+        # print("Total",total)
+        if graded == 0:
+            mea.evaluationPercent = 0.0
+        else:
+            mea.evaluationPercent = (graded / total) * 100.0
+
+    context = {'rubrics': rubrics, 'students': students, 'evaluations': evaluations, 'measures': measure,
+               'percent': perc, 'flag': cust_student_list
+        , 'now': 'active', 'alerts': alerts, 'alerts_count': alerts_count, 'cycle_filter': len(cycle_filter)}
+>>>>>>> 2e96ed5621e884ed70f35fd1eb01289cb6470ef3
 
     return render(request, 'main/evaluatorhome.html', context)
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2e96ed5621e884ed70f35fd1eb01289cb6470ef3
 @user_passes_test(admin_test)
 def outcomes(request):
     coordinator = CoOrdinator.objects.get(request.user.email)
@@ -359,7 +397,7 @@ def evaluatorhome(request):
         eval_a = Evaluator.objects.filter(dept=dept)
         courses = Course.objects.filter(dept=dept)
 
-        for ev in Evaluator.objects.all():
+        for ev in Evaluator.objects.filter(dept=dept):
             perc_update(ev)
 
         data = dict()
@@ -593,7 +631,7 @@ def dashboard(request):
     eval_a = Evaluator.objects.filter(dept=dept)
     courses = Course.objects.filter(dept=dept)
 
-    for ev in Evaluator.objects.all():
+    for ev in Evaluator.objects.filter(dept=dept):
         perc_update(ev)
 
     data = dict()
