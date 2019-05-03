@@ -92,7 +92,7 @@ class Outcome(models.Model):
     title = models.CharField(max_length=200, default='', null=True)
     desc = models.CharField(max_length=600, null=True)
     status = models.BooleanField(default=True)
-    status_help = models.CharField(max_length=200, null=True, default="pending")
+    status_help = models.CharField(max_length=200, null=True, default="notstarted")
     cycle = models.ManyToManyField(Cycle)
     course = models.ManyToManyField(Course)
     coordinator = models.ForeignKey(CoOrdinator,null=True,on_delete=models.CASCADE)
@@ -139,7 +139,7 @@ class Measure(models.Model):
                     ('passed', 'passed'),
                     ('failed', 'failed')
                     )
-    status = models.CharField(max_length=100, choices=STATUS_TYPES, default='pending')
+    status = models.CharField(max_length=100, choices=STATUS_TYPES, default='notstarted')
     statusPercent = models.FloatField(default=0.0)
     evaluationPercent = models.FloatField(default=0.0)
     measureTitle = models.CharField(max_length=200, default='', null=True)

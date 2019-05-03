@@ -148,6 +148,8 @@ background: #f5efe6;
                 <div class="badge badge-pill badge-danger" style="font-size:initial;">failing</div>
               {%elif outcome.status_help == "passing" %}
                 <div class="badge badge-pill badge-success" style="font-size:initial;">passing</div>
+              {%elif outcome.status_help == "notstarted" %}
+                <div class="badge badge-pill badge-info" style="font-size:initial;">Not Started</div>
                   {% else %}
                   <div class="badge badge-pill badge-warning" style="font-size:initial;">pending</div>
               {%endif%}

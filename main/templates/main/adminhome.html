@@ -212,6 +212,8 @@ hr {
                            <span class="badge badge-success" style="padding: 10px;"> {{measure.status}}</span>
                            {%elif measure.status == 'failing'%}
                            <span class="badge badge-danger" style="padding: 10px;"> {{measure.status}}</span>
+                            {%elif measure.status == 'notstarted'%}
+                           <span class="badge badge-info" style="padding: 10px;">Not Started</span>
                             {% else %}
                            <span class="badge badge-warning" style="padding: 10px;"> {{measure.status}}</span>
                            {%endif%}

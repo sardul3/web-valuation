@@ -197,6 +197,8 @@ hr.not(.style15) {
             <div class="badge badge-pill badge-danger" style="font-size:initial;">failing</div>
               {% elif measure.status == 'pending' %}
               <div class="badge badge-pill badge-warning" style="font-size:initial;">pending</div>
+              {% elif measure.status == 'notstarted' %}
+              <div class="badge badge-pill badge-info" style="font-size:initial;">Not Started</div>
           {%else%}
             <div class="badge badge-pill badge-success" style="font-size:initial;">passing</div>
           {%endif%}
