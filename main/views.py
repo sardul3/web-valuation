@@ -1252,6 +1252,8 @@ def add_evaluator(request, outcome_id, measure_id):
         for ev in evals:
             if ev.email == request.POST.get('evaluator_email'):
                 evaluator = ev
+                evaluator.name=request.POST.get('evaluator_name')
+                evaluator.save()
                 flag = True
         print(flag)
         if not flag:
