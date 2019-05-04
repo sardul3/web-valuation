@@ -28,7 +28,7 @@
     <thead class = "card-header">
       <tr>
         <th scope="col">Logs</th>
-        <th scope="col"><a href = "{%url 'main:clear_log'%}">clear all</a></th>
+        <th scope="col"><a  style="color:white;" href = "{%url 'main:clear_log'%}">clear all</a></th>
       </tr>
     </thead>
     <tbody>
@@ -38,8 +38,21 @@
         <td> {{log.created_at|timesince}} ago</td>
       </tr>
       {%empty%}
-      <a href= "#" class="list-group-item list-group-item-action text-center" style="padding:20px;"><span >No activity to log. <br/> Please check back later</span>
-       </a>
+      <tr>
+        <td>
+        <div class="jumbotron jumbotron-fluid" style="background-color: rgb(252, 243, 229); width:100%;">
+          <div class="container">
+            <h1 class="display-4">No activity to log.</h1>
+            <p class="lead">Please check back later
+              <br/>
+            </p>
+
+          </div>
+        </div>
+
+
+        </td>
+     </tr>
 
       {%endfor%}
     </tbody>
