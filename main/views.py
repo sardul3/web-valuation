@@ -1775,7 +1775,7 @@ def super_admin_home(request):
             co = InvitedCo(email=email, pending=True, dept=department, name=name)
             co.save()
             email = co.email
-            email_send = EmailMessage('Regarding Measure Evaluation:', 'Hi, You have been invited as a coordinator for'+ co.dept + 'department. Please visit: \nhttps://evapp-wolfteam.herokuapp.com/registerCo \n Please sign up to continue.\n\n -'+ request.user.username, to=[email])
+            email_send = EmailMessage('Regarding Measure Evaluation:', 'Hi, You have been invited as a coordinator for'+ str(co.dept) + 'department. Please visit: \nhttps://evapp-wolfteam.herokuapp.com/registerCo \n Please sign up to continue.\n\n -'+ request.user.username, to=[email])
             email_send.send()
 
             for eval in evaluators:
