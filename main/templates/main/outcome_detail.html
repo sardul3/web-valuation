@@ -96,20 +96,19 @@ hr.not(.style15) {
                <div class="form-group">
                  <label for="exampleFormControlTextarea1">Cutoff-percent</label>
                  <input type="number" class="form-control" id="exampleInputPassword1"
-                        placeholder="cutoff percentage" name = "cutoff_percent">
+                        placeholder="cutoff percentage" name = "cutoff_percent" min=1 max=100>
                </div>
 
                <label for="exampleFormControlTextarea1">Select Cutoff type</label>
                  <select class="custom-select" name="cutoff_selection">
                  <option selected>Percentage</option>
-                 <option value="Percentile">Percentile</option>
-                 <option value ="Average">Average</option>
+
                  </select>
 
                  <div class="form-group">
                    <label for="exampleFormControlTextarea1">Cutoff-Score</label>
                    <input type="number" class="form-control" id="exampleInputPassword1"
-                          placeholder="cutoff score" name = "cutoff_score">
+                          placeholder="cutoff score" name = "cutoff_score" min=1>
                  </div>
 
             <div class="form-group">
@@ -353,7 +352,7 @@ hr.not(.style15) {
             <div class="form-group">
               <label for="exampleFormControlTextarea1">Student Name</label>
               <input type="text" class="form-control" id="exampleInputPassword1"
-                     placeholder="name of the student" name = "student_name">
+                     placeholder="name of the student" name = "student_name" required>
               <br />
               <button type = "submit" class = "btn btn-primary"> Add </button>
             </div>
@@ -1054,7 +1053,7 @@ hr.not(.style15) {
               <div class="form-group">
                 <label for="exampleInputEmail1">Test Title</label>
                 <input type="textarea" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="title of the test"
-                name="test_title"
+                name="test_title" required
                 {%if measure.test_score%}
                   value = "{{measure.test_score.test}}"
                 {%endif%}
