@@ -653,7 +653,7 @@ hr.not(.style15) {
 
 
 
-          <div class = "col col-lg-4 md-12 sm-12 xs-12">
+          <div class = "col col-lg-4 md-12 sm-12 xs-12 " style="overflow-y:auto; height: 40vh;">
             <li class="list-group-item d-flex justify-content-between card-header align-items-center"> <h4>Students</h4>
 
           <div class = "d-flex justify-content-between">
@@ -667,29 +667,38 @@ hr.not(.style15) {
           </div>
 
             </li>
-            <ul class="list-group" style="overflow-y:auto; height: 40vh">
 
-              {% for student in measure.student.all %}
-                    <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
-                      <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
-                            <span style="font-size: 1em; color: #7a2831;">
-                                <i data-toggle="tooltip" title="Remove Student" class="fas fa-times"></i>
-                            </span>
-                      </a>
-                    </li>
-              {%empty%}
-              <div class="jumbotron jumbotron-fluid">
-                <div class="container">
-                  <h1>No students</h1>
-                  <p class="lead">Click the
-                    <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-                      <i data-toggle="tooltip" title="Add Students" class="fas fa-plus"></i>
-                    </button>
-                     button above to add students</p>
-                </div>
-              </div>
-              {%endfor%}
-          </ul>
+            <table class = "table" style="background-color:#f8f9fa;">
+              <tbody>
+                {% for student in measure.student.all %}
+                <tr class = "d-flex justify-content-between" style="border-bottom: 1px solid #7a2831;">
+                  <td class = "d-flex align-items-center">{{student.name}}</td>
+                  <td>
+                    <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
+                          <span style="font-size: 1em; color: #7a2831;">
+                              <i data-toggle="tooltip" title="Remove Student" class="fas fa-times"></i>
+                          </span>
+                    </a>
+                  </td>
+                  </tr>
+
+                  {%empty%}
+                  <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                      <h1>No students</h1>
+                      <p class="lead">Click the
+                        <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
+                          <i data-toggle="tooltip" title="Add Students" class="fas fa-plus"></i>
+                        </button>
+                         button above to add students</p>
+                    </div>
+                  </div>
+
+                  {%endfor%}
+            </table>
+
+
+
           </div>
         </div>
 
@@ -842,7 +851,7 @@ hr.not(.style15) {
 </div>
 
 
-<div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12">
+<div class = "col col-lg-4 col-md-12 col-sm-12 col-xs-12 col-12" style="overflow-y:auto; height: 40vh;">
     <li class="list-group-item d-flex justify-content-between card-header  align-items-center"> <h4>Students</h4>
 
   <div class = "d-flex justify-content-between">
@@ -856,31 +865,37 @@ hr.not(.style15) {
   </div>
 
     </li>
-    <ul class="list-group" style="overflow-y:auto; height: 40vh">
-
+    
+  <table class = "table" style="background-color:#f8f9fa;">
+    <tbody>
       {% for student in measure.student.all %}
-            <li class="list-group-item  d-flex justify-content-between ">{{student.name}}
-              <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
-                    <span style="font-size: 1em; color: #7a2831;">
-                        <i class="fas fa-times"></i>
-                    </span>
-              </a>
-            </li>
+      <tr class = "d-flex justify-content-between" style="border-bottom: 1px solid #7a2831;">
+        <td class = "d-flex align-items-center">{{student.name}}</td>
+        <td>
+          <a href = "{%url 'main:delete_student' outcome_id measure.id student.id%}" class="btn btn-md mr-3">
+                <span style="font-size: 1em; color: #7a2831;">
+                    <i data-toggle="tooltip" title="Remove Student" class="fas fa-times"></i>
+                </span>
+          </a>
+        </td>
+        </tr>
 
-            {%empty%}
-            <div class="jumbotron jumbotron-fluid">
-              <div class="container">
-                <h1>No students</h1>
-                <p class="lead">Click the
-                  <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                   button above to add students</p>
-              </div>
-            </div>
+        {%empty%}
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h1>No students</h1>
+            <p class="lead">Click the
+              <button type="button" class="btn btn-md btn-light ml-1 mr-1" data-toggle="modal" data-target="#exampleModalCenterStudentUpload{{measure.id}}">
+                <i data-toggle="tooltip" title="Add Students" class="fas fa-plus"></i>
+              </button>
+               button above to add students</p>
+          </div>
+        </div>
 
-      {%endfor%}
-  </ul>
+        {%endfor%}
+  </table>
+
+
 
 
 
