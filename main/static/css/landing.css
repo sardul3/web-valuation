@@ -1,6 +1,6 @@
 {% load static %}
 
-
+  html{ overflow-y: scroll;}
 body{
   font-family: Montserrat, Lato, 'Nunito Sans', Helvetica, Arial, Platino, Garamond, Bookman, Lucidia;
 }
@@ -65,8 +65,8 @@ td{
   right: 0;
   font-size: 1.5rem;
   z-index: 1;
-  background-color: #7a2831;
-  color: #f8f9fa;
+  /* background-color: #7a2831; */
+  /* color: #f8f9fa; */
   font-style: oblique;
   font-family: Bookman;
 

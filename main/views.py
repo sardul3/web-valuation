@@ -957,7 +957,7 @@ def register(request):
 
             return redirect('/')
         else:
-            messages.add_message(request, messages.SUCCESS, 'Please check your credentials')
+            messages.add_message(request, messages.ERROR, 'Please check your credentials')
             return render(request, 'main/register.html', {'form': form})
 
     else:
@@ -990,7 +990,7 @@ def registerCo(request):
             Log.objects.create(message=text, created_at=datetime.today(), subject=inv.dept, cor=inv.email)
             return redirect('/')
         else:
-            messages.add_message(request, messages.SUCCESS, 'Please check your credentials')
+            messages.add_message(request, messages.ERROR, 'Please check your credentials')
             return render(request, 'main/registerCo.html', {'form': form})
 
     else:
@@ -1449,7 +1449,7 @@ def remove_test_association(request, measure_id, outcome_id):
     measure.update(test_score=None, statusPercent=0.0, current=False)
     custom_students.objects.filter(measure__in=measure, graded=True).update(current=False)
 
-    messages.add_message(request, messages.SUCCESS, 'Removed test association')
+    messages.add_message(request, messages.WARNING, 'Removed test association')
 
 
     return HttpResponseRedirect(reverse_lazy('main:outcome_detail', kwargs={'outcome_id':outcome_id}))
@@ -1459,7 +1459,7 @@ def remove_evaluator_access(request, evaluator_id, measure_id, outcome_id):
     measure = Measure.objects.get(id=measure_id)
     measure.evaluator.remove(evaluator)
 
-    messages.add_message(request, messages.SUCCESS, 'Evaluator access removed')
+    messages.add_message(request, messages.WARNING, 'Evaluator access removed')
     text = request.user.username + " ( " + request.user.email + " ) " + 'removed the evaluator, ' + evaluator.name + " ( " + evaluator.email + " ) from measure, " + measure.measureTitle
     Log.objects.create(message=text, created_at=datetime.today(), cor=request.user.email)
 
@@ -1483,7 +1483,7 @@ def past_assessments(request):
     email = request.user.email
     evaluator = Evaluator.objects.filter(email=email)
     if len(evaluator)==0:
-        messages.add_message(request, messages.SUCCESS, 'No past assessments')
+        messages.add_message(request, messages.WARNING, 'No past assessments')
         return render(request, 'main/past_assessments.html', {})
     else:
         evaluator = evaluator[0]
@@ -1647,7 +1647,7 @@ def delete_notification(request, notification_id):
     notification = Notification.objects.filter(id=notification_id)
     notification.update(read=True)
     print(request.build_absolute_uri())
-    messages.add_message(request, messages.SUCCESS, 'Notifications removed with success')
+    messages.add_message(request, messages.WARNING, 'Notifications removed with success')
 
     url = request.POST.get("url")
     return redirect(url)
@@ -1656,7 +1656,7 @@ def delete_notification(request, notification_id):
 def delete_notifications(request):
     notification = Notification.objects.all()
     notification.update(read = True)
-    messages.add_message(request, messages.SUCCESS, 'Notifications removed with success')
+    messages.add_message(request, messages.WARNING, 'Notifications removed with success')
 
     print(request.build_absolute_uri())
     url = request.POST.get("urls")
@@ -1774,7 +1774,7 @@ def super_admin_home(request):
         department = request.POST.get('department')
         name = request.POST.get('name')
         if InvitedCo.objects.filter(email=email).exists():
-            messages.add_message(request, messages.SUCCESS, 'Coordinator already exists')
+            messages.add_message(request, messages.ERROR, 'Coordinator already exists')
         else:
             invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
             flag = False
@@ -1849,7 +1849,7 @@ def clear_log(request):
     Log.objects.filter(read=False).update(read=True)
     logs = Log.objects.filter(read=False).order_by('-created_at')
     context = {"logs":logs, 'log':'active', }
-    messages.add_message(request, messages.SUCCESS, 'Removed all the logs')
+    messages.add_message(request, messages.WARNING, 'Removed all the logs')
 
     return render(request, 'main/logs.html', context)
 
