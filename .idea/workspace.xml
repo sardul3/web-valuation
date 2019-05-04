@@ -2,12 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15eb8ac5-b517-4c29-a46b-e1fbe16a6bd5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/adminhome.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/adminhome.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/cycle.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/cycle.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/outcome_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/outcome_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,8 +36,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="263">
-              <caret line="1819" column="27" selection-start-line="1819" selection-start-column="27" selection-end-line="1819" selection-end-column="27" />
+            <state relative-caret-position="670">
+              <caret line="282" lean-forward="true" selection-start-line="282" selection-end-line="282" />
             </state>
           </provider>
         </entry>
@@ -502,8 +496,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="1819" column="27" selection-start-line="1819" selection-start-column="27" selection-end-line="1819" selection-end-column="27" />
+        <state relative-caret-position="670">
+          <caret line="282" lean-forward="true" selection-start-line="282" selection-end-line="282" />
         </state>
       </provider>
     </entry>
