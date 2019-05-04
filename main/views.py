@@ -215,7 +215,7 @@ def homepage(request):
 
     email_address = request.user.email
     cycle_filter = []
-    measure = Measure.objects.filter(evaluator__in = Evaluator.objects.filter(email=email_address), current=True )
+    measure = Measure.objects.filter(evaluator__in=Evaluator.objects.filter(email=email_address), current=True)
     for m in measure:
         if m.rubric or m.test_score:
             print(m)
@@ -238,47 +238,14 @@ def homepage(request):
                 flag.append(f.student_name)
     student_count = len(x)
     eval_student = y
-    if student_count==0:
-        perc=100.0
+    if student_count == 0:
+        perc = 100.0
     else:
-        perc =100.0* (eval_student/student_count)
+        perc = 100.0 * (eval_student / student_count)
 
     eval = request.user.email
     current_eval = 0
     for myeval in Evaluator.objects.all():
-<<<<<<< HEAD
-        if(myeval.email==eval):
-            current_eval = myeval
-    myeval.perc_completed = perc
-    myeval.save()
-
-    cust_student_list=[]
-    for stu in custom_students.objects.all():
-        for evaluator in stu.measure.evaluator.all():
-            if(evaluator.email==email_address):
-                cust_student_list.append(stu)
-    for mea in measure:
-        total=0.0
-        graded =0
-
-        for cu in cust_student_list:
-            if cu.evaluator is not None:
-                if cu.measure == mea and cu.evaluator.email==request.user.email:
-                    total+=1
-                    if cu.graded:
-                        #print(cu.student_name)
-                        graded+=1
-
-        #print("Graded",graded)
-        #print("Total",total)
-        if graded==0:
-            mea.evaluationPercent=0.0
-        else:
-            mea.evaluationPercent = (graded/total)*100.0
-
-    context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
-    , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'cycle_filter':len(cycle_filter)}
-=======
         if (myeval.email == eval):
             current_eval = myeval
     myeval.perc_completed = perc
@@ -311,16 +278,10 @@ def homepage(request):
     context = {'rubrics': rubrics, 'students': students, 'evaluations': evaluations, 'measures': measure,
                'percent': perc, 'flag': cust_student_list
         , 'now': 'active', 'alerts': alerts, 'alerts_count': alerts_count, 'cycle_filter': len(cycle_filter)}
->>>>>>> 2e96ed5621e884ed70f35fd1eb01289cb6470ef3
 
     return render(request, 'main/evaluatorhome.html', context)
 
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 2e96ed5621e884ed70f35fd1eb01289cb6470ef3
 @user_passes_test(admin_test)
 def outcomes(request):
     coordinator = CoOrdinator.objects.get(request.user.email)
