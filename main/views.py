@@ -680,11 +680,11 @@ def cycle(request, cycle_id):
     for outcome in outcomes:
         flag, toshow_flag = outcome_test(outcome.id)
         if toshow_flag:
-            flag, pending_flag = outcome_test(outcome.id)
-        if not pending_flag:
             Outcome.objects.filter(id=outcome.id).update(status=flag)
             if flag:
                 Outcome.objects.filter(id=outcome.id).update(status_help='passing')
+            else:
+                Outcome.objects.filter(id=outcome.id).update(status_help='failing')
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
@@ -969,13 +969,14 @@ def registerCo(request):
     if request.method == "POST":
         form = CoOrdinatorRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+
             email = form.cleaned_data.get('email')
             code = form.cleaned_data.get('code')
             cd = tempCode.objects.filter(email=email)[0].code
             if not code==cd:
                 messages.add_message(request, messages.SUCCESS, 'Please check your Access Code')
                 return render(request, 'main/registerCo.html', {'form': form})
+            form.save()
             username = form.cleaned_data.get('username')
             inv = InvitedCo.objects.filter(email=email)[0]
             myinvited = InvitedCo.objects.filter(email=email)[0]
@@ -1789,6 +1790,7 @@ def super_admin_home(request):
             co = InvitedCo(email=email, pending=True, dept=department, name=name)
             co.save()
             unique_id = get_random_string(length=10)
+            print(unique_id)
             code_email = tempCode(email=email,code=unique_id)
             code_email.save()
             email = co.email
@@ -1819,7 +1821,7 @@ def outcome_test(outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome = outcome)
     flag = True
-    toshow_flag = True
+    toshow_flag = False
     for measure in measures:
         if measure.status == 'failing' or measure.status == 'passing':
             toshow_flag = True
