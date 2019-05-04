@@ -1275,7 +1275,7 @@ def add_preexisting_evaluator(request, outcome_id, measure_id):
             measure.evaluator.add(evaluator)
 
             email = evaluator.email
-            email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register/ \nYou have been assigned some evaluations\n\n -Admin', to=[email])
+            email_send = EmailMessage('Regarding Measure Evaluation', 'Hi, please go to: \nhttps://evapp-wolfteam.herokuapp.com/register \nYou have been assigned some evaluations\n\n -Admin', to=[email])
         email_send.send()
         messages.add_message(request, messages.SUCCESS, 'Successfully added Evaluator added to the Measure')
 
@@ -1767,7 +1767,7 @@ def super_admin_home(request):
         email = request.POST.get('email')
         department = request.POST.get('department')
         name = request.POST.get('name')
-        if CoOrdinator.objects.filter(email=email).exists():
+        if InvitedCo.objects.filter(email=email).exists():
             messages.add_message(request, messages.SUCCESS, 'Coordinator already exists')
         else:
             invited_Coordinator = Invited_Coordinator.objects.create(email=email, department=department, invited_by=request.user.username)
