@@ -246,7 +246,6 @@ def homepage(request):
     eval = request.user.email
     current_eval = 0
     for myeval in Evaluator.objects.all():
-<<<<<<< HEAD
         if(myeval.email==eval):
             current_eval = myeval
     myeval.perc_completed = perc
@@ -278,49 +277,12 @@ def homepage(request):
 
     context = {'rubrics':rubrics, 'students':students, 'evaluations':evaluations, 'measures':measure, 'percent':perc, 'flag':cust_student_list
     , 'now':'active','alerts':alerts, 'alerts_count':alerts_count, 'cycle_filter':len(cycle_filter)}
-=======
-        if (myeval.email == eval):
-            current_eval = myeval
-    myeval.perc_completed = perc
-    myeval.save()
-
-    cust_student_list = []
-    for stu in custom_students.objects.all():
-        for evaluator in stu.measure.evaluator.all():
-            if (evaluator.email == email_address):
-                cust_student_list.append(stu)
-    for mea in measure:
-        total = 0.0
-        graded = 0
-
-        for cu in cust_student_list:
-            if cu.evaluator is not None:
-                if cu.measure == mea and cu.evaluator.email == request.user.email:
-                    total += 1
-                    if cu.graded:
-                        # print(cu.student_name)
-                        graded += 1
-
-        # print("Graded",graded)
-        # print("Total",total)
-        if graded == 0:
-            mea.evaluationPercent = 0.0
-        else:
-            mea.evaluationPercent = (graded / total) * 100.0
-
-    context = {'rubrics': rubrics, 'students': students, 'evaluations': evaluations, 'measures': measure,
-               'percent': perc, 'flag': cust_student_list
-        , 'now': 'active', 'alerts': alerts, 'alerts_count': alerts_count, 'cycle_filter': len(cycle_filter)}
->>>>>>> 2e96ed5621e884ed70f35fd1eb01289cb6470ef3
 
     return render(request, 'main/evaluatorhome.html', context)
 
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 2e96ed5621e884ed70f35fd1eb01289cb6470ef3
 @user_passes_test(admin_test)
 def outcomes(request):
     coordinator = CoOrdinator.objects.get(request.user.email)
@@ -714,8 +676,8 @@ def cycle(request, cycle_id):
 
 
     for outcome in outcomes:
-        flag, toshow_flag = outcome_test(outcome.id)
-        if toshow_flag:
+        flag, pending_flag = outcome_test(outcome.id)
+        if not pending_flag:
             Outcome.objects.filter(id=outcome.id).update(status=flag)
             if flag:
                 Outcome.objects.filter(id=outcome.id).update(status_help='passing')
@@ -859,19 +821,7 @@ def outcome_detail(request, outcome_id):
     test_data = {}
     data = {}
     custom_student = None
-
-
-
     for measure in measures:
-        mycust = custom_students.objects.filter(measure=measure)
-        mycustgraded = custom_students.objects.filter(measure=measure).filter(graded=True)
-        if(len(mycust)>0 and measure.status=='notstarted'):
-            measure.status='pending'
-            measure.save()
-            if(outcome.status_help=='notstarted'):
-                outcome.status_help='pending'
-                outcome.save()
-
         students = measure.student.all()
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
         if(evaluations>0):
@@ -879,7 +829,7 @@ def outcome_detail(request, outcome_id):
 
         if measure.tool_type == 'Rubric':
             if measure.rubric:
-                if len(num_of_evaluations) > 0:
+                if len(num_of_evaluations)  > 0:
                     data = rubric_data(measure.id)
                     if(data['percent_pass_cases']>=measure.cutoff_percentage):
                         Measure.objects.filter(id=measure.id).update(status='passing', statusPercent = data['percent_pass_cases'])
@@ -898,8 +848,6 @@ def outcome_detail(request, outcome_id):
                      Measure.objects.filter(id=measure.id).update(status='failing', statusPercent = test_data['percentage'])
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
-
-
 
 
     context = {'cordinator':cordinator,'evaluator': Evaluator.objects.filter(dept=dept),'outcome_id': outcome_id, 'outcome': outcome, 'measures': measures, 'rubrics':rubrics,
@@ -1854,13 +1802,13 @@ def outcome_test(outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome = outcome)
     flag = True
-    toshow_flag = False
+    pending_flag = True
     for measure in measures:
-        if measure.status == 'failing' or measure.status=='passing':
-            toshow_flag=True
-        if measure.status=='failing':
-            flag=False
-    return (flag,toshow_flag)
+        if measure.status == 'failing':
+            flag = False
+        if not measure.status == 'pending':
+            pending_flag = False
+    return (flag,pending_flag)
 
 def cycle_report_test(cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
