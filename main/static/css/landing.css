@@ -1,6 +1,6 @@
 {% load static %}
 
-
+  html{ overflow-y: scroll;}
 body{
   font-family: Montserrat, Lato, 'Nunito Sans', Helvetica, Arial, Platino, Garamond, Bookman, Lucidia;
 }
