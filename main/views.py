@@ -675,15 +675,14 @@ def cycle(request, cycle_id):
             prev_cycles.append(cy)
     all_outcomes = Outcome.objects.filter(dept=dept)
 
-
     for outcome in outcomes:
-        flag, pending_flag = outcome_test(outcome.id)
+        flag, toshow_flag = outcome_test(outcome.id)
+        if toshow_flag:
+            flag, pending_flag = outcome_test(outcome.id)
         if not pending_flag:
             Outcome.objects.filter(id=outcome.id).update(status=flag)
             if flag:
                 Outcome.objects.filter(id=outcome.id).update(status_help='passing')
-            else:
-                Outcome.objects.filter(id=outcome.id).update(status_help='failing')
 
     msgs = Broadcast.objects.filter(receiver=request.user.email).order_by('-sent_at')
 
@@ -823,6 +822,14 @@ def outcome_detail(request, outcome_id):
     data = {}
     custom_student = None
     for measure in measures:
+        mycust = custom_students.objects.filter(measure=measure)
+        mycustgraded = custom_students.objects.filter(measure=measure).filter(graded=True)
+        if (len(mycust) > 0 and measure.status == 'notstarted'):
+            measure.status = 'pending'
+            measure.save()
+            if (outcome.status_help == 'notstarted'):
+                outcome.status_help = 'pending'
+                outcome.save()
         students = measure.student.all()
         evaluations = evaluate_rubric.objects.filter(measure=measure).count()
         if(evaluations>0):
@@ -1803,13 +1810,13 @@ def outcome_test(outcome_id):
     outcome = Outcome.objects.get(id=outcome_id)
     measures = Measure.objects.filter(outcome = outcome)
     flag = True
-    pending_flag = True
+    toshow_flag = True
     for measure in measures:
+        if measure.status == 'failing' or measure.status == 'passing':
+            toshow_flag = True
         if measure.status == 'failing':
             flag = False
-        if not measure.status == 'pending':
-            pending_flag = False
-    return (flag,pending_flag)
+    return (flag, toshow_flag)
 
 def cycle_report_test(cycle_id):
     cycle = Cycle.objects.get(id=cycle_id)
