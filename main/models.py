@@ -215,3 +215,7 @@ class InvitedCo(models.Model):
     pending = models.BooleanField(default=True)
     dept = models.ForeignKey(Department,null=True,on_delete=models.CASCADE)
     name = models.CharField(null=True,max_length=400)
+
+class tempCode(models.Model):
+    email = models.CharField(max_length=200)
+    code = models.CharField(max_length=400)

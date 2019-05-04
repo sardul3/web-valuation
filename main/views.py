@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import( Rubric, Student, Measure, Category, evaluate_rubric,
         Evaluator, Outcome, Cycle, Test_score, Test, Student, evaluation_flag,
         custom_students, Broadcast, Course, Notification, category_score,
-        CoOrdinator, Invited_Coordinator,InvitedCo, Log, Department)
+        CoOrdinator, Invited_Coordinator,InvitedCo, Log, Department,tempCode)
 from django.contrib import messages
 from .forms import RegisterForm, CoOrdinatorRegisterForm
 import csv
@@ -20,6 +20,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
 from itertools import chain
 import csv
+import random
+from django.utils.crypto import get_random_string
 
 def test_score_data(test_score_test, measure_id):
     measure = Measure.objects.get(id=measure_id)
@@ -968,14 +970,18 @@ def registerCo(request):
         form = CoOrdinatorRegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
-            dept = form.cleaned_data.get('department')
+            code = form.cleaned_data.get('code')
+            cd = tempCode.objects.filter(email=email)[0].code
+            if not code==cd:
+                messages.add_message(request, messages.SUCCESS, 'Please check your Access Code')
+                return render(request, 'main/registerCo.html', {'form': form})
+            username = form.cleaned_data.get('username')
+            inv = InvitedCo.objects.filter(email=email)[0]
             myinvited = InvitedCo.objects.filter(email=email)[0]
-            co = CoOrdinator(name=username, email=email, department=dept, dept=myinvited.dept)
+            co = CoOrdinator(name=username, email=email, department=inv.dept.dept_name, dept=myinvited.dept)
             co.save()
             messages.success(request, 'Account created')
-            inv = InvitedCo.objects.filter(email=email)[0]
             print(email)
             print(inv)
             inv.pending = False
@@ -1782,8 +1788,11 @@ def super_admin_home(request):
             evaluators = Evaluator.objects.all()
             co = InvitedCo(email=email, pending=True, dept=department, name=name)
             co.save()
+            unique_id = get_random_string(length=10)
+            code_email = tempCode(email=email,code=unique_id)
+            code_email.save()
             email = co.email
-            email_send = EmailMessage('Regarding Measure Evaluation:', 'Hi,' + str(co.name) + '\n You have been invited as a coordinator for '+ str(co.dept.dept_name) + ' department.\n Please visit and create an account at: \nhttps://evapp-wolfteam.herokuapp.com/registerCo \n Please sign up to continue.\n\n -'+ request.user.username, to=[email])
+            email_send = EmailMessage('Regarding Measure Evaluation:', 'Hi,' + str(co.name) + '\n You have been invited as a coordinator for '+ str(co.dept.dept_name) + ' department.\n Please visit and create an account at: \nhttps://evapp-wolfteam.herokuapp.com/registerCo'+ '\nYour access code is: '+str(unique_id)+'\n Please sign up to continue.\n\n -'+ request.user.username, to=[email])
             email_send.send()
 
             for eval in evaluators:

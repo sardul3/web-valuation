@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import CoOrdinator,InvitedCo
+from .models import CoOrdinator,InvitedCo,tempCode
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -17,18 +17,24 @@ class RegisterForm(UserCreationForm):
 
 class CoOrdinatorRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    department = forms.CharField(label="Department",required=True)
+    code = forms.CharField(label="Code", required=True)
     def clean_email(self):
+        print(self)
+        email_found = False
         data = self.cleaned_data['email']
         for em in InvitedCo.objects.all():
             if em.pending:
                 if em.email==data:
-                    return data
-        raise forms.ValidationError('You must be invited to register!!')
+                    email_found = True
+        if not email_found:
+            raise forms.ValidationError('You must be invited to register!!')
+        if email_found:
+            return data
+
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2','department']
+        fields = ['username', 'email', 'code','password1', 'password2']
 
     def save(self):
         user = super().save(commit=False)
