@@ -28,7 +28,7 @@
     <thead class = "card-header">
       <tr>
         <th scope="col">Logs</th>
-        <th scope="col">clear all</th>
+        <th scope="col"><a href = "{%url 'main:clear_log'%}">clear all</a></th>
       </tr>
     </thead>
     <tbody>
@@ -49,19 +49,6 @@
 
 
 
-    <ul class="list-group" style = "overflow-y:auto; height: 80vh;">
-      <li class="list-group-item  list-group-item-action active  d-flex justify-content-between"><span> <h4>Logs</h4> </span>
-        <a href = "{%url 'main:clear_log'%}">clear all</a>
-      </li>
-      {%for log in logs%}
-        <a href= "#" class="list-group-item list-group-item-action d-flex justify-content-between"><span>{{log.message}}</span>
-           {{log.created_at|timesince}} ago
-         </a>
-  {%empty%}
-  <a href= "#" class="list-group-item list-group-item-action text-center" style="padding:20px;"><span >No activity to log. <br/> Please check back later</span>
-   </a>
-  {%endfor%}
-</ul>
 
 
 
